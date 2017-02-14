@@ -15,6 +15,7 @@
         <module>server</module>
         <module>model</module>
         <module>service</module>
+        <module>console</module>
     </modules>
 
 </project>

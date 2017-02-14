@@ -1,4 +1,4 @@
-package ge.tsu.edu.hcrs;
+package ge.edu.tsu.hcrs.control_panel.console;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

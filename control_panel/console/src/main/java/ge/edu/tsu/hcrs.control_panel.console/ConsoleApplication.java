@@ -1,4 +1,4 @@
-package ge.tsu.edu.hcrs.control_panel.console;
+package ge.edu.tsu.hcrs.control_panel.console;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
