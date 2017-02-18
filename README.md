@@ -1,1 +1,1 @@
-#Handwritten Recognition System
+#Handwriting Recognition System

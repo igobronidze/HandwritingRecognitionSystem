@@ -28,14 +28,14 @@ public class CachedSystemParameter {
     }
 
     public static void deleteParameter(String key) {
-        if (cachedParameters != null) {
+        if (cachedParameters == null) {
             fillParameters();
         }
         cachedParameters.remove(key);
     }
 
     public static void editOrAddParameter(SystemParameter systemParameter) {
-        if (cachedParameters != null) {
+        if (cachedParameters == null) {
             fillParameters();
         }
         cachedParameters.put(systemParameter.getKey(), systemParameter.getValue());

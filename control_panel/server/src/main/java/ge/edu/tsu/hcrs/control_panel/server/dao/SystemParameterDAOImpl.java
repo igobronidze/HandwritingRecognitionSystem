@@ -31,7 +31,7 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setString(1, systemParameter.getKey());
             pstmt.setString(2, systemParameter.getValue());
-            pstmt.setString(3, systemParameter.getType().name());
+            pstmt.setString(3, systemParameter.getType() == null ? "CONTROL_PANEL" : systemParameter.getType().name());
             pstmt.executeUpdate();
             CachedSystemParameter.editOrAddParameter(systemParameter);
         } catch (SQLException ex) {

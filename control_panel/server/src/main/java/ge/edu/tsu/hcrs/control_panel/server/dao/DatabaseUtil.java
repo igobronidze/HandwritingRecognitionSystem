@@ -6,11 +6,11 @@ import java.sql.SQLException;
 
 public class DatabaseUtil {
 
-    private static final String databaseURL = "jdbc:postgresql://localhost:5432/handwriting_recognition";
+    private static final String databaseURL = "jdbc:postgresql://139.59.208.165:5432/hcrs_db";
 
-    private static final String databaseUsername = "postgres";
+    private static final String databaseUsername = "dev";
 
-    private static final String databasePassword = "pass";
+    private static final String databasePassword = "dev";
 
     private static Connection connection;
 
