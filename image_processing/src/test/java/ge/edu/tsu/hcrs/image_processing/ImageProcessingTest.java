@@ -1,5 +1,7 @@
 package ge.edu.tsu.hcrs.image_processing;
 
+import ge.edu.tsu.hcrs.image_processing.manually_tool.ImageCutter;
+import ge.edu.tsu.hcrs.image_processing.manually_tool.ImageTransformer;
 import org.junit.Before;
 import org.junit.Ignore;
 import org.junit.Test;
