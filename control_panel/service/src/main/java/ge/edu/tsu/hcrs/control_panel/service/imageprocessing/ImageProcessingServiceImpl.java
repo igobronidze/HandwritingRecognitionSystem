@@ -1,7 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.service.imageprocessing;
 
-import ge.edu.tsu.hcrs.image_processing.ImageCutter;
-import ge.edu.tsu.hcrs.image_processing.ImageTransformer;
+import ge.edu.tsu.hcrs.image_processing.manually_tool.ImageCutter;
+import ge.edu.tsu.hcrs.image_processing.manually_tool.ImageTransformer;
 
 import java.awt.image.BufferedImage;
 

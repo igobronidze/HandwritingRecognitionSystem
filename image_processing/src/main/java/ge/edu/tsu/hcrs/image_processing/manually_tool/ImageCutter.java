@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.image_processing;
+package ge.edu.tsu.hcrs.image_processing.manually_tool;
 
 import java.awt.image.BufferedImage;
 
