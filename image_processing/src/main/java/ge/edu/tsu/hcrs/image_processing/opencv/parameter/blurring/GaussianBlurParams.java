@@ -2,7 +2,7 @@ package ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring;
 
 import org.bytedeco.javacpp.opencv_core;
 
-public class GaussianBlur implements Blurring {
+public class GaussianBlurParams implements BlurringParams {
 
     // ksize - Gaussian kernel size. ksize.width and ksize.height can differ but they
     // both must be positive and odd. Or, they can be zeroÃ¢Â€Â™s and then they are computed from sigma*.

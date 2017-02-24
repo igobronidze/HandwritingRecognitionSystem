@@ -1,10 +1,9 @@
 package ge.edu.tsu.hcrs.image_processing.opencv;
 
-import ge.edu.tsu.hcrs.image_processing.Runner;
-import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.BilateralFilter;
-import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.Blur;
-import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.GaussianBlur;
-import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.MedianBlur;
+import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.BilateralFilterParams;
+import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.BlurParams;
+import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.GaussianBlurParams;
+import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.MedianBlurParams;
 import ge.edu.tsu.hcrs.image_processing.opencv.parameter.cutpapper.CannyEdgeDetectionParams;
 import ge.edu.tsu.hcrs.image_processing.opencv.parameter.cutpapper.CutPaperParams;
 import ge.edu.tsu.hcrs.image_processing.opencv.parameter.cutpapper.LargestFigureParams;
@@ -62,19 +61,19 @@ public class PaperCutter {
         Frame grayImageFrame = converterToMat.convert(grayImage);
         opencv_core.Mat grayImageMat = converterToMat.convertToMat(grayImageFrame);
         // სურათის გაწმენდა ზედმეტი ხმაურისგან, შესაძლო მეთოდებია - blur, gaussianBlur, medianBlur, bilateralFilter
-        if (params.getBlurring() instanceof Blur) {
-            Blur blur = (Blur)params.getBlurring();
-            opencv_imgproc.blur(grayImageMat, grayImageMat, new opencv_core.Size(blur.getkSizeWidth(), blur.getkSizeHeight()));
-        } else if (params.getBlurring() instanceof GaussianBlur) {
-            GaussianBlur gaussianBlur = (GaussianBlur)params.getBlurring();
-            opencv_imgproc.GaussianBlur(grayImageMat, grayImageMat, new opencv_core.Size(gaussianBlur.getkSizeWidth(), gaussianBlur.getkSizeHeight()),
-                    gaussianBlur.getSigmaX(), gaussianBlur.getSigmaY(), gaussianBlur.getBorderType());
-        } else if (params.getBlurring() instanceof MedianBlur) {
-            MedianBlur medianBlur = (MedianBlur)params.getBlurring();
-            opencv_imgproc.medianBlur(grayImageMat, grayImageMat, medianBlur.getkSize());
-        } else if (params.getBlurring() instanceof BilateralFilter) {
-            BilateralFilter bilateralFilter = (BilateralFilter)params.getBlurring();
-            opencv_imgproc.bilateralFilter(grayImageMat, grayImageMat, bilateralFilter.getDiameter(), bilateralFilter.getSigmaColor(), bilateralFilter.getSigmaSpace());
+        if (params.getBlurringParams() instanceof BlurParams) {
+            BlurParams blurParams = (BlurParams)params.getBlurringParams();
+            opencv_imgproc.blur(grayImageMat, grayImageMat, new opencv_core.Size(blurParams.getkSizeWidth(), blurParams.getkSizeHeight()));
+        } else if (params.getBlurringParams() instanceof GaussianBlurParams) {
+            GaussianBlurParams gaussianBlurParams = (GaussianBlurParams)params.getBlurringParams();
+            opencv_imgproc.GaussianBlur(grayImageMat, grayImageMat, new opencv_core.Size(gaussianBlurParams.getkSizeWidth(), gaussianBlurParams.getkSizeHeight()),
+                    gaussianBlurParams.getSigmaX(), gaussianBlurParams.getSigmaY(), gaussianBlurParams.getBorderType());
+        } else if (params.getBlurringParams() instanceof MedianBlurParams) {
+            MedianBlurParams medianBlurParams = (MedianBlurParams)params.getBlurringParams();
+            opencv_imgproc.medianBlur(grayImageMat, grayImageMat, medianBlurParams.getkSize());
+        } else if (params.getBlurringParams() instanceof BilateralFilterParams) {
+            BilateralFilterParams bilateralFilterParams = (BilateralFilterParams)params.getBlurringParams();
+            opencv_imgproc.bilateralFilter(grayImageMat, grayImageMat, bilateralFilterParams.getDiameter(), bilateralFilterParams.getSigmaColor(), bilateralFilterParams.getSigmaSpace());
         }
         // Mat-დან სურათის დაბრუნება destImage-ში
         opencv_core.IplImage destImage = converterToMat.convertToIplImage(grayImageFrame);
