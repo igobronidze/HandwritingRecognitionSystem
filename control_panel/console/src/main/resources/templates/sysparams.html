@@ -1,0 +1,110 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>System Parameters</title>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
+              integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+              crossorigin="anonymous" />
+
+        <link rel="stylesheet" th:href="@{/css/main.css}"
+              href="../../css/main.css" />
+    </head>
+    <body style="padding: 30px">
+        <div class="container">
+            <div class="col-md-8">
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h4>System Parameters</h4>
+                    </div>
+                    <div class="panel-body">
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th>Key</th>
+                                <th>Value</th>
+                                <th>Type</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="sysParam : ${systemParameters}">
+                                <!--<td th:text="${iterationStatus.count}">1</td>-->
+                                <td th:text="${sysParam.key}" class="col-md-4"></td>
+                                <td th:text="${sysParam.value}" class="col-md-4"></td>
+                                <td th:text="${sysParam.type}" class="col-md-4"></td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="panel panel-primary">
+                    <div class="panel-heading"><h4>Add or Edit</h4></div>
+                    <form class="form-horizontal" action="/addSysParam" method="POST">
+                        <fieldset>
+                            <!-- Form Name -->
+
+                            <!-- Button -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="singlebutton"></label>
+                                <div class="col-md-4">
+                                    <button id="singlebutton" name="singlebutton" class="btn btn-primary">New</button>
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="textinput-key">Key</label>
+                                <div class="col-md-4">
+                                    <input id="textinput-key" name="key" type="text" placeholder="" class="form-control input-md" />
+
+                                </div>
+                            </div>
+
+                            <!-- Text input-->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="textinput-value">Value</label>
+                                <div class="col-md-4">
+                                    <input id="textinput-value" name="value" type="text" placeholder="" class="form-control input-md" />
+                                </div>
+                            </div>
+
+                            <!-- Select Basic -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="selectbasic">Type</label>
+                                <div class="col-md-4">
+                                    <select id="selectbasic" name="type" class="form-control">
+                                        <option th:each="sysParamType : ${sysParamTypes}"
+                                                th:value="${sysParamType}" th:text="${sysParamType}">
+                                        </option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Button (Double) -->
+                            <div class="form-group">
+                                <label class="col-md-4 control-label" for="button1id"></label>
+                                <div class="col-md-8">
+                                    <button id="button1id" name="button1id" class="btn btn-success">Save</button>
+                                    <button id="button2id" name="button2id" class="btn btn-danger">Delete</button>
+                                </div>
+                            </div>
+
+                        </fieldset>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <script
+                src="https://code.jquery.com/jquery-3.1.1.js"
+                integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+                crossorigin="anonymous"></script>
+
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
+                integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+                crossorigin="anonymous"></script>
+    </body>
+</html>
