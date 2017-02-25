@@ -30,6 +30,6 @@ public class SystemParametersController {
 
     @RequestMapping(value = "/sys_param/all", method = RequestMethod.GET)
     public List<SystemParameter> getAllSystemParameters() {
-        return systemParameterService.getSystemParameters(null);
+        return systemParameterService.getSystemParameters(null, null);
     }
 }

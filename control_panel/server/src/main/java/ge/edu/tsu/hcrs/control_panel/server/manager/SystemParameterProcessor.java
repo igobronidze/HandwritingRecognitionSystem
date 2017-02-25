@@ -6,9 +6,7 @@ import ge.edu.tsu.hcrs.control_panel.server.caching.CachedSystemParameter;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SystemParameterManager {
-
-    private CachedSystemParameter cachedSystemParameter = new CachedSystemParameter();
+public class SystemParameterProcessor {
 
     public String getParameterValue(Parameter parameter) {
         return CachedSystemParameter.getParameterValue(parameter);

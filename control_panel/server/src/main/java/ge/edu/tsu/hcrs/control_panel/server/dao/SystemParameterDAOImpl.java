@@ -79,12 +79,15 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
     }
 
     @Override
-    public List<SystemParameter> getSystemParameters(String key) {
+    public List<SystemParameter> getSystemParameters(String key, SysParamType type) {
         List<SystemParameter> systemParameterList = new ArrayList<>();
         try {
-            String sql = "SELECT * FROM system_parameter ";
+            String sql = "SELECT * FROM system_parameter WHERE 1 = 1 ";
             if (key != null && !key.isEmpty()) {
-                sql += "WHERE key LIKE '%" + key + "%'";
+                sql += "AND key LIKE '%" + key + "%' ";
+            }
+            if (type != null) {
+                sql += "AND type = '" + type.name() + "' ";
             }
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
@@ -92,8 +95,8 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
                 int id = rs.getInt("id");
                 String k = rs.getString("key");
                 String value = rs.getString("value");
-                String type = rs.getString("type");
-                SystemParameter systemParameter = new SystemParameter(id, k, value, SysParamType.valueOf(type));
+                String t = rs.getString("type");
+                SystemParameter systemParameter = new SystemParameter(id, k, value, SysParamType.valueOf(t));
                 systemParameterList.add(systemParameter);
             }
         } catch (SQLException ex) {
@@ -102,24 +105,5 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
             DatabaseUtil.closeConnection();
         }
         return systemParameterList;
-    }
-
-    @Override
-    public String getSystemParameterValue(String key) {
-        try {
-            String sql = "SELECT value FROM system_parameter WHERE key = ?";
-            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
-            pstmt.setString(1, key);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                String value = rs.getString("value");
-                return value;
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
-        } finally {
-            DatabaseUtil.closeConnection();
-        }
-        return null;
     }
 }

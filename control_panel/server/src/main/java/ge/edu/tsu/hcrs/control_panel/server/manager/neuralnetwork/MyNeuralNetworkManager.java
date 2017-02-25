@@ -5,7 +5,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.*;
 import ge.edu.tsu.hcrs.control_panel.server.manager.NormalizedDataManager;
-import ge.edu.tsu.hcrs.control_panel.server.manager.SystemParameterManager;
+import ge.edu.tsu.hcrs.control_panel.server.manager.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetworkParameter;
@@ -18,7 +18,7 @@ import java.util.List;
 
 public class MyNeuralNetworkManager implements NeuralNetworkManager {
 
-    private SystemParameterManager systemParameterManager = new SystemParameterManager();
+    private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
     private NormalizedDataManager normalizedDataManager = new NormalizedDataManager();
 
@@ -57,8 +57,8 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
     private Parameter neuralNetworkDirectoryParameter = new Parameter("neuralNetworkDirectory", "D:\\sg\\handwriting_recognition\\network");
 
     public MyNeuralNetworkManager() {
-        char firstSymbolInCharSequence = systemParameterManager.getParameterValue(firstSymbolInCharSequenceParameter).charAt(0);
-        char lastSymbolInCharSequence = systemParameterManager.getParameterValue(lastSymbolInCharSequenceParameter).charAt(0);
+        char firstSymbolInCharSequence = systemParameterProcessor.getParameterValue(firstSymbolInCharSequenceParameter).charAt(0);
+        char lastSymbolInCharSequence = systemParameterProcessor.getParameterValue(lastSymbolInCharSequenceParameter).charAt(0);
         charSequence = new CharSequence(firstSymbolInCharSequence, lastSymbolInCharSequence);
     }
 
@@ -68,7 +68,7 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
             List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatas(width, height, charSequence, generation);
             List<Integer> layers = new ArrayList<>();
             layers.add(width * height);
-            for (int x : systemParameterManager.getIntegerListParameterValue(neuralInHiddenLayersParameter)) {
+            for (int x : systemParameterProcessor.getIntegerListParameterValue(neuralInHiddenLayersParameter)) {
                 layers.add(x);
             }
             layers.add(charSequence.getNumberOfChars());
@@ -79,7 +79,7 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
             }
             long trainingDuration = neuralNetwork.train();
             int id = networkInfoDAO.addNetworkInfo(getNetworkInfo(neuralNetwork, trainingDuration, width, height, generation));
-            NeuralNetwork.save(systemParameterManager.getParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + generation + "_" + width + "_" + height + ".nnet", neuralNetwork);
+            NeuralNetwork.save(systemParameterProcessor.getParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + generation + "_" + width + "_" + height + ".nnet", neuralNetwork);
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
         }
@@ -134,15 +134,15 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
 
     private void setNeuralNetworkParameters(NeuralNetwork neuralNetwork) {
         NeuralNetworkParameter parameter = neuralNetwork.getNeuralNetworkParameter();
-        parameter.setWeightMinValue(systemParameterManager.getFloatParameterValue(weightMinValueParameter));
-        parameter.setWeightMaxValue(systemParameterManager.getFloatParameterValue(weightMaxValueParameter));
-        parameter.setBiasMinValue(systemParameterManager.getFloatParameterValue(biasMinValueParameter));
-        parameter.setBiasMaxValue(systemParameterManager.getFloatParameterValue(biasMaxValueParameter));
-        parameter.setTransferFunctionType(TransferFunctionType.valueOf(systemParameterManager.getParameterValue(transferFunctionParameter)));
-        parameter.setLearningRate(systemParameterManager.getFloatParameterValue(learningRateParameter));
-        parameter.setMinError(systemParameterManager.getFloatParameterValue(minErrorParameter));
-        parameter.setTrainingMaxIteration(systemParameterManager.getLongParameterValue(trainingMaxIterationParameter));
-        parameter.setNumberOfTrainingDataInOneIteration(systemParameterManager.getLongParameterValue(numberOfTrainingDataInOneIterationParameter));
+        parameter.setWeightMinValue(systemParameterProcessor.getFloatParameterValue(weightMinValueParameter));
+        parameter.setWeightMaxValue(systemParameterProcessor.getFloatParameterValue(weightMaxValueParameter));
+        parameter.setBiasMinValue(systemParameterProcessor.getFloatParameterValue(biasMinValueParameter));
+        parameter.setBiasMaxValue(systemParameterProcessor.getFloatParameterValue(biasMaxValueParameter));
+        parameter.setTransferFunctionType(TransferFunctionType.valueOf(systemParameterProcessor.getParameterValue(transferFunctionParameter)));
+        parameter.setLearningRate(systemParameterProcessor.getFloatParameterValue(learningRateParameter));
+        parameter.setMinError(systemParameterProcessor.getFloatParameterValue(minErrorParameter));
+        parameter.setTrainingMaxIteration(systemParameterProcessor.getLongParameterValue(trainingMaxIterationParameter));
+        parameter.setNumberOfTrainingDataInOneIteration(systemParameterProcessor.getLongParameterValue(numberOfTrainingDataInOneIterationParameter));
     }
 
     private NetworkInfo getNetworkInfo(NeuralNetwork neuralNetwork, long trainingDuration, int width, int height, String generation) {

@@ -41,9 +41,9 @@ public class CachedSystemParameter {
         cachedParameters.put(systemParameter.getKey(), systemParameter.getValue());
     }
 
-    private static void fillParameters() {
+    public static void fillParameters() {
         cachedParameters = new HashMap<>();
-        List<SystemParameter> systemParameterList = systemParameterDAO.getSystemParameters(null);
+        List<SystemParameter> systemParameterList = systemParameterDAO.getSystemParameters(null, null);
         for (SystemParameter systemParameter : systemParameterList) {
             cachedParameters.put(systemParameter.getKey(), systemParameter.getValue());
         }

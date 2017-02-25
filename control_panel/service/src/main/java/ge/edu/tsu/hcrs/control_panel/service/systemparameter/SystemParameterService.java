@@ -2,6 +2,7 @@ package ge.edu.tsu.hcrs.control_panel.service.systemparameter;
 
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
+import ge.edu.tsu.hcrs.control_panel.model.sysparam.SysParamType;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.SystemParameter;
 
 import java.util.List;
@@ -14,7 +15,7 @@ public interface SystemParameterService {
 
     void deleteSystemParameter(String key) throws ControlPanelException;
 
-    List<SystemParameter> getSystemParameters(String key);
+    List<SystemParameter> getSystemParameters(String key, SysParamType type);
 
     String getParameterValue(Parameter parameter);
 
