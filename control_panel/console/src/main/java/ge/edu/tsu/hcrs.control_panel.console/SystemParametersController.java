@@ -27,15 +27,34 @@ public class SystemParametersController {
     @RequestMapping(value = "/addSysParam", method=RequestMethod.POST)
     public String addSysParam(@RequestParam("key") String key,
                               @RequestParam("value") String value,
-                              @RequestParam("type") String type) {
-        SystemParameter systemParameter = new SystemParameter();
-        systemParameter.setKey(key);
-        systemParameter.setValue(value);
-        systemParameter.setType(SysParamType.valueOf(type));
-        try {
-            systemParameterService.addSystemParameter(systemParameter);
-        } catch (ControlPanelException e) {
-            System.out.println(e.getMessage());
+                              @RequestParam("type") String type,
+                              @RequestParam(value = "action", required = false, defaultValue = "save") String action) {
+        if(action.equals("save")) {
+            SystemParameter systemParameter = new SystemParameter();
+            systemParameter.setKey(key);
+            systemParameter.setValue(value);
+            systemParameter.setType(SysParamType.valueOf(type));
+            try {
+                systemParameterService.addSystemParameter(systemParameter);
+            } catch (ControlPanelException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if(action.equals("edit")) {
+            SystemParameter systemParameter = new SystemParameter();
+            systemParameter.setKey(key);
+            systemParameter.setValue(value);
+            systemParameter.setType(SysParamType.valueOf(type));
+            try {
+                systemParameterService.editSystemParameter(systemParameter);
+            } catch (ControlPanelException e) {
+                System.out.println(e.getMessage());
+            }
+        } else if(action.equals("delete")) {
+            try {
+                systemParameterService.deleteSystemParameter(key);
+            } catch (ControlPanelException e) {
+                System.out.println(e.getMessage());
+            }
         }
         return "redirect:";
     }

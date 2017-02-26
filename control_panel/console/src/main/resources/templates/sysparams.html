@@ -19,7 +19,7 @@
                         <h4>System Parameters</h4>
                     </div>
                     <div class="panel-body">
-                        <table class="table table-striped">
+                        <table class="table table-striped" id="param-table">
                             <thead>
                             <tr>
                                 <th>Key</th>
@@ -30,9 +30,9 @@
                             <tbody>
                             <tr th:each="sysParam : ${systemParameters}">
                                 <!--<td th:text="${iterationStatus.count}">1</td>-->
-                                <td th:text="${sysParam.key}" class="col-md-4"></td>
-                                <td th:text="${sysParam.value}" class="col-md-4"></td>
-                                <td th:text="${sysParam.type}" class="col-md-4"></td>
+                                <td th:text="${sysParam.key}" class="col-md-4 param-key"></td>
+                                <td th:text="${sysParam.value}" class="col-md-4 param-value"></td>
+                                <td th:text="${sysParam.type}" class="col-md-4 param-type"></td>
                             </tr>
                             </tbody>
                         </table>
@@ -42,58 +42,46 @@
             <div class="col-md-4">
                 <div class="panel panel-primary">
                     <div class="panel-heading"><h4>Add or Edit</h4></div>
-                    <form class="form-horizontal" action="/addSysParam" method="POST">
-                        <fieldset>
-                            <!-- Form Name -->
+                    <div class="panel-body">
+                        <div class="form-group">
+                            <label class="control-label" for="new-button"></label>
+                            <button id="new-button" name="new-button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New</button>
+                        </div>
+                        <form action="/addSysParam" method="POST" id="param-form">
+                                <!-- Form Name -->
 
-                            <!-- Button -->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="singlebutton"></label>
-                                <div class="col-md-4">
-                                    <button id="singlebutton" name="singlebutton" class="btn btn-primary">New</button>
-                                </div>
-                            </div>
+                                <!-- Button -->
 
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="textinput-key">Key</label>
-                                <div class="col-md-4">
+                                <!-- Text input-->
+                                <div class="form-group">
+                                    <label class="control-label" for="textinput-key">Key</label>
                                     <input id="textinput-key" name="key" type="text" placeholder="" class="form-control input-md" />
-
                                 </div>
-                            </div>
 
-                            <!-- Text input-->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="textinput-value">Value</label>
-                                <div class="col-md-4">
+                                <!-- Text input-->
+                                <div class="form-group">
+                                    <label class="control-label" for="textinput-value">Value</label>
                                     <input id="textinput-value" name="value" type="text" placeholder="" class="form-control input-md" />
                                 </div>
-                            </div>
 
-                            <!-- Select Basic -->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="selectbasic">Type</label>
-                                <div class="col-md-4">
-                                    <select id="selectbasic" name="type" class="form-control">
+                                <!-- Select Basic -->
+                                <div class="form-group">
+                                    <label class="control-label" for="select-type">Type</label>
+                                    <select id="select-type" name="type" class="form-control">
                                         <option th:each="sysParamType : ${sysParamTypes}"
                                                 th:value="${sysParamType}" th:text="${sysParamType}">
                                         </option>
                                     </select>
                                 </div>
-                            </div>
 
-                            <!-- Button (Double) -->
-                            <div class="form-group">
-                                <label class="col-md-4 control-label" for="button1id"></label>
-                                <div class="col-md-8">
-                                    <button id="button1id" name="button1id" class="btn btn-success">Save</button>
-                                    <button id="button2id" name="button2id" class="btn btn-danger">Delete</button>
+                                <input id="hiddeninput-action" name="action" type="hidden" />
+                                <!-- Button (Double) -->
+                                <div class="form-group">
+                                    <button id="save-button" name="save-button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save</button>
+                                    <button id="delete-button" name="delete-button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
                                 </div>
-                            </div>
-
-                        </fieldset>
-                    </form>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -106,5 +94,7 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
                 crossorigin="anonymous"></script>
+
+        <script th:src="@{/js/app.js}" src="../../js/app.js" />
     </body>
 </html>
