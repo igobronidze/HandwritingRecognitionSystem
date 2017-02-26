@@ -81,4 +81,33 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
         }
         return normalizedDataList;
     }
+
+    @Override
+    public int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generation) {
+        int count = 0;
+        try {
+            String sql = "SELECT COUNT(id) FROM normalized_data WHERE 1=1 ";
+            if (width != null) {
+                sql += "AND width = '" + width + "' ";
+            }
+            if (height != null) {
+                sql += "AND height = '" + height + "' ";
+            }
+            if (charSequence != null) {
+                sql += "AND first_symbol = '" + charSequence.getFirstSymbol() + "' AND last_symbol = '" + charSequence.getLastSymbol() + "' ";
+            }
+            if (generation != null) {
+                sql += "AND generation = '" + generation + "' ";
+            }
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            count = rs.getInt(1);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+        return count;
+    }
 }

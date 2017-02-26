@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
+package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
@@ -7,7 +7,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 
 import java.util.List;
 
-public interface NeuralNetworkService {
+public interface INeuralNetworkProcessor {
 
     void trainNeural(NetworkInfo networkInfo);
 

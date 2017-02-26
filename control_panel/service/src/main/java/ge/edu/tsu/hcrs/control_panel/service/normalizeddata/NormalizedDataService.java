@@ -10,4 +10,6 @@ public interface NormalizedDataService {
     void addNormalizedData(NormalizedData normalizedData);
 
     List<NormalizedData> getNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generation);
+
+    int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, List<String> generations);
 }

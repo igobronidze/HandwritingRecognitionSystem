@@ -11,7 +11,7 @@ public class NetworkInfo implements Serializable {
 
     private int height;
 
-    private String generation;
+    private List<String> generations;
 
     private int numberOfData;
 
@@ -37,11 +37,11 @@ public class NetworkInfo implements Serializable {
 
     private List<TestingInfo> testingInfoList;
 
-    private String charSequence;
+    private CharSequence charSequence;
 
-    private String hiddenLayer;
+    private List<Integer> hiddenLayer;
 
-    private NeuralNetworkProcessorType networkProcessorType;
+    private NetworkProcessorType networkProcessorType;
 
     private String networkMetaInfo;
 
@@ -71,12 +71,12 @@ public class NetworkInfo implements Serializable {
         this.height = height;
     }
 
-    public String getGeneration() {
-        return generation;
+    public List<String> getGenerations() {
+        return generations;
     }
 
-    public void setGeneration(String generation) {
-        this.generation = generation;
+    public void setGeneration(List<String> generations) {
+        this.generations = generations;
     }
 
     public int getNumberOfData() {
@@ -175,27 +175,27 @@ public class NetworkInfo implements Serializable {
         this.testingInfoList = testingInfoList;
     }
 
-    public String getCharSequence() {
+    public CharSequence getCharSequence() {
         return charSequence;
     }
 
-    public void setCharSequence(String charSequence) {
+    public void setCharSequence(CharSequence charSequence) {
         this.charSequence = charSequence;
     }
 
-    public String getHiddenLayer() {
+    public List<Integer> getHiddenLayer() {
         return hiddenLayer;
     }
 
-    public void setHiddenLayer(String hiddenLayer) {
+    public void setHiddenLayer(List<Integer> hiddenLayer) {
         this.hiddenLayer = hiddenLayer;
     }
 
-    public NeuralNetworkProcessorType getNetworkProcessorType() {
+    public NetworkProcessorType getNetworkProcessorType() {
         return networkProcessorType;
     }
 
-    public void setNetworkProcessorType(NeuralNetworkProcessorType networkProcessorType) {
+    public void setNetworkProcessorType(NetworkProcessorType networkProcessorType) {
         this.networkProcessorType = networkProcessorType;
     }
 

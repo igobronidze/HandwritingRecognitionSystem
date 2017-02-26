@@ -1,7 +1,9 @@
-package ge.edu.tsu.hcrs.control_panel.server.manager;
+package ge.edu.tsu.hcrs.control_panel.server.processor;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingData;
 import org.neuroph.core.data.DataSetRow;
 
@@ -9,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NormalizedDataProcessor {
+
+    private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
     public TrainingData getTrainingData(NormalizedData normalizedData, CharSequence charSequence) {
         Float[] data = normalizedData.getData();
@@ -37,5 +41,16 @@ public class NormalizedDataProcessor {
             ans[normalizedData.getLetter() - charSequence.getFirstCharASCI()] = 1;
         }
         return new DataSetRow(input, ans);
+    }
+
+    public int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, List<String> generations) {
+        int count = 0;
+        if (generations == null) {
+            return normalizedDataDAO.countNormalizedDatas(width, height, charSequence, null);
+        }
+        for (String generation : generations) {
+            count += normalizedDataDAO.countNormalizedDatas(width, height, charSequence, generation);
+        }
+        return count;
     }
 }

@@ -2,7 +2,7 @@ CREATE TABLE network_info (
     id SERIAL PRIMARY KEY NOT NULL,
     width INT NOT NULL,
     height INT NOT NULL,
-    generation VARCHAR(50) NOT NULL,
+    generations TEXT NOT NULL,
     number_of_data INT NOT NULL,
     training_duration BIGINT NOT NULL,
     weight_min_value REAL NOT NULL,

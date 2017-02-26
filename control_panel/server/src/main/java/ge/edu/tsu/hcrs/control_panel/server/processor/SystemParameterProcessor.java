@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.control_panel.server.manager;
+package ge.edu.tsu.hcrs.control_panel.server.processor;
 
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.caching.CachedSystemParameter;

@@ -1,39 +1,38 @@
 package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
-import ge.edu.tsu.hcrs.control_panel.model.network.NeuralNetworkProcessorType;
-import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
-import ge.edu.tsu.hcrs.control_panel.server.manager.neuralnetwork.HCRSINeuralNetworkProcessor;
-import ge.edu.tsu.hcrs.control_panel.server.manager.neuralnetwork.INeuralNetworkProcessor;
-import ge.edu.tsu.hcrs.control_panel.server.manager.neuralnetwork.NeurophINeuralNetworkProcessor;
+import ge.edu.tsu.hcrs.control_panel.model.network.*;
+import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.HCRSNeuralNetworkProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.INeuralNetworkProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.NeurophNeuralNetworkProcessor;
 
 public class NeuralNetworkServiceImpl implements NeuralNetworkService {
 
-    private INeuralNetworkProcessor INeuralNetworkProcessor;
+    private INeuralNetworkProcessor iNeuralNetworkProcessor;
 
-    public NeuralNetworkServiceImpl(NeuralNetworkProcessorType type) {
+    public NeuralNetworkServiceImpl(NetworkProcessorType type) {
         switch (type) {
             case MY_NEURAL_NETWORK:
-                INeuralNetworkProcessor = new HCRSINeuralNetworkProcessor();
+                iNeuralNetworkProcessor = new HCRSNeuralNetworkProcessor();
             case NEUROPH_NEURAL_NETWORK:
-                INeuralNetworkProcessor = new NeurophINeuralNetworkProcessor();
+                iNeuralNetworkProcessor = new NeurophNeuralNetworkProcessor();
             default:
-                INeuralNetworkProcessor = new HCRSINeuralNetworkProcessor();
+                iNeuralNetworkProcessor = new HCRSNeuralNetworkProcessor();
         }
     }
 
     @Override
-    public void trainNeural(int width, int height, String generation) {
-        INeuralNetworkProcessor.trainNeural(width, height, generation);
+    public void trainNeural(NetworkInfo networkInfo) {
+        iNeuralNetworkProcessor.trainNeural(networkInfo);
     }
 
     @Override
-    public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath) {
-        return INeuralNetworkProcessor.getNetworkResult(normalizedData, networkPath);
+    public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence) {
+        return iNeuralNetworkProcessor.getNetworkResult(normalizedData, networkPath, charSequence);
     }
 
     @Override
-    public float test(int width, int height, String generation, String path, int networkId) {
-        return INeuralNetworkProcessor.test(width, height, generation, path, networkId);
+    public float test(int width, int height, String generation, String path, int networkId, CharSequence charSequence) {
+        return iNeuralNetworkProcessor.test(width, height, generation, path, networkId, charSequence);
     }
 }

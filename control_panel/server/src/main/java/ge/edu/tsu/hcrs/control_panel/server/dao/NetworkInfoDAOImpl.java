@@ -1,8 +1,9 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
-import ge.edu.tsu.hcrs.control_panel.model.network.NeuralNetworkProcessorType;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.TransferFunction;
+import ge.edu.tsu.hcrs.control_panel.server.util.StringUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -17,14 +18,14 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public int addNetworkInfo(NetworkInfo networkInfo) {
         try {
-            String sql = "INSERT INTO network_info (width, height, generation, number_of_data, training_duration, weight_min_value," +
+            String sql = "INSERT INTO network_info (width, height, generations, number_of_data, training_duration, weight_min_value," +
                     "weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
                     "number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description) " +
                     "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, networkInfo.getWidth());
             pstmt.setInt(2, networkInfo.getHeight());
-            pstmt.setString(3, networkInfo.getGeneration());
+            pstmt.setString(3, StringUtil.getStringFromList(networkInfo.getGenerations()));
             pstmt.setInt(4, networkInfo.getNumberOfData());
             pstmt.setLong(5, networkInfo.getTrainingDuration());
             pstmt.setFloat(6, networkInfo.getWeightMinValue());
@@ -36,8 +37,8 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setFloat(12, networkInfo.getMinError());
             pstmt.setLong(13, networkInfo.getTrainingMaxIteration());
             pstmt.setLong(14, networkInfo.getNumberOfTrainingDataInOneIteration());
-            pstmt.setString(15, networkInfo.getCharSequence());
-            pstmt.setString(16, networkInfo.getHiddenLayer());
+            pstmt.setString(15, StringUtil.getStringFromCharSequence(networkInfo.getCharSequence()));
+            pstmt.setString(16, StringUtil.getStringFromIntegerList(networkInfo.getHiddenLayer()));
             pstmt.setString(17, networkInfo.getNetworkProcessorType().name());
             pstmt.setString(18, networkInfo.getNetworkMetaInfo());
             pstmt.setString(19, networkInfo.getDescription());
@@ -74,7 +75,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setId(rs.getInt("id"));
                 networkInfo.setWidth(rs.getInt("width"));
                 networkInfo.setHeight(rs.getInt("height"));
-                networkInfo.setGeneration(rs.getString("generation"));
+                networkInfo.setGeneration(StringUtil.getListFromString(rs.getString("generations")));
                 networkInfo.setNumberOfData(rs.getInt("number_of_data"));
                 networkInfo.setTrainingDuration(rs.getLong("training_duration"));
                 networkInfo.setWeightMinValue(rs.getFloat("weight_min_value"));
@@ -86,9 +87,9 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setMinError(rs.getFloat("min_error"));
                 networkInfo.setTrainingMaxIteration(rs.getLong("training_max_iteration"));
                 networkInfo.setNumberOfTrainingDataInOneIteration(rs.getLong("number_of_training_data_in_one_iteration"));
-                networkInfo.setCharSequence(rs.getString("char_sequence"));
-                networkInfo.setHiddenLayer(rs.getString("hidden_layer"));
-                networkInfo.setNetworkProcessorType(NeuralNetworkProcessorType.valueOf(rs.getString("network_processor_type")));
+                networkInfo.setCharSequence(StringUtil.getCharSequenceFromString(rs.getString("char_sequence")));
+                networkInfo.setHiddenLayer(StringUtil.getIntegerListFromString(rs.getString("hidden_layer")));
+                networkInfo.setNetworkProcessorType(NetworkProcessorType.valueOf(rs.getString("network_processor_type")));
                 networkInfo.setNetworkMetaInfo(rs.getString("network_meta_info"));
                 networkInfo.setDescription(rs.getString("description"));
                 networkInfoList.add(networkInfo);
