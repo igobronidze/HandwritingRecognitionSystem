@@ -4,7 +4,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.*;
-import ge.edu.tsu.hcrs.control_panel.server.manager.NormalizedDataManager;
+import ge.edu.tsu.hcrs.control_panel.server.manager.NormalizedDataProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.manager.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
@@ -16,11 +16,11 @@ import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunctionType;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MyNeuralNetworkManager implements NeuralNetworkManager {
+public class HCRSINeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private NormalizedDataManager normalizedDataManager = new NormalizedDataManager();
+    private NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
 
     private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
@@ -56,7 +56,7 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
 
     private Parameter neuralNetworkDirectoryParameter = new Parameter("neuralNetworkDirectory", "D:\\sg\\handwriting_recognition\\network");
 
-    public MyNeuralNetworkManager() {
+    public HCRSINeuralNetworkProcessor() {
         char firstSymbolInCharSequence = systemParameterProcessor.getParameterValue(firstSymbolInCharSequenceParameter).charAt(0);
         char lastSymbolInCharSequence = systemParameterProcessor.getParameterValue(lastSymbolInCharSequenceParameter).charAt(0);
         charSequence = new CharSequence(firstSymbolInCharSequence, lastSymbolInCharSequence);
@@ -75,7 +75,7 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
             NeuralNetwork neuralNetwork = new NeuralNetwork(layers);
             setNeuralNetworkParameters(neuralNetwork);
             for (int i = 0; i < normalizedDataList.size(); i++) {
-                neuralNetwork.addTrainingData(normalizedDataManager.getTrainingData(normalizedDataList.get(i), charSequence));
+                neuralNetwork.addTrainingData(normalizedDataProcessor.getTrainingData(normalizedDataList.get(i), charSequence));
             }
             long trainingDuration = neuralNetwork.train();
             int id = networkInfoDAO.addNetworkInfo(getNetworkInfo(neuralNetwork, trainingDuration, width, height, generation));
@@ -89,7 +89,7 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
     public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath) {
         try {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(networkPath);
-            TrainingData trainingData = normalizedDataManager.getTrainingData(normalizedData, charSequence);
+            TrainingData trainingData = normalizedDataProcessor.getTrainingData(normalizedData, charSequence);
             List<Float> output = neuralNetwork.getOutputActivation(trainingData);
             int ans = 0;
             for (int i = 1; i < charSequence.getNumberOfChars(); i++) {
@@ -113,7 +113,7 @@ public class MyNeuralNetworkManager implements NeuralNetworkManager {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(path);
             List<TrainingData> trainingDataList = new ArrayList<>();
             for (NormalizedData normalizedData : normalizedDataList) {
-                trainingDataList.add(normalizedDataManager.getTrainingData(normalizedData, charSequence));
+                trainingDataList.add(normalizedDataProcessor.getTrainingData(normalizedData, charSequence));
             }
             TestResult testResult = neuralNetwork.test(trainingDataList);
             TestingInfo testingInfo = new TestingInfo();

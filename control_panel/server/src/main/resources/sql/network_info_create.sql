@@ -15,5 +15,8 @@ CREATE TABLE network_info (
     training_max_iteration BIGINT NOT NULL,
     number_of_training_data_in_one_iteration BIGINT NOT NULL,
     char_sequence VARCHAR(3) NOT NULL,
-    hidden_layer VARCHAR(100) NOT NULL
+    hidden_layer VARCHAR(100) NOT NULL,
+    network_processor_type VARCHAR(50) NOT NULL,
+    network_meta_info TEXT,
+    description TEXT
     );

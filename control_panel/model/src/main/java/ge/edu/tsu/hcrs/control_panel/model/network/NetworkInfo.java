@@ -41,6 +41,12 @@ public class NetworkInfo implements Serializable {
 
     private String hiddenLayer;
 
+    private NeuralNetworkProcessorType networkProcessorType;
+
+    private String networkMetaInfo;
+
+    private String description;
+
     public int getId() {
         return id;
     }
@@ -183,5 +189,29 @@ public class NetworkInfo implements Serializable {
 
     public void setHiddenLayer(String hiddenLayer) {
         this.hiddenLayer = hiddenLayer;
+    }
+
+    public NeuralNetworkProcessorType getNetworkProcessorType() {
+        return networkProcessorType;
+    }
+
+    public void setNetworkProcessorType(NeuralNetworkProcessorType networkProcessorType) {
+        this.networkProcessorType = networkProcessorType;
+    }
+
+    public String getNetworkMetaInfo() {
+        return networkMetaInfo;
+    }
+
+    public void setNetworkMetaInfo(String networkMetaInfo) {
+        this.networkMetaInfo = networkMetaInfo;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -6,7 +6,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.manager.NormalizedDataManager;
+import ge.edu.tsu.hcrs.control_panel.server.manager.NormalizedDataProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.manager.SystemParameterProcessor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.neuroph.core.NeuralNetwork;
@@ -20,11 +20,11 @@ import java.util.Collections;
 import java.util.List;
 
 @Deprecated
-public class NeurophNeuralNetworkManager implements NeuralNetworkManager {
+public class NeurophINeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private NormalizedDataManager normalizedDataManager = new NormalizedDataManager();
+    private NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
 
     private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
@@ -40,7 +40,7 @@ public class NeurophNeuralNetworkManager implements NeuralNetworkManager {
 
     private CharSequence charSequence;
 
-    public NeurophNeuralNetworkManager() {
+    public NeurophINeuralNetworkProcessor() {
         char firstSymbolInCharSequence = systemParameterProcessor.getParameterValue(firstSymbolInCharSequenceParameter).charAt(0);
         char lastSymbolInCharSequence = systemParameterProcessor.getParameterValue(lastSymbolInCharSequenceParameter).charAt(0);
         charSequence = new CharSequence(firstSymbolInCharSequence, lastSymbolInCharSequence);
@@ -63,7 +63,7 @@ public class NeurophNeuralNetworkManager implements NeuralNetworkManager {
         Collections.shuffle(randomList);
         int min = Math.min(systemParameterProcessor.getIntegerParameterValue(numberOfTrainingDataInOneIterationParameter), normalizedDataList.size());
         for (int i = 0; i < min; i++) {
-            trainingSet.addRow(normalizedDataManager.getDataSetRow(normalizedDataList.get(randomList.get(i)), charSequence));
+            trainingSet.addRow(normalizedDataProcessor.getDataSetRow(normalizedDataList.get(randomList.get(i)), charSequence));
         }
         MultiLayerPerceptron perceptron = null;
         try {
@@ -78,7 +78,7 @@ public class NeurophNeuralNetworkManager implements NeuralNetworkManager {
     @Override
     public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath) {
         NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getParameterValue(neuralNetworkPathParameter));
-        DataSetRow dataSetRow = normalizedDataManager.getDataSetRow(normalizedData, charSequence);
+        DataSetRow dataSetRow = normalizedDataProcessor.getDataSetRow(normalizedData, charSequence);
         neuralNetwork.setInput(dataSetRow.getInput());
         neuralNetwork.calculate();
         double[] networkOutput = neuralNetwork.getOutput();
