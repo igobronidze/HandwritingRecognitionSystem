@@ -3,7 +3,7 @@ package ge.edu.tsu.hcrs.control_panel.server.manager.neuralnetwork;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 
-public interface NeuralNetworkManager {
+public interface INeuralNetworkProcessor {
 
     void trainNeural(int width, int height, String generation);
 

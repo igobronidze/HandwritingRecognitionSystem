@@ -1,6 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.NeuralNetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.TransferFunction;
 
 import java.sql.PreparedStatement;
@@ -18,7 +19,8 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
         try {
             String sql = "INSERT INTO network_info (width, height, generation, number_of_data, training_duration, weight_min_value," +
                     "weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
-                    "number_of_training_data_in_one_iteration, char_sequence, hidden_layer) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    "number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description) " +
+                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, networkInfo.getWidth());
             pstmt.setInt(2, networkInfo.getHeight());
@@ -36,6 +38,9 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setLong(14, networkInfo.getNumberOfTrainingDataInOneIteration());
             pstmt.setString(15, networkInfo.getCharSequence());
             pstmt.setString(16, networkInfo.getHiddenLayer());
+            pstmt.setString(17, networkInfo.getNetworkProcessorType().name());
+            pstmt.setString(18, networkInfo.getNetworkMetaInfo());
+            pstmt.setString(19, networkInfo.getDescription());
             pstmt.executeUpdate();
             String idSql = "SELECT MAX(id) AS max_id FROM network_info";
             pstmt = DatabaseUtil.getConnection().prepareStatement(idSql);
@@ -83,6 +88,9 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setNumberOfTrainingDataInOneIteration(rs.getLong("number_of_training_data_in_one_iteration"));
                 networkInfo.setCharSequence(rs.getString("char_sequence"));
                 networkInfo.setHiddenLayer(rs.getString("hidden_layer"));
+                networkInfo.setNetworkProcessorType(NeuralNetworkProcessorType.valueOf(rs.getString("network_processor_type")));
+                networkInfo.setNetworkMetaInfo(rs.getString("network_meta_info"));
+                networkInfo.setDescription(rs.getString("description"));
                 networkInfoList.add(networkInfo);
             }
         } catch (SQLException ex) {

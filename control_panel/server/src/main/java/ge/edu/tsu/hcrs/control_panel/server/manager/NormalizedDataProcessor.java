@@ -8,7 +8,7 @@ import org.neuroph.core.data.DataSetRow;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NormalizedDataManager {
+public class NormalizedDataProcessor {
 
     public TrainingData getTrainingData(NormalizedData normalizedData, CharSequence charSequence) {
         Float[] data = normalizedData.getData();
