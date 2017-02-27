@@ -10,6 +10,7 @@ import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetworkParameter;
 import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingData;
+import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingProgress;
 import ge.edu.tsu.hcrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunctionType;
 
@@ -29,6 +30,10 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     private TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
     private Parameter neuralNetworkDirectoryParameter = new Parameter("neuralNetworkDirectory", "D:\\sg\\handwriting_recognition\\network");
+
+    private Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
+
+    private Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
 
     public HCRSNeuralNetworkProcessor() {
     }
@@ -54,11 +59,29 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             for (int i = 0; i < normalizedDataList.size(); i++) {
                 neuralNetwork.addTrainingData(normalizedDataProcessor.getTrainingData(normalizedDataList.get(i), charSequence));
             }
-            long trainingDuration = neuralNetwork.train();
+            TrainingProgress trainingProgress = new TrainingProgress();
+            trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
+            networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINING);
             networkInfo.setNumberOfData(neuralNetwork.getTrainingDataList().size());
-            networkInfo.setTrainingDuration(trainingDuration);
             int id = networkInfoDAO.addNetworkInfo(networkInfo);
-            NeuralNetwork.save(systemParameterProcessor.getParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + width + "_" + height + ".nnet", neuralNetwork);
+            Runnable run = () -> {
+                try {
+                    long trainingDuration = neuralNetwork.train(trainingProgress);
+                    networkInfoDAO.updateTrainedState(trainingDuration, id);
+                    NeuralNetwork.save(systemParameterProcessor.getParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + width + "_" + height + ".nnet", neuralNetwork);
+                } catch (NNException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            };
+            new Thread(run).start();
+            while (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+                try {
+                    networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
+                    Thread.sleep(systemParameterProcessor.getIntegerParameterValue(updatePerSeconds) * 1000);
+                } catch (InterruptedException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
         }

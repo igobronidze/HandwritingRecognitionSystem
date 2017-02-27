@@ -3,6 +3,7 @@ package ge.edu.tsu.hcrs.neural_network;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingData;
+import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingProgress;
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -38,7 +39,7 @@ public class SimpleNeuralTest {
         TrainingData trainingData4 = new TrainingData(input4, output4);
         neuralNetwork.addTrainingData(trainingData4);
 
-        neuralNetwork.train();
+        neuralNetwork.train(new TrainingProgress(1000, 0, 0, 0));
 
         neuralNetwork.save("D:\\sg\\network.nnet", neuralNetwork);
         NeuralNetwork myNetwork = NeuralNetwork.load("D:\\sg\\network.nnet");

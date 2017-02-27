@@ -102,8 +102,8 @@ public class NeuralNetwork implements Serializable {
         this.trainingDataList.add(trainingData);
     }
 
-    public long train() {
-        int counter = 0;
+    public long train(TrainingProgress trainingProgress) {
+        long counter = 0;
         float error;
         long startTime = new Date().getTime();
         do {
@@ -121,9 +121,10 @@ public class NeuralNetwork implements Serializable {
                 Backpropagation.backpropagation(this, trainingData);
             }
             counter++;
-            if (counter % 500 == 0) {
-                System.out.println(counter);
-                System.out.println(error);
+            if (counter % trainingProgress.getUpdatePerIteration() == 0) {
+                trainingProgress.setCurrentDuration(new Date().getTime() - startTime);
+                trainingProgress.setCurrentIterations(counter);
+                trainingProgress.setCurrentSquaredError(error);
             }
         } while (counter < neuralNetworkParameter.getTrainingMaxIteration() && error > neuralNetworkParameter.getMinError());
         return new Date().getTime() - startTime;

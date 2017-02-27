@@ -3,8 +3,8 @@ CREATE TABLE network_info (
     width INT NOT NULL,
     height INT NOT NULL,
     generations TEXT NOT NULL,
-    number_of_data INT NOT NULL,
-    training_duration BIGINT NOT NULL,
+    number_of_data INT DEFAULT 0,
+    training_duration BIGINT DEFAULT 0,
     weight_min_value REAL NOT NULL,
     weight_max_value REAL NOT NULL,
     bias_min_value REAL NOT NULL,
@@ -18,5 +18,9 @@ CREATE TABLE network_info (
     hidden_layer VARCHAR(100) NOT NULL,
     network_processor_type VARCHAR(50) NOT NULL,
     network_meta_info TEXT,
-    description TEXT
+    description TEXT,
+    trainingStatus VARCHAR(50) NOT NULL,
+    currentSquaredError REAL NOT NULL DEFAULT 0.0,
+    currentIterations BIGINT NOT NULL DEFAULT 0,
+    currentDuration BIGINT NOT NULL DEFAULT 0
     );

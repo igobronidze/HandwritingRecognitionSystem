@@ -47,6 +47,14 @@ public class NetworkInfo implements Serializable {
 
     private String description;
 
+    private NetworkTrainingStatus trainingStatus;
+
+    private float currentSquaredError;
+
+    private long currentIterations;
+
+    private long currentDuration;
+
     public int getId() {
         return id;
     }
@@ -75,7 +83,7 @@ public class NetworkInfo implements Serializable {
         return generations;
     }
 
-    public void setGeneration(List<String> generations) {
+    public void setGenerations(List<String> generations) {
         this.generations = generations;
     }
 
@@ -213,5 +221,37 @@ public class NetworkInfo implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public NetworkTrainingStatus getTrainingStatus() {
+        return trainingStatus;
+    }
+
+    public void setTrainingStatus(NetworkTrainingStatus trainingStatus) {
+        this.trainingStatus = trainingStatus;
+    }
+
+    public float getCurrentSquaredError() {
+        return currentSquaredError;
+    }
+
+    public void setCurrentSquaredError(float currentSquaredError) {
+        this.currentSquaredError = currentSquaredError;
+    }
+
+    public long getCurrentIterations() {
+        return currentIterations;
+    }
+
+    public void setCurrentIterations(long currentIterations) {
+        this.currentIterations = currentIterations;
+    }
+
+    public long getCurrentDuration() {
+        return currentDuration;
+    }
+
+    public void setCurrentDuration(long currentDuration) {
+        this.currentDuration = currentDuration;
     }
 }
