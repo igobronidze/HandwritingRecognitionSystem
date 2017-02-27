@@ -32,4 +32,9 @@ public class NetworkInfoServiceImpl implements NetworkInfoService {
     public void deleteNetworkInfo(int id) {
         networkInfoDAO.deleteNetworkInfo(id);
     }
+
+    @Override
+    public Object[] getTrainingCurrentState(int id) {
+        return networkInfoDAO.getTrainingCurrentState(id);
+    }
 }

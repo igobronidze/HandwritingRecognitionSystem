@@ -11,4 +11,6 @@ public interface NetworkInfoService {
     List<NetworkInfo> getNetworkInfoList(Integer id, String generation);
 
     void deleteNetworkInfo(int id);
+
+    Object[] getTrainingCurrentState(int id);
 }

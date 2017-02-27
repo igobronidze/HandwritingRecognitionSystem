@@ -2,6 +2,7 @@ package ge.edu.tsu.hcrs.control_panel.server.dao;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkTrainingStatus;
 import ge.edu.tsu.hcrs.control_panel.model.network.TransferFunction;
 import ge.edu.tsu.hcrs.control_panel.server.util.StringUtil;
 
@@ -19,9 +20,9 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     public int addNetworkInfo(NetworkInfo networkInfo) {
         try {
             String sql = "INSERT INTO network_info (width, height, generations, number_of_data, training_duration, weight_min_value," +
-                    "weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
-                    "number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description) " +
-                    "VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    " weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
+                    " number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description," +
+                    " trainingStatus, currentSquaredError, currentIterations, currentDuration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, networkInfo.getWidth());
             pstmt.setInt(2, networkInfo.getHeight());
@@ -42,6 +43,10 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setString(17, networkInfo.getNetworkProcessorType().name());
             pstmt.setString(18, networkInfo.getNetworkMetaInfo());
             pstmt.setString(19, networkInfo.getDescription());
+            pstmt.setString(20, networkInfo.getTrainingStatus().name());
+            pstmt.setFloat(21, networkInfo.getCurrentSquaredError());
+            pstmt.setLong(22, networkInfo.getCurrentIterations());
+            pstmt.setLong(23, networkInfo.getCurrentDuration());
             pstmt.executeUpdate();
             String idSql = "SELECT MAX(id) AS max_id FROM network_info";
             pstmt = DatabaseUtil.getConnection().prepareStatement(idSql);
@@ -75,7 +80,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setId(rs.getInt("id"));
                 networkInfo.setWidth(rs.getInt("width"));
                 networkInfo.setHeight(rs.getInt("height"));
-                networkInfo.setGeneration(StringUtil.getListFromString(rs.getString("generations")));
+                networkInfo.setGenerations(StringUtil.getListFromString(rs.getString("generations")));
                 networkInfo.setNumberOfData(rs.getInt("number_of_data"));
                 networkInfo.setTrainingDuration(rs.getLong("training_duration"));
                 networkInfo.setWeightMinValue(rs.getFloat("weight_min_value"));
@@ -92,6 +97,10 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setNetworkProcessorType(NetworkProcessorType.valueOf(rs.getString("network_processor_type")));
                 networkInfo.setNetworkMetaInfo(rs.getString("network_meta_info"));
                 networkInfo.setDescription(rs.getString("description"));
+                networkInfo.setTrainingStatus(NetworkTrainingStatus.valueOf(rs.getString("trainingStatus")));
+                networkInfo.setCurrentSquaredError(rs.getFloat("currentSquaredError"));
+                networkInfo.setCurrentIterations(rs.getLong("currentIterations"));
+                networkInfo.setCurrentDuration(rs.getLong("currentDuration"));
                 networkInfoList.add(networkInfo);
             }
         } catch (SQLException ex) {
@@ -112,6 +121,61 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             sql = "DELETE FROM network_info WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+    }
+
+    @Override
+    public Object[] getTrainingCurrentState(int id) {
+        Object[] result = new Object[4];
+        try {
+            String sql = "SELECT trainingStatus, currentSquaredError, currentIterations, currentDuration fROM testing_info WHERE network_id = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            pstmt.setInt(1, id);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                result[0] = NetworkTrainingStatus.valueOf(rs.getString("trainingStatus"));
+                result[1] = rs.getFloat("currentSquaredError");
+                result[2] = rs.getLong("currentIterations");
+                result[3] = rs.getLong("currentDuration");
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+        return result;
+    }
+
+    @Override
+    public void updateTrainingCurrentState(float currentSquaredError, long currentIterations, long currentDuration, int id) {
+        try {
+            String sql = "UPDATE testing_info SET currentSquaredError = ?, currentIterations = ?, currentDuration = ? WHERE network_id = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            pstmt.setFloat(1, currentDuration);
+            pstmt.setLong(2, currentIterations);
+            pstmt.setLong(3, currentDuration);
+            pstmt.setInt(4, id);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+    }
+
+    @Override
+    public void updateTrainedState(long trainingDuration, int id) {
+        try {
+            String sql = "UPDATE testing_info SET trainingStatus = ?, trainingDuration = ? WHERE network_id = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            pstmt.setString(1, NetworkTrainingStatus.TRAINED.name());
+            pstmt.setLong(2, trainingDuration);
+            pstmt.setInt(3, id);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
