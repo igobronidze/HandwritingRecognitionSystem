@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class ImageProcessingTest {
+public class ManuallyToolsTest {
 
     private BufferedImage image;
 

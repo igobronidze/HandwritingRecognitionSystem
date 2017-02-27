@@ -1,6 +1,6 @@
 package ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring;
 
-public class BilateralFilter implements Blurring {
+public class BilateralFilterParams implements BlurringParams {
 
     //diameter - Diameter of each pixel neighborhood that is used during filtering. If it is non-positive, it is computed from sigmaSpace.
     private int diameter = 9;

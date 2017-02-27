@@ -1,7 +1,7 @@
 package ge.edu.tsu.hcrs.image_processing.opencv.parameter.cutpapper;
 
-import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.Blurring;
-import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.MedianBlur;
+import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.BlurringParams;
+import ge.edu.tsu.hcrs.image_processing.opencv.parameter.blurring.MedianBlurParams;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgproc;
 
@@ -18,7 +18,7 @@ public class CannyEdgeDetectionParams {
     // Color conversion operation that can be specifed using CV_src_color_space2dst_color_space constants
     private int colorConversion = opencv_imgproc.CV_RGB2GRAY;
 
-    private Blurring blurring = new MedianBlur();
+    private BlurringParams blurringParams = new MedianBlurParams();
 
     private boolean applyErode = true;
 
@@ -54,12 +54,12 @@ public class CannyEdgeDetectionParams {
         this.colorConversion = colorConversion;
     }
 
-    public Blurring getBlurring() {
-        return blurring;
+    public BlurringParams getBlurringParams() {
+        return blurringParams;
     }
 
-    public void setBlurring(Blurring blurring) {
-        this.blurring = blurring;
+    public void setBlurringParams(BlurringParams blurringParams) {
+        this.blurringParams = blurringParams;
     }
 
     public boolean isApplyErode() {
