@@ -12,6 +12,7 @@ public class NoiseRemover {
 
 	public static opencv_core.Mat applyNoiseRemoval(opencv_core.Mat srcMat, BlurringParams blurringParams, int iteration) {
 		opencv_core.Mat resultMat = new opencv_core.Mat();
+//		opencv_imgproc.cvtColor(srcMat, srcMat, opencv_imgproc.CV_BGR2GRAY);
 		if (blurringParams instanceof BlurParams) {
 			BlurParams blurParams = (BlurParams) blurringParams;
 			if (iteration > 0) {
