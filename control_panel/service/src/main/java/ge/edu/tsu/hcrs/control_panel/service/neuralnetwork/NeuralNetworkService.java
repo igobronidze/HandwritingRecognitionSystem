@@ -13,5 +13,5 @@ public interface NeuralNetworkService {
 
     NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence);
 
-    float test(int width, int height, String generation, String path, int networkId, CharSequence charSequence);
+    float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence);
 }

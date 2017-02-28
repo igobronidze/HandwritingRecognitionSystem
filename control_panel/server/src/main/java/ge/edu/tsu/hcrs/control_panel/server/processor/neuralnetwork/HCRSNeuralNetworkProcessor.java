@@ -109,8 +109,11 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public float test(int width, int height, String generation, String path, int networkId, CharSequence charSequence) {
-        List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatas(width, height, charSequence, generation);
+    public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
+        List<NormalizedData> normalizedDataList = new ArrayList<>();
+        for (String generation : generations) {
+            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, charSequence, generation));
+        }
         try {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(path);
             List<TrainingData> trainingDataList = new ArrayList<>();
@@ -121,7 +124,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             TestingInfo testingInfo = new TestingInfo();
             testingInfo.setNumberOfTest(testResult.getNumberOfData());
             testingInfo.setNetworkId(networkId);
-            testingInfo.setGeneration(generation);
+            testingInfo.setGenerations(generations);
             testingInfo.setSquaredError(testResult.getSquaredError());
             testingInfo.setDiffBetweenAnsAndBest(testResult.getDiffBetweenAnsAndBest());
             testingInfo.setPercentageOfCorrects(testResult.getPercentageOfCorrects());

@@ -89,7 +89,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public float test(int width, int height, String generation, String path, int networkId, CharSequence charSequence) {
+    public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
         throw new NotImplementedException("Not yet :D");
     }
 }

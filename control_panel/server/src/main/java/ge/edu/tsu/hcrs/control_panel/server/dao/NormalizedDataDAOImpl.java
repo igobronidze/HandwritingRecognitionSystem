@@ -1,6 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
 
+import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 
@@ -109,5 +110,37 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
             DatabaseUtil.closeConnection();
         }
         return count;
+    }
+
+    @Override
+    public List<GroupedNormalizedData> getGroupedNormalizedDatas() {
+        List<GroupedNormalizedData> groupedNormalizedDatas = new ArrayList<>();
+        try {
+            String sql = "SELECT width, height, first_symbol, last_symbol, generation, COUNT(id) AS count FROM normalized_data GROUP BY width, height, first_symbol, last_symbol, generation";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                Integer wid = rs.getInt("width");
+                Integer heig = rs.getInt("height");
+                String firstSymbolString = rs.getString("first_symbol");
+                Character firSym = firstSymbolString == null || firstSymbolString.isEmpty() ? null : firstSymbolString.charAt(0);
+                String lastSymbolString = rs.getString("last_symbol");
+                Character lasSym = lastSymbolString == null || lastSymbolString.isEmpty() ? null : lastSymbolString.charAt(0);
+                String generation = rs.getString("generation");
+                int count = rs.getInt("count");
+                GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
+                groupedNormalizedData.setWidth(wid);
+                groupedNormalizedData.setHeight(heig);
+                groupedNormalizedData.setCharSequence(new CharSequence(firSym, lasSym));
+                groupedNormalizedData.setTrainingSetGeneration(generation);
+                groupedNormalizedData.setCount(count);
+                groupedNormalizedDatas.add(groupedNormalizedData);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+        return groupedNormalizedDatas;
     }
 }

@@ -53,4 +53,9 @@ public class CharSequence implements Serializable {
     public void setLastSymbol(char lastSymbol) {
         this.lastSymbol = lastSymbol;
     }
+
+    @Override
+    public String toString() {
+        return firstSymbol + "-" + lastSymbol;
+    }
 }

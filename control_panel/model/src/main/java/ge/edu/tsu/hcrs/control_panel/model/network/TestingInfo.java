@@ -1,12 +1,13 @@
 package ge.edu.tsu.hcrs.control_panel.model.network;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class TestingInfo implements Serializable {
 
     private int networkId;
 
-    private String generation;
+    private List<String> generations;
 
     private int numberOfTest;
 
@@ -26,12 +27,12 @@ public class TestingInfo implements Serializable {
         this.networkId = networkId;
     }
 
-    public String getGeneration() {
-        return generation;
+    public List<String> getGenerations() {
+        return generations;
     }
 
-    public void setGeneration(String generation) {
-        this.generation = generation;
+    public void setGenerations(List<String> generations) {
+        this.generations = generations;
     }
 
     public int getNumberOfTest() {

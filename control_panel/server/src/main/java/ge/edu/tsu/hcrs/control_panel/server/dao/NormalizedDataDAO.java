@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 
@@ -12,4 +13,6 @@ public interface NormalizedDataDAO {
     List<NormalizedData> getNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generation);
 
     int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generations);
+
+    List<GroupedNormalizedData> getGroupedNormalizedDatas();
 }

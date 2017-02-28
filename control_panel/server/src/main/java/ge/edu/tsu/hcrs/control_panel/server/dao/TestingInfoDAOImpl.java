@@ -1,6 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.TestingInfo;
+import ge.edu.tsu.hcrs.control_panel.server.util.StringUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,10 +16,10 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
     @Override
     public void addTestingInfo(TestingInfo testingInfo) {
         try {
-            String sql = "INSERT INTO testing_info (generation, number_of_test, squared_error, percentage_of_corrects, " +
+            String sql = "INSERT INTO testing_info (generations, number_of_test, squared_error, percentage_of_corrects, " +
                     "diff_between_ans_and_best, normalized_general_error, network_id) VALUES (?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
-            pstmt.setString(1, testingInfo.getGeneration());
+            pstmt.setString(1, StringUtil.getStringFromList(testingInfo.getGenerations()));
             pstmt.setInt(2, testingInfo.getNumberOfTest());
             pstmt.setFloat(3, testingInfo.getSquaredError());
             pstmt.setFloat(4, testingInfo.getPercentageOfCorrects());
@@ -45,7 +46,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 TestingInfo testingInfo = new TestingInfo();
                 testingInfo.setNetworkId(rs.getInt("network_id"));
                 testingInfo.setNumberOfTest(rs.getInt("number_of_test"));
-                testingInfo.setGeneration(rs.getString("generation"));
+                testingInfo.setGenerations(StringUtil.getListFromString(rs.getString("generations")));
                 testingInfo.setSquaredError(rs.getFloat("squared_error"));
                 testingInfo.setPercentageOfCorrects(rs.getFloat("percentage_of_corrects"));
                 testingInfo.setDiffBetweenAnsAndBest(rs.getFloat("diff_between_ans_and_best"));

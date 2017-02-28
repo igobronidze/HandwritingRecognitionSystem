@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.service.normalizeddata;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 
@@ -12,4 +13,6 @@ public interface NormalizedDataService {
     List<NormalizedData> getNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generation);
 
     int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, List<String> generations);
+
+    List<GroupedNormalizedData> getGroupedNormalizedDatas();
 }

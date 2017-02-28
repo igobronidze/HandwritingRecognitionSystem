@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.service.normalizeddata;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
@@ -27,5 +28,10 @@ public class NormalizedDataServiceImpl implements NormalizedDataService {
     @Override
     public int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, List<String> generations) {
         return normalizedDataProcessor.countNormalizedDatas(width, height, charSequence, generations);
+    }
+
+    @Override
+    public List<GroupedNormalizedData> getGroupedNormalizedDatas() {
+        return normalizedDataDAO.getGroupedNormalizedDatas();
     }
 }

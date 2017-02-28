@@ -1,6 +1,6 @@
 CREATE TABLE testing_info (
     id SERIAL PRIMARY KEY NOT NULL,
-    generation VARCHAR(50) NOT NULL,
+    generations VARCHAR(50) NOT NULL,
     number_of_test INT NOT NULL,
     squared_error REAL NOT NULL,
     percentage_of_corrects REAL NOT NULL,

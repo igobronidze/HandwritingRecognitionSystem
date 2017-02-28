@@ -13,6 +13,7 @@ import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.bytedeco.javacpp.opencv_imgproc;
 import org.junit.BeforeClass;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class BinaryConverterTest {
@@ -26,6 +27,7 @@ public class BinaryConverterTest {
 	private static String otsuPath;
 
 	@BeforeClass
+	@Ignore
 	public static void init() {
 		srcImagePath = "test_images/binaryconverter/text.jpg";
 		simpleThresholdPath = "test_images/binaryconverter/r_text_simple.jpg";
@@ -34,6 +36,7 @@ public class BinaryConverterTest {
 	}
 
 	@Test
+	@Ignore
 	public void applyNoiseRemovalTest() {
 		opencv_core.Mat resultMat;
 		opencv_core.Mat srcMat = opencv_imgcodecs.imread(srcImagePath, opencv_core.CV_8UC1);

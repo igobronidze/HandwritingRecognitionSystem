@@ -6,6 +6,8 @@ import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.HCRSNeuralNe
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.INeuralNetworkProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.NeurophNeuralNetworkProcessor;
 
+import java.util.List;
+
 public class NeuralNetworkServiceImpl implements NeuralNetworkService {
 
     private INeuralNetworkProcessor iNeuralNetworkProcessor;
@@ -32,7 +34,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public float test(int width, int height, String generation, String path, int networkId, CharSequence charSequence) {
-        return iNeuralNetworkProcessor.test(width, height, generation, path, networkId, charSequence);
+    public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
+        return iNeuralNetworkProcessor.test(width, height, generations, path, networkId, charSequence);
     }
 }
