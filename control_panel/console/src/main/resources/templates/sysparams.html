@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
     <head>
-        <title>System Parameters</title>
+        <title th:text="#{sysparam.systemParameters}"></title>
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
 
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"
@@ -16,15 +16,15 @@
             <div class="col-md-8">
                 <div class="panel panel-primary">
                     <div class="panel-heading">
-                        <h4>System Parameters</h4>
+                        <h4 th:text="#{sysparam.systemParameters}"></h4>
                     </div>
                     <div class="panel-body">
                         <table class="table table-striped" id="param-table">
                             <thead>
                             <tr>
-                                <th>Key</th>
-                                <th>Value</th>
-                                <th>Type</th>
+                                <th th:text="#{sysparam.key}"></th>
+                                <th th:text="#{sysparam.value}"></th>
+                                <th th:text="#{sysparam.type}">Type</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -41,11 +41,11 @@
             </div>
             <div class="col-md-4">
                 <div class="panel panel-primary">
-                    <div class="panel-heading"><h4>Add or Edit</h4></div>
+                    <div class="panel-heading"><h4 th:text="#{sysparam.addOrEdit}"></h4></div>
                     <div class="panel-body">
                         <div class="form-group">
                             <label class="control-label" for="new-button"></label>
-                            <button id="new-button" name="new-button" class="btn btn-primary"><span class="glyphicon glyphicon-plus"></span> New</button>
+                            <button id="new-button" name="new-button" class="btn btn-primary"><span class="glyphicon glyphicon-plus" th:text="#{sysparam.new}"></span></button>
                         </div>
                         <form action="/addSysParam" method="POST" id="param-form">
                                 <!-- Form Name -->
@@ -54,19 +54,19 @@
 
                                 <!-- Text input-->
                                 <div class="form-group">
-                                    <label class="control-label" for="textinput-key">Key</label>
+                                    <label class="control-label" for="textinput-key" th:text="#{sysparam.key}"></label>
                                     <input id="textinput-key" name="key" type="text" placeholder="" class="form-control input-md" />
                                 </div>
 
                                 <!-- Text input-->
                                 <div class="form-group">
-                                    <label class="control-label" for="textinput-value">Value</label>
+                                    <label class="control-label" for="textinput-value" th:text="#{sysparam.value}"></label>
                                     <input id="textinput-value" name="value" type="text" placeholder="" class="form-control input-md" />
                                 </div>
 
                                 <!-- Select Basic -->
                                 <div class="form-group">
-                                    <label class="control-label" for="select-type">Type</label>
+                                    <label class="control-label" for="select-type" th:text="#{sysparam.type}"></label>
                                     <select id="select-type" name="type" class="form-control">
                                         <option th:each="sysParamType : ${sysParamTypes}"
                                                 th:value="${sysParamType}" th:text="${sysParamType}">
@@ -77,8 +77,8 @@
                                 <input id="hiddeninput-action" name="action" type="hidden" />
                                 <!-- Button (Double) -->
                                 <div class="form-group">
-                                    <button id="save-button" name="save-button" class="btn btn-success"><span class="glyphicon glyphicon-ok"></span> Save</button>
-                                    <button id="delete-button" name="delete-button" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span> Delete</button>
+                                    <button id="save-button" name="save-button" class="btn btn-success"><span class="glyphicon glyphicon-ok" th:text=" #{sysparam.save}"></span></button>
+                                    <button id="delete-button" name="delete-button" class="btn btn-danger"><span class="glyphicon glyphicon-remove" th:text=" #{sysparam.delete}"></span></button>
                                 </div>
                         </form>
                     </div>

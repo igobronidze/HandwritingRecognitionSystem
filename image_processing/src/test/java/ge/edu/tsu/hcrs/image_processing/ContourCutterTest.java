@@ -3,6 +3,7 @@ package ge.edu.tsu.hcrs.image_processing;
 import ge.edu.tsu.hcrs.image_processing.opencv.ContourCutter;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgcodecs;
+import org.junit.Ignore;
 import org.junit.Test;
 
 public class ContourCutterTest {
@@ -11,6 +12,7 @@ public class ContourCutterTest {
 	private String resultImagePath = "test_images/binaryconverter/r_apple1.jpg";
 
 	@Test
+	@Ignore
 	public void cutContourTest() {
 		opencv_core.Mat resultMat;
 		opencv_core.Mat srcMat = opencv_imgcodecs.imread(srcImagePath);
