@@ -1,4 +1,10 @@
-package ge.edu.tsu.hcrs.image_processing.characterdetect;
+package ge.edu.tsu.hcrs.image_processing.characterdetect.detector;
+
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.Contour;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.Point;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.TextAdapter;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.TextRow;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.util.ElementsAddUtil;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
@@ -8,8 +14,6 @@ import java.util.Queue;
 
 public class ContoursDetector {
 
-    private static final int rgbChecker = 4500000;
-
     private static boolean[][] checked;
 
     private static boolean[][] colored;
@@ -18,12 +22,13 @@ public class ContoursDetector {
 
     private static short height;
 
-    public static List<Contour> detectContours(BufferedImage image) {
+    public static TextAdapter detectContours(BufferedImage image, ContoursDetectorParams params) {
         width = (short) image.getWidth();
         height = (short) image.getHeight();
         initCheckedMatrix();
-        initColoredMatrix(image);
-        List<Contour> contours = new ArrayList<>();
+        initColoredMatrix(image, params.getRgbChecker());
+        TextAdapter textAdapter = new TextAdapter();
+        TextRow lastTextRow = new TextRow();
         for (short i = 0; i < height; i++) {
             for (short j = 0; j < width; j++) {
                 if (checked[i][j]) {
@@ -33,23 +38,42 @@ public class ContoursDetector {
                     checked[i][j] = true;
                     continue;
                 }
-                contours.add(detectContour(new Point(i, j)));
+                lastTextRow = addContour(textAdapter, new Point(i, j), lastTextRow);
             }
         }
-        return contours;
+        ElementsAddUtil.addTextRowAndUpdate(textAdapter, lastTextRow);
+        return textAdapter;
     }
 
-    private static Contour detectContour(Point point) {
+    private static TextRow addContour(TextAdapter textAdapter, Point point, TextRow lastTextRow) {
         Contour contour = new Contour();
         Queue<Point> queue = new LinkedList<>();
         queue.add(point);
         while (!queue.isEmpty()) {
             Point curr = queue.remove();
             checked[curr.getX()][curr.getY()] = true;
-            contour.getContourCoordinates().add(curr);
+            ElementsAddUtil.addPointAndUpdate(contour, curr);
             queue.addAll(getConnectedPoints(curr.getX(), curr.getY()));
         }
-        return contour;
+        if (isInSameTextRow(lastTextRow, contour)) {
+            ElementsAddUtil.addContourAndUpdate(lastTextRow, contour);
+        } else {
+            ElementsAddUtil.addTextRowAndUpdate(textAdapter, lastTextRow);
+            lastTextRow = new TextRow();
+            ElementsAddUtil.addContourAndUpdate(lastTextRow, contour);
+        }
+        return lastTextRow;
+    }
+
+    private static boolean isInSameTextRow(TextRow textRow, Contour contour) {
+        if (textRow.getContours().size() == 0) {
+            return true;
+        }
+        if (textRow.getBottomPoint() >= contour.getTopPoint()) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     private static List<Point> getConnectedPoints(short i, short j) {
@@ -67,7 +91,7 @@ public class ContoursDetector {
         return connected;
     }
 
-    private static void initColoredMatrix(BufferedImage image) {
+    private static void initColoredMatrix(BufferedImage image, int rgbChecker) {
         int width = image.getWidth();
         int height = image.getHeight();
         colored = new boolean[height][width];

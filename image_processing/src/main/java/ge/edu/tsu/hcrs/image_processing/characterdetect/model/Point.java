@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.image_processing.characterdetect;
+package ge.edu.tsu.hcrs.image_processing.characterdetect.model;
 
 public class Point {
 
