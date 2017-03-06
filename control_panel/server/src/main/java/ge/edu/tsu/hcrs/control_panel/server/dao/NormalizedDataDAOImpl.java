@@ -1,9 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
-
 import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
-import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;
@@ -19,16 +17,14 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
     @Override
     public void addNormalizedData(NormalizedData normalizedData) {
         try {
-            String sql = "INSERT INTO normalized_data (width, height, letter, first_symbol, last_symbol, generation, data)" +
-                    " VALUES (?, ?, ?, ?, ?, ?, ?)";
+            String sql = "INSERT INTO normalized_data (width, height, letter, generation, data)" +
+                    " VALUES (?, ?, ?, ?, ?)";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, normalizedData.getWidth());
             pstmt.setInt(2, normalizedData.getHeight());
             pstmt.setString(3, "" + normalizedData.getLetter());
-            pstmt.setString(4, "" + normalizedData.getCharSequence().getFirstSymbol());
-            pstmt.setString(5, "" + normalizedData.getCharSequence().getLastSymbol());
-            pstmt.setString(6, normalizedData.getTrainingSetGeneration());
-            pstmt.setArray(7, DatabaseUtil.getConnection().createArrayOf("float4", normalizedData.getData()));
+            pstmt.setString(4, normalizedData.getTrainingSetGeneration());
+            pstmt.setArray(5, DatabaseUtil.getConnection().createArrayOf("float4", normalizedData.getData()));
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -38,7 +34,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
     }
 
     @Override
-    public List<NormalizedData> getNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generation) {
+    public List<NormalizedData> getNormalizedDatas(Integer width, Integer height, String generation) {
         List<NormalizedData> normalizedDataList = new ArrayList<>();
         try {
             String sql = "SELECT * FROM normalized_data WHERE 1=1 ";
@@ -47,9 +43,6 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
             }
             if (height != null) {
                 sql += "AND height = '" + height + "' ";
-            }
-            if (charSequence != null) {
-                sql += "AND first_symbol = '" + charSequence.getFirstSymbol() + "' AND last_symbol = '" + charSequence.getLastSymbol() + "' ";
             }
             if (generation != null) {
                 sql += "AND generation = '" + generation + "' ";
@@ -61,18 +54,10 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
                 Integer heig = rs.getInt("height");
                 String letterString = rs.getString("letter");
                 Character letter = letterString == null || letterString.isEmpty() ? null : letterString.charAt(0);
-                String firstSymbolString = rs.getString("first_symbol");
-                Character firSym = firstSymbolString == null || firstSymbolString.isEmpty() ? null : firstSymbolString.charAt(0);
-                String lastSymbolString = rs.getString("last_symbol");
-                Character lasSym = lastSymbolString == null || lastSymbolString.isEmpty() ? null : lastSymbolString.charAt(0);
-                CharSequence chSeq = null;
-                if (firSym != null && lasSym != null) {
-                    chSeq = new CharSequence(firSym, lasSym);
-                }
                 String gen = rs.getString("generation");
                 Array sqlArray = rs.getArray("data");
                 Float[] data = (Float[])sqlArray.getArray();
-                NormalizedData normalizedData = new NormalizedData(wid, heig, data, letter, chSeq, gen);
+                NormalizedData normalizedData = new NormalizedData(wid, heig, data, letter, gen);
                 normalizedDataList.add(normalizedData);
             }
         } catch (SQLException ex) {
@@ -84,7 +69,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
     }
 
     @Override
-    public int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, String generation) {
+    public int countNormalizedDatas(Integer width, Integer height, String generation) {
         int count = 0;
         try {
             String sql = "SELECT COUNT(id) FROM normalized_data WHERE 1=1 ";
@@ -93,9 +78,6 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
             }
             if (height != null) {
                 sql += "AND height = '" + height + "' ";
-            }
-            if (charSequence != null) {
-                sql += "AND first_symbol = '" + charSequence.getFirstSymbol() + "' AND last_symbol = '" + charSequence.getLastSymbol() + "' ";
             }
             if (generation != null) {
                 sql += "AND generation = '" + generation + "' ";
@@ -116,22 +98,17 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
     public List<GroupedNormalizedData> getGroupedNormalizedDatas() {
         List<GroupedNormalizedData> groupedNormalizedDatas = new ArrayList<>();
         try {
-            String sql = "SELECT width, height, first_symbol, last_symbol, generation, COUNT(id) AS count FROM normalized_data GROUP BY width, height, first_symbol, last_symbol, generation";
+            String sql = "SELECT width, height, first_symbol, last_symbol, generation, COUNT(id) AS count FROM normalized_data GROUP BY width, height, generation";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 Integer wid = rs.getInt("width");
                 Integer heig = rs.getInt("height");
-                String firstSymbolString = rs.getString("first_symbol");
-                Character firSym = firstSymbolString == null || firstSymbolString.isEmpty() ? null : firstSymbolString.charAt(0);
-                String lastSymbolString = rs.getString("last_symbol");
-                Character lasSym = lastSymbolString == null || lastSymbolString.isEmpty() ? null : lastSymbolString.charAt(0);
                 String generation = rs.getString("generation");
                 int count = rs.getInt("count");
                 GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
                 groupedNormalizedData.setWidth(wid);
                 groupedNormalizedData.setHeight(heig);
-                groupedNormalizedData.setCharSequence(new CharSequence(firSym, lasSym));
                 groupedNormalizedData.setTrainingSetGeneration(generation);
                 groupedNormalizedData.setCount(count);
                 groupedNormalizedDatas.add(groupedNormalizedData);

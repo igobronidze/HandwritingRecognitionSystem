@@ -46,7 +46,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             CharSequence charSequence = networkInfo.getCharSequence();
             List<NormalizedData> normalizedDataList = new ArrayList<>();
             for (String generation : networkInfo.getGenerations()) {
-                normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, charSequence, generation));
+                normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, generation));
             }
             List<Integer> layers = new ArrayList<>();
             layers.add(width * height);
@@ -99,7 +99,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                     ans = i;
                 }
             }
-            char c = (char) (ans + charSequence.getFirstCharASCI());
+            char c = charSequence.getIndexToCharMap().get(ans);
             NetworkResult networkResult = new NetworkResult(output, c);
             return networkResult;
         } catch (NNException ex) {
@@ -112,7 +112,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
         List<NormalizedData> normalizedDataList = new ArrayList<>();
         for (String generation : generations) {
-            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, charSequence, generation));
+            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, generation));
         }
         try {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(path);

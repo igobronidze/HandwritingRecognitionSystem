@@ -1,25 +1,48 @@
 package ge.edu.tsu.hcrs.control_panel.model.network;
 
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CharSequence implements Serializable {
 
-    private char firstSymbol;
+    private String charactersRegex;
 
-    private char lastSymbol;
+    private Map<Character, Integer> charToIndexMap = new HashMap<>();
 
-    private int numberOfChars;
+    private Map<Integer, Character> indexToCharMap = new HashMap<>();
 
-    private int firstCharASCI;
+    int numberOfChars;
 
     public CharSequence() {
     }
 
-    public CharSequence(char firstSymbol, char lastSymbol) {
-        this.firstSymbol = firstSymbol;
-        this.lastSymbol = lastSymbol;
-        this.numberOfChars = lastSymbol - firstSymbol + 1;
-        this.firstCharASCI = (int)firstSymbol;
+    public CharSequence(String charactersRegex) {
+        this.charactersRegex = charactersRegex;
+    }
+
+    public String getCharactersRegex() {
+        return charactersRegex;
+    }
+
+    public void setCharactersRegex(String charactersRegex) {
+        this.charactersRegex = charactersRegex;
+    }
+
+    public Map<Character, Integer> getCharToIndexMap() {
+        return charToIndexMap;
+    }
+
+    public void setCharToIndexMap(Map<Character, Integer> charToIndexMap) {
+        this.charToIndexMap = charToIndexMap;
+    }
+
+    public Map<Integer, Character> getIndexToCharMap() {
+        return indexToCharMap;
+    }
+
+    public void setIndexToCharMap(Map<Integer, Character> indexToCharMap) {
+        this.indexToCharMap = indexToCharMap;
     }
 
     public int getNumberOfChars() {
@@ -28,34 +51,5 @@ public class CharSequence implements Serializable {
 
     public void setNumberOfChars(int numberOfChars) {
         this.numberOfChars = numberOfChars;
-    }
-
-    public int getFirstCharASCI() {
-        return firstCharASCI;
-    }
-
-    public void setFirstCharASCI(int firstCharASCI) {
-        this.firstCharASCI = firstCharASCI;
-    }
-
-    public char getFirstSymbol() {
-        return firstSymbol;
-    }
-
-    public void setFirstSymbol(char firstSymbol) {
-        this.firstSymbol = firstSymbol;
-    }
-
-    public char getLastSymbol() {
-        return lastSymbol;
-    }
-
-    public void setLastSymbol(char lastSymbol) {
-        this.lastSymbol = lastSymbol;
-    }
-
-    @Override
-    public String toString() {
-        return firstSymbol + "-" + lastSymbol;
     }
 }

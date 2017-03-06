@@ -1,15 +1,11 @@
 package ge.edu.tsu.hcrs.control_panel.server.util;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class StringUtil {
 
     private static final String listSeparator = "J7ფ@";
-
-    private static final String charSequenceSeparator = "-";
 
     private static final String integerListSeparator = ",";
 
@@ -34,14 +30,6 @@ public class StringUtil {
             result.add(part);
         }
         return result;
-    }
-
-    public static String getStringFromCharSequence(CharSequence charSequence) {
-        return charSequence.getFirstSymbol() + charSequenceSeparator + charSequence.getLastSymbol();
-    }
-
-    public static CharSequence getCharSequenceFromString(String text) {
-        return new CharSequence(text.charAt(0), text.charAt(2));
     }
 
     public static String getStringFromIntegerList(List<Integer> list) {

@@ -14,8 +14,6 @@ public class NormalizedData implements Serializable {
 
     private Character letter;
 
-    private CharSequence charSequence;
-
     private String trainingSetGeneration;
 
     public NormalizedData() {
@@ -27,12 +25,11 @@ public class NormalizedData implements Serializable {
         this.data = data;
     }
 
-    public NormalizedData(int width, int height, Float[] data, Character letter, CharSequence charSequence, String trainingSetGeneration) {
+    public NormalizedData(int width, int height, Float[] data, Character letter, String trainingSetGeneration) {
         this.width = width;
         this.height = height;
         this.data = data;
         this.letter = letter;
-        this.charSequence = charSequence;
         this.trainingSetGeneration = trainingSetGeneration;
     }
 
@@ -68,14 +65,6 @@ public class NormalizedData implements Serializable {
         this.letter = letter;
     }
 
-    public CharSequence getCharSequence() {
-        return charSequence;
-    }
-
-    public void setCharSequence(CharSequence charSequence) {
-        this.charSequence = charSequence;
-    }
-
     public String getTrainingSetGeneration() {
         return trainingSetGeneration;
     }
@@ -91,7 +80,6 @@ public class NormalizedData implements Serializable {
                 ", height=" + height +
                 ", grid=" + Arrays.toString(data) +
                 ", letter=" + letter +
-                ", charSequence=" + charSequence +
                 ", trainingSetGeneration='" + trainingSetGeneration + '\'' +
                 '}';
     }

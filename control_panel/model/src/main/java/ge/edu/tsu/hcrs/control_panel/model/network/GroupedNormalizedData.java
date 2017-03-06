@@ -6,8 +6,6 @@ public class GroupedNormalizedData {
 
 	private int height;
 
-	private CharSequence charSequence;
-
 	private String trainingSetGeneration;
 
 	private int count;
@@ -26,14 +24,6 @@ public class GroupedNormalizedData {
 
 	public void setHeight(int height) {
 		this.height = height;
-	}
-
-	public CharSequence getCharSequence() {
-		return charSequence;
-	}
-
-	public void setCharSequence(CharSequence charSequence) {
-		this.charSequence = charSequence;
 	}
 
 	public String getTrainingSetGeneration() {

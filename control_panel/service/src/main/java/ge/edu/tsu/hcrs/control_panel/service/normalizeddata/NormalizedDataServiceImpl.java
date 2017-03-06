@@ -2,7 +2,6 @@ package ge.edu.tsu.hcrs.control_panel.service.normalizeddata;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
-import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
@@ -21,13 +20,13 @@ public class NormalizedDataServiceImpl implements NormalizedDataService {
     }
 
     @Override
-    public List<NormalizedData> getNormalizedDatas(Integer widht, Integer height, CharSequence charSequence, String generation) {
-        return normalizedDataDAO.getNormalizedDatas(widht, height, charSequence, generation);
+    public List<NormalizedData> getNormalizedDatas(Integer widht, Integer height, String generation) {
+        return normalizedDataDAO.getNormalizedDatas(widht, height, generation);
     }
 
     @Override
-    public int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, List<String> generations) {
-        return normalizedDataProcessor.countNormalizedDatas(width, height, charSequence, generations);
+    public int countNormalizedDatas(Integer width, Integer height, List<String> generations) {
+        return normalizedDataProcessor.countNormalizedDatas(width, height, generations);
     }
 
     @Override

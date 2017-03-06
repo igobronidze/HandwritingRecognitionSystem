@@ -1,10 +1,8 @@
 package ge.edu.tsu.hcrs.control_panel.server.migrationscript;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
 import ge.edu.tsu.hcrs.image_processing.manually_tool.ImageCutter;
 import ge.edu.tsu.hcrs.image_processing.manually_tool.ImageTransformer;
 
@@ -22,8 +20,6 @@ public class MigrationScript1 {
     private static ImageCutter imageCutter = new ImageCutter();
 
     private static ImageTransformer imageTransformer = new ImageTransformer();
-
-    private static CharSequence charSequence = new CharSequence('ა', 'ჰ');
 
     private static String path1 = "D:\\Bachelor Project\\handwriting_recognition\\images\\created_images\\geo";
 
@@ -45,8 +41,7 @@ public class MigrationScript1 {
                 try {
                     BufferedImage image = ImageIO.read(file);
                     NormalizedData normalizedData = new NormalizedData(width, height, imageTransformer.getFloatArrayFromImage(
-                            imageCutter.cutCornerUnusedParts(image, -1), width, height, -1),
-                            file.getName().charAt(0), charSequence, generation);
+                            imageCutter.cutCornerUnusedParts(image, -1), width, height, -1), file.getName().charAt(0), generation);
                     normalizedDataList.add(normalizedData);
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());

@@ -41,7 +41,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         CharSequence charSequence = networkInfo.getCharSequence();
         List<NormalizedData> normalizedDataList = new ArrayList<>();
         for (String generation : networkInfo.getGenerations()) {
-            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, charSequence, generation));
+            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, generation));
         }
         List<Integer> layers = new ArrayList<>();
         layers.add(width * height);
@@ -84,7 +84,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 ans = i;
             }
         }
-        char c = (char)(ans + charSequence.getFirstCharASCI());
+        char c = charSequence.getIndexToCharMap().get(ans);
         return new NetworkResult(output, c);
     }
 

@@ -22,8 +22,9 @@ public class NormalizedDataProcessor {
         }
         if (normalizedData.getLetter() != null) {
             List<Float> output = new ArrayList<>();
+            int index = charSequence.getCharToIndexMap().get(normalizedData.getLetter());
             for (int i = 0; i < charSequence.getNumberOfChars(); i++) {
-                output.add(i == normalizedData.getLetter() - charSequence.getFirstCharASCI() ? 1.0f : 0.0f);
+                output.add(i == index ? 1.0f : 0.0f);
             }
             return new TrainingData(input, output);
         }
@@ -38,18 +39,18 @@ public class NormalizedDataProcessor {
         }
         double[] ans = new double[charSequence.getNumberOfChars()];
         if (normalizedData.getLetter() != null) {
-            ans[normalizedData.getLetter() - charSequence.getFirstCharASCI()] = 1;
+            ans[charSequence.getCharToIndexMap().get(normalizedData.getLetter())] = 1;
         }
         return new DataSetRow(input, ans);
     }
 
-    public int countNormalizedDatas(Integer width, Integer height, CharSequence charSequence, List<String> generations) {
+    public int countNormalizedDatas(Integer width, Integer height, List<String> generations) {
         int count = 0;
         if (generations == null) {
-            return normalizedDataDAO.countNormalizedDatas(width, height, charSequence, null);
+            return normalizedDataDAO.countNormalizedDatas(width, height, null);
         }
         for (String generation : generations) {
-            count += normalizedDataDAO.countNormalizedDatas(width, height, charSequence, generation);
+            count += normalizedDataDAO.countNormalizedDatas(width, height, generation);
         }
         return count;
     }

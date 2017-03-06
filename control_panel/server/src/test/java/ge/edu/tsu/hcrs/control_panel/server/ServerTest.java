@@ -20,7 +20,7 @@ public class ServerTest {
         List<String> generations = new ArrayList<>();
         generations.add("made_by_javafx_canvas_1");
         generations.add("made_by_javafx_canvas_2");
-        System.out.println(normalizedDataProcessor.countNormalizedDatas(23, 29, new CharSequence('ა', 'ჰ'), generations));
+        System.out.println(normalizedDataProcessor.countNormalizedDatas(23, 29, generations));
     }
 
 	@Test
@@ -29,7 +29,7 @@ public class ServerTest {
 		NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 		List<GroupedNormalizedData> groupedNormalizedDatas = normalizedDataDAO.getGroupedNormalizedDatas();
 		for (GroupedNormalizedData groupedNormalizedData : groupedNormalizedDatas) {
-			System.out.println(groupedNormalizedData.getWidth() + " " + groupedNormalizedData.getHeight() + " " + groupedNormalizedData.getCharSequence() + " " +
+			System.out.println(groupedNormalizedData.getWidth() + " " + groupedNormalizedData.getHeight() + " " +
 			groupedNormalizedData.getTrainingSetGeneration() + " " + groupedNormalizedData.getCount());
 		}
 	}

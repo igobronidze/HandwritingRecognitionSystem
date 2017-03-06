@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkTrainingStatus;
@@ -38,7 +39,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setFloat(12, networkInfo.getMinError());
             pstmt.setLong(13, networkInfo.getTrainingMaxIteration());
             pstmt.setLong(14, networkInfo.getNumberOfTrainingDataInOneIteration());
-            pstmt.setString(15, StringUtil.getStringFromCharSequence(networkInfo.getCharSequence()));
+            pstmt.setString(15, networkInfo.getCharSequence().getCharactersRegex());
             pstmt.setString(16, StringUtil.getStringFromIntegerList(networkInfo.getHiddenLayer()));
             pstmt.setString(17, networkInfo.getNetworkProcessorType().name());
             pstmt.setString(18, networkInfo.getNetworkMetaInfo());
@@ -92,7 +93,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setMinError(rs.getFloat("min_error"));
                 networkInfo.setTrainingMaxIteration(rs.getLong("training_max_iteration"));
                 networkInfo.setNumberOfTrainingDataInOneIteration(rs.getLong("number_of_training_data_in_one_iteration"));
-                networkInfo.setCharSequence(StringUtil.getCharSequenceFromString(rs.getString("char_sequence")));
+                networkInfo.setCharSequence(new CharSequence(rs.getString("char_sequence")));
                 networkInfo.setHiddenLayer(StringUtil.getIntegerListFromString(rs.getString("hidden_layer")));
                 networkInfo.setNetworkProcessorType(NetworkProcessorType.valueOf(rs.getString("network_processor_type")));
                 networkInfo.setNetworkMetaInfo(rs.getString("network_meta_info"));
