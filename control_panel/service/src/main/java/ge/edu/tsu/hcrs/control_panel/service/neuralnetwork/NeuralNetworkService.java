@@ -3,7 +3,7 @@ package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
-import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 
 import java.util.List;
 

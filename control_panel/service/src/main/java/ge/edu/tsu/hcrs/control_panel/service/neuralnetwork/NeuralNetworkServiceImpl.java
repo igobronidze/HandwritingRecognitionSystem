@@ -2,6 +2,7 @@ package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.HCRSNeuralNetworkProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.INeuralNetworkProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.NeurophNeuralNetworkProcessor;

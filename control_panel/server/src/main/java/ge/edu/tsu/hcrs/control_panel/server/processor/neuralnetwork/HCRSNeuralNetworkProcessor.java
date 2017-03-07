@@ -2,6 +2,7 @@ package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.*;
 import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;

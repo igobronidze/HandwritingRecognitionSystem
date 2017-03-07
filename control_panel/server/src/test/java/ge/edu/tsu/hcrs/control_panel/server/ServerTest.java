@@ -1,7 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
-import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;

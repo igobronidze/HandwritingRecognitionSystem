@@ -1,7 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
-import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 
 import java.sql.Array;
 import java.sql.PreparedStatement;

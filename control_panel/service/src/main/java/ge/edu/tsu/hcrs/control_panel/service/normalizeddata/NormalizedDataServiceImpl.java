@@ -1,7 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.service.normalizeddata;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.GroupedNormalizedData;
-import ge.edu.tsu.hcrs.control_panel.model.network.NormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
