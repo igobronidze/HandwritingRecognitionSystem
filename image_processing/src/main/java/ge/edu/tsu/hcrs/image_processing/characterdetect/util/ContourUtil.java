@@ -7,26 +7,20 @@ import java.awt.image.BufferedImage;
 
 public class ContourUtil {
 
-    private static final int blackRGB = -16777216;
-
     private static final int whiteRGB = -1;
 
     public static BufferedImage getBufferedImageFromContour(Contour contour) {
-        boolean colored[][] = getColoredMatrixFromContour(contour);
+        int colored[][] = getColoredMatrixFromContour(contour);
         BufferedImage image = new BufferedImage(colored[0].length, colored.length, BufferedImage.TYPE_INT_RGB);
         for (int i = 0; i < colored.length; i++ ) {
             for (int j = 0; j < colored[i].length; j++) {
-                if (colored[i][j]) {
-                    image.setRGB(j, i, blackRGB);
-                } else {
-                    image.setRGB(j, i, whiteRGB);
-                }
+                image.setRGB(j, i, colored[i][j] == 0 ? whiteRGB : colored[i][j]);
             }
         }
         return image;
     }
 
-    public static boolean[][] getColoredMatrixFromContour(Contour contour) {
+    public static int[][] getColoredMatrixFromContour(Contour contour) {
         short topPoint = contour.getTopPoint();
         short rightPoint = contour.getRightPoint();
         short bottomPoint = contour.getBottomPoint();
@@ -39,18 +33,17 @@ public class ContourUtil {
             leftPoint = (short) Math.min(leftPoint, unitedContour.getLeftPoint());
             unitedContour = unitedContour.getUnitedContour();
         }
-        boolean colored[][] = new boolean[bottomPoint - topPoint + 1][rightPoint - leftPoint + 1];
+        int colored[][] = new int[bottomPoint - topPoint + 1][rightPoint - leftPoint + 1];
         for (Point point : contour.getContourCoordinates()) {
-            colored[point.getX() - topPoint][point.getY() - leftPoint] = true;
+            colored[point.getX() - topPoint][point.getY() - leftPoint] = point.getColor();
         }
         unitedContour = contour.getUnitedContour();
         while (unitedContour != null) {
             for (Point point : unitedContour.getContourCoordinates()) {
-                colored[point.getX() - topPoint][point.getY() - leftPoint] = true;
+                colored[point.getX() - topPoint][point.getY() - leftPoint] = point.getColor();
             }
             unitedContour = unitedContour.getUnitedContour();
         }
         return colored;
-
     }
 }

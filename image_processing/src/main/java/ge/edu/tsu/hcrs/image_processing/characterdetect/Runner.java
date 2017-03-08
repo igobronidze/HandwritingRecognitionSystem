@@ -6,11 +6,11 @@ import ge.edu.tsu.hcrs.image_processing.exception.TextAdapterSizeException;
 
 public class Runner {
 
-    private static final String srcImagePath = "test_images/src_images/sylfaen_30.jpg";
+    private static final String srcImagePath = "test_images/src_images/sylfaen_13.png";
 
-    private static final String srcTextPath = "test_images/src_images/sylfaen_30.txt";
+    private static final String srcTextPath = "test_images/src_images/krw_yay.txt";
 
-    private static final String resultImagesPath = "test_images/result_images/sylfaen_30";
+    private static final String resultImagesPath = "test_images/result_images/sylfaen_13";
 
     public static void main(String[] args) {
         try {

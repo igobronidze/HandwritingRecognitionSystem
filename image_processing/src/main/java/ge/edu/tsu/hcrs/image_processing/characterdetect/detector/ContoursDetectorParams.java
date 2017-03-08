@@ -2,13 +2,13 @@ package ge.edu.tsu.hcrs.image_processing.characterdetect.detector;
 
 public class ContoursDetectorParams {
 
-    private int rgbChecker = 9500000;
+    private int checkedRGBMaxValue = -2;
 
-    public int getRgbChecker() {
-        return rgbChecker;
+    public int getCheckedRGBMaxValue() {
+        return checkedRGBMaxValue;
     }
 
-    public void setRgbChecker(int rgbChecker) {
-        this.rgbChecker = rgbChecker;
+    public void setCheckedRGBMaxValue(int checkedRGBMaxValue) {
+        this.checkedRGBMaxValue = checkedRGBMaxValue;
     }
 }

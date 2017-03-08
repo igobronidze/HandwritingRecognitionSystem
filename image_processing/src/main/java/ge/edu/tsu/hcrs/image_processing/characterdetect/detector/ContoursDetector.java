@@ -14,9 +14,11 @@ import java.util.Queue;
 
 public class ContoursDetector {
 
+    private static final int whiteRGB = -1;
+
     private static boolean[][] checked;
 
-    private static boolean[][] colored;
+    private static int[][] imagePixels;
 
     private static short width;
 
@@ -26,7 +28,7 @@ public class ContoursDetector {
         width = (short) image.getWidth();
         height = (short) image.getHeight();
         initCheckedMatrix();
-        initColoredMatrix(image, params.getRgbChecker());
+        initColoredMatrix(image, params.getCheckedRGBMaxValue());
         TextAdapter textAdapter = new TextAdapter();
         TextRow lastTextRow = new TextRow();
         for (short i = 0; i < height; i++) {
@@ -34,11 +36,11 @@ public class ContoursDetector {
                 if (checked[i][j]) {
                     continue;
                 }
-                if (!colored[i][j]) {
+                if (imagePixels[i][j] == whiteRGB) {
                     checked[i][j] = true;
                     continue;
                 }
-                lastTextRow = addContour(textAdapter, new Point(i, j), lastTextRow);
+                lastTextRow = addContour(textAdapter, new Point(i, j, imagePixels[i][j]), lastTextRow);
             }
         }
         ElementsAddUtil.addTextRowAndUpdate(textAdapter, lastTextRow);
@@ -81,8 +83,8 @@ public class ContoursDetector {
         for (short deltaI = -1; deltaI <= 1; deltaI++) {
             for (short deltaJ = -1; deltaJ <= 1; deltaJ++) {
                 if (i + deltaI >=0 && i + deltaI < height && j + deltaJ >=0 && j + deltaJ < width) {
-                    if (colored[i + deltaI][j + deltaJ] && !checked[i + deltaI][j + deltaJ]) {
-                        connected.add(new Point((short)(i + deltaI), (short)(j + deltaJ)));
+                    if (imagePixels[i + deltaI][j + deltaJ] != whiteRGB && !checked[i + deltaI][j + deltaJ]) {
+                        connected.add(new Point((short)(i + deltaI), (short)(j + deltaJ), imagePixels[i + deltaI][j + deltaJ]));
                         checked[i + deltaI][j + deltaJ] = true;
                     }
                 }
@@ -94,10 +96,10 @@ public class ContoursDetector {
     private static void initColoredMatrix(BufferedImage image, int rgbChecker) {
         int width = image.getWidth();
         int height = image.getHeight();
-        colored = new boolean[height][width];
+        imagePixels = new int[height][width];
         for (short i = 0; i < height; i++) {
             for (short j = 0; j < width; j++) {
-                colored[i][j] = (Math.abs(image.getRGB(j, i) ) > rgbChecker);
+                imagePixels[i][j] = image.getRGB(j, i) <= rgbChecker ? image.getRGB(j, i) : whiteRGB;
             }
         }
     }

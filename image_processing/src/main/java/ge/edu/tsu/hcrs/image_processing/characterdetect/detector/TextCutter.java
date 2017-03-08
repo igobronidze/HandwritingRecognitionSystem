@@ -39,7 +39,7 @@ public class TextCutter {
                     for (TextRow textRow : textAdapter.getRows()) {
                         for (Contour contour : textRow.getContours()) {
                             BufferedImage resultImage = ContourUtil.getBufferedImageFromContour(contour);
-                            ImageIO.write(resultImage, "jpg", new File(resultImagesPath + "/" + i + ".jpg"));
+                            ImageIO.write(resultImage, "png", new File(resultImagesPath + "/" + i + ".png"));
                             i++;
                         }
                     }
@@ -53,7 +53,7 @@ public class TextCutter {
                             i++;
                         }
                         BufferedImage resultImage = ContourUtil.getBufferedImageFromContour(contour);
-                        ImageIO.write(resultImage, "jpg", new File(resultImagesPath + "/" + (i + 1) + "_" + getForbiddenCharsValue(text.charAt(i)) + ".jpg"));
+                        ImageIO.write(resultImage, "png", new File(resultImagesPath + "/" + (i + 1) + "_" + getForbiddenCharsValue(text.charAt(i)) + ".png"));
                         i++;
                     }
                 }

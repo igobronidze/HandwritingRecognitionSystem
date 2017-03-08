@@ -6,12 +6,20 @@ public class Point {
 
     private short y;
 
+    private int color;
+
     public Point() {
     }
 
     public Point(short x, short y) {
         this.x = x;
         this.y = y;
+    }
+
+    public Point(short x, short y, int color) {
+        this.x = x;
+        this.y = y;
+        this.color = color;
     }
 
     public short getX() {
@@ -28,6 +36,14 @@ public class Point {
 
     public void setY(short y) {
         this.y = y;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
     }
 
     @Override
@@ -54,6 +70,7 @@ public class Point {
         return "Point{" +
                 "x=" + x +
                 ", y=" + y +
+                ", color=" + color +
                 '}';
     }
 }
