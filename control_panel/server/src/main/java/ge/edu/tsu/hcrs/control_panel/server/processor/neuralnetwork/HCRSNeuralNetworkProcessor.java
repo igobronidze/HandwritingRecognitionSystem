@@ -11,8 +11,7 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
-import ge.edu.tsu.hcrs.control_panel.server.processor.SystemParameterProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetworkParameter;
@@ -27,8 +26,6 @@ import java.util.List;
 public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
-
-    private NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
 
     private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
@@ -61,7 +58,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             NeuralNetwork neuralNetwork = new NeuralNetwork(layers);
             setNeuralNetworkParameters(neuralNetwork, networkInfo);
             for (int i = 0; i < normalizedDataList.size(); i++) {
-                neuralNetwork.addTrainingData(normalizedDataProcessor.getTrainingData(normalizedDataList.get(i), charSequence));
+                neuralNetwork.addTrainingData(NetworkDataCreator.getTrainingData(normalizedDataList.get(i), charSequence));
             }
             TrainingProgress trainingProgress = new TrainingProgress();
             trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
@@ -95,7 +92,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence) {
         try {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(networkPath);
-            TrainingData trainingData = normalizedDataProcessor.getTrainingData(normalizedData, charSequence);
+            TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
             List<Float> output = neuralNetwork.getOutputActivation(trainingData);
             int ans = 0;
             for (int i = 1; i < charSequence.getNumberOfChars(); i++) {
@@ -119,7 +116,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(path);
             List<TrainingData> trainingDataList = new ArrayList<>();
             for (NormalizedData normalizedData : normalizedDataList) {
-                trainingDataList.add(normalizedDataProcessor.getTrainingData(normalizedData, charSequence));
+                trainingDataList.add(NetworkDataCreator.getTrainingData(normalizedData, charSequence));
             }
             TestResult testResult = neuralNetwork.test(trainingDataList);
             TestingInfo testingInfo = new TestingInfo();

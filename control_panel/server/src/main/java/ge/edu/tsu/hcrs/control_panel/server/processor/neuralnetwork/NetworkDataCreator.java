@@ -1,20 +1,16 @@
-package ge.edu.tsu.hcrs.control_panel.server.processor;
+package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
-import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingData;
 import org.neuroph.core.data.DataSetRow;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class NormalizedDataProcessor {
+public class NetworkDataCreator {
 
-    private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
-
-    public TrainingData getTrainingData(NormalizedData normalizedData, CharSequence charSequence) {
+    public static TrainingData getTrainingData(NormalizedData normalizedData, CharSequence charSequence) {
         Float[] data = normalizedData.getData();
         List<Float> input = new ArrayList<>();
         for (int i = 0; i < data.length; i++) {
@@ -31,7 +27,7 @@ public class NormalizedDataProcessor {
         return new TrainingData(input);
     }
 
-    public DataSetRow getDataSetRow(NormalizedData normalizedData, CharSequence charSequence) {
+    public static DataSetRow getDataSetRow(NormalizedData normalizedData, CharSequence charSequence) {
         Float[] data = normalizedData.getData();
         double[] input = new double[data.length];
         for (int i = 0; i < data.length; i++) {

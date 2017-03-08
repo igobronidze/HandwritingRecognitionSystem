@@ -8,8 +8,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
-import ge.edu.tsu.hcrs.control_panel.server.processor.SystemParameterProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import org.apache.commons.lang3.NotImplementedException;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
@@ -25,8 +24,6 @@ import java.util.List;
 public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
-
-    private NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
 
     private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
@@ -55,7 +52,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         Collections.shuffle(randomList);
         int min = Math.min((int)networkInfo.getNumberOfTrainingDataInOneIteration(), normalizedDataList.size());
         for (int i = 0; i < min; i++) {
-            trainingSet.addRow(normalizedDataProcessor.getDataSetRow(normalizedDataList.get(randomList.get(i)), charSequence));
+            trainingSet.addRow(NetworkDataCreator.getDataSetRow(normalizedDataList.get(randomList.get(i)), charSequence));
         }
         MultiLayerPerceptron perceptron = null;
         try {
@@ -70,7 +67,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     @Override
     public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence) {
         NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getParameterValue(neuralNetworkPathParameter));
-        DataSetRow dataSetRow = normalizedDataProcessor.getDataSetRow(normalizedData, charSequence);
+        DataSetRow dataSetRow = NetworkDataCreator.getDataSetRow(normalizedData, charSequence);
         neuralNetwork.setInput(dataSetRow.getInput());
         neuralNetwork.calculate();
         double[] networkOutput = neuralNetwork.getOutput();

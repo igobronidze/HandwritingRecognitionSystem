@@ -7,7 +7,7 @@ import ge.edu.tsu.hcrs.control_panel.model.sysparam.SystemParameter;
 import ge.edu.tsu.hcrs.control_panel.server.caching.CachedSystemParameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.systemparameter.SystemParameterDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.systemparameter.SystemParameterDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.processor.SystemParameterProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 
 import java.util.List;
 
