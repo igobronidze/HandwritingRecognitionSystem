@@ -1,8 +1,8 @@
 package ge.edu.tsu.hcrs.control_panel.service.testinginfo;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.TestingInfo;
-import ge.edu.tsu.hcrs.control_panel.server.dao.TestingInfoDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.TestingInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 
 import java.util.List;
 

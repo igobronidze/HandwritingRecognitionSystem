@@ -2,6 +2,7 @@ package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.HCRSNeuralNetworkProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.INeuralNetworkProcessor;
@@ -35,7 +36,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
-        return iNeuralNetworkProcessor.test(width, height, generations, path, networkId, charSequence);
+    public float test(int width, int height, List<GroupedNormalizedData> groupedNormalizedDatum, String path, int networkId, CharSequence charSequence) {
+        return iNeuralNetworkProcessor.test(width, height, groupedNormalizedDatum, path, networkId, charSequence);
     }
 }

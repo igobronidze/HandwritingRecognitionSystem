@@ -2,8 +2,8 @@ package ge.edu.tsu.hcrs.control_panel.server.caching;
 
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.SystemParameter;
-import ge.edu.tsu.hcrs.control_panel.server.dao.SystemParameterDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.SystemParameterDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.systemparameter.SystemParameterDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.systemparameter.SystemParameterDAOImpl;
 
 import java.util.HashMap;
 import java.util.List;

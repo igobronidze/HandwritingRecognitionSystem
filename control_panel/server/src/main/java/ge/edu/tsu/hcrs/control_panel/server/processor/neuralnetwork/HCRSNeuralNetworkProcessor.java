@@ -2,9 +2,15 @@ package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
-import ge.edu.tsu.hcrs.control_panel.server.dao.*;
+import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
@@ -45,10 +51,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             int width = networkInfo.getWidth();
             int height = networkInfo.getHeight();
             CharSequence charSequence = networkInfo.getCharSequence();
-            List<NormalizedData> normalizedDataList = new ArrayList<>();
-            for (String generation : networkInfo.getGenerations()) {
-                normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, generation));
-            }
+            List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
             List<Integer> layers = new ArrayList<>();
             layers.add(width * height);
             for (int x : networkInfo.getHiddenLayer()) {
@@ -110,11 +113,8 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
-        List<NormalizedData> normalizedDataList = new ArrayList<>();
-        for (String generation : generations) {
-            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, generation));
-        }
+    public float test(int width, int height, List<GroupedNormalizedData> groupedNormalizedDatum, String path, int networkId, CharSequence charSequence) {
+        List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
         try {
             NeuralNetwork neuralNetwork = NeuralNetwork.load(path);
             List<TrainingData> trainingDataList = new ArrayList<>();
@@ -125,7 +125,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             TestingInfo testingInfo = new TestingInfo();
             testingInfo.setNumberOfTest(testResult.getNumberOfData());
             testingInfo.setNetworkId(networkId);
-            testingInfo.setGenerations(generations);
+            testingInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
             testingInfo.setSquaredError(testResult.getSquaredError());
             testingInfo.setDiffBetweenAnsAndBest(testResult.getDiffBetweenAnsAndBest());
             testingInfo.setPercentageOfCorrects(testResult.getPercentageOfCorrects());

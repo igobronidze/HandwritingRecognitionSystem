@@ -2,11 +2,12 @@ package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
-import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.NormalizedDataProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.SystemParameterProcessor;
 import org.apache.commons.lang3.NotImplementedException;
@@ -39,10 +40,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         int width = networkInfo.getWidth();
         int height = networkInfo.getHeight();
         CharSequence charSequence = networkInfo.getCharSequence();
-        List<NormalizedData> normalizedDataList = new ArrayList<>();
-        for (String generation : networkInfo.getGenerations()) {
-            normalizedDataList.addAll(normalizedDataDAO.getNormalizedDatas(width, height, generation));
-        }
+        List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
         List<Integer> layers = new ArrayList<>();
         layers.add(width * height);
         for (int x : networkInfo.getHiddenLayer()) {
@@ -89,7 +87,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public float test(int width, int height, List<String> generations, String path, int networkId, CharSequence charSequence) {
+    public float test(int width, int height, List<GroupedNormalizedData> groupedNormalizedDatum, String path, int networkId, CharSequence charSequence) {
         throw new NotImplementedException("Not yet :D");
     }
 }

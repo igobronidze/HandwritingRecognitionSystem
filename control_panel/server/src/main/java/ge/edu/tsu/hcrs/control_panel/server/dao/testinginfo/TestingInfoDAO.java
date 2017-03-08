@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.control_panel.server.dao;
+package ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.TestingInfo;
 

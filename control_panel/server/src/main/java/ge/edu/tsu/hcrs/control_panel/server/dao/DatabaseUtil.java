@@ -26,7 +26,9 @@ public class DatabaseUtil {
 
     public static void closeConnection() {
         try {
-            connection.close();
+            if (connection != null) {
+                connection.close();
+            }
         } catch (SQLException ex) {
             System.out.println("Sql connection closing problem...");
         }

@@ -1,10 +1,10 @@
 package ge.edu.tsu.hcrs.control_panel.service.networkinfo;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
-import ge.edu.tsu.hcrs.control_panel.server.dao.NetworkInfoDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.NetworkInfoDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.dao.TestingInfoDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.TestingInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 
 import java.util.List;
 

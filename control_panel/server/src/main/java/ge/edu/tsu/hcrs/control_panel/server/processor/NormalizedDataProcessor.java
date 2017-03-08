@@ -2,8 +2,8 @@ package ge.edu.tsu.hcrs.control_panel.server.processor;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
-import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAO;
-import ge.edu.tsu.hcrs.control_panel.server.dao.NormalizedDataDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingData;
 import org.neuroph.core.data.DataSetRow;
 
@@ -42,16 +42,5 @@ public class NormalizedDataProcessor {
             ans[charSequence.getCharToIndexMap().get(normalizedData.getLetter())] = 1;
         }
         return new DataSetRow(input, ans);
-    }
-
-    public int countNormalizedDatas(Integer width, Integer height, List<String> generations) {
-        int count = 0;
-        if (generations == null) {
-            return normalizedDataDAO.countNormalizedDatas(width, height, null);
-        }
-        for (String generation : generations) {
-            count += normalizedDataDAO.countNormalizedDatas(width, height, generation);
-        }
-        return count;
     }
 }

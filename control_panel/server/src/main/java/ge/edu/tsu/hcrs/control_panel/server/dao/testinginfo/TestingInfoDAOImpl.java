@@ -1,6 +1,8 @@
-package ge.edu.tsu.hcrs.control_panel.server.dao;
+package ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.TestingInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.server.dao.DatabaseUtil;
 import ge.edu.tsu.hcrs.control_panel.server.util.StringUtil;
 
 import java.sql.PreparedStatement;
@@ -19,7 +21,11 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
             String sql = "INSERT INTO testing_info (generations, number_of_test, squared_error, percentage_of_corrects, " +
                     "diff_between_ans_and_best, normalized_general_error, network_id) VALUES (?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
-            pstmt.setString(1, StringUtil.getStringFromList(testingInfo.getGenerations()));
+            List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
+            for (GroupedNormalizedData groupedNormalizedData : testingInfo.getGroupedNormalizedDatum()) {
+                groupedNormalizedDatumIds.add(groupedNormalizedData.getId());
+            }
+            pstmt.setString(1, StringUtil.getStringFromIntegerList(groupedNormalizedDatumIds));
             pstmt.setInt(2, testingInfo.getNumberOfTest());
             pstmt.setFloat(3, testingInfo.getSquaredError());
             pstmt.setFloat(4, testingInfo.getPercentageOfCorrects());
@@ -46,7 +52,14 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 TestingInfo testingInfo = new TestingInfo();
                 testingInfo.setNetworkId(rs.getInt("network_id"));
                 testingInfo.setNumberOfTest(rs.getInt("number_of_test"));
-                testingInfo.setGenerations(StringUtil.getListFromString(rs.getString("generations")));
+                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("groupedNormalizedDatum"));
+                List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
+                for (Integer groupedNormalizedDataId : groupedNormalizedDatumIds) {
+                    GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
+                    groupedNormalizedData.setId(groupedNormalizedDataId);
+                    groupedNormalizedDatum.add(groupedNormalizedData);
+                }
+                testingInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
                 testingInfo.setSquaredError(rs.getFloat("squared_error"));
                 testingInfo.setPercentageOfCorrects(rs.getFloat("percentage_of_corrects"));
                 testingInfo.setDiffBetweenAnsAndBest(rs.getFloat("diff_between_ans_and_best"));

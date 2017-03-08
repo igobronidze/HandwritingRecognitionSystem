@@ -1,10 +1,12 @@
-package ge.edu.tsu.hcrs.control_panel.server.dao;
+package ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkTrainingStatus;
 import ge.edu.tsu.hcrs.control_panel.model.network.TransferFunction;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.server.dao.DatabaseUtil;
 import ge.edu.tsu.hcrs.control_panel.server.util.StringUtil;
 
 import java.sql.PreparedStatement;
@@ -20,14 +22,18 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public int addNetworkInfo(NetworkInfo networkInfo) {
         try {
-            String sql = "INSERT INTO network_info (width, height, generations, number_of_data, training_duration, weight_min_value," +
+            String sql = "INSERT INTO network_info (width, height, groupedNormalizedDatum, number_of_data, training_duration, weight_min_value," +
                     " weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
                     " number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description," +
                     " trainingStatus, currentSquaredError, currentIterations, currentDuration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, networkInfo.getWidth());
             pstmt.setInt(2, networkInfo.getHeight());
-            pstmt.setString(3, StringUtil.getStringFromList(networkInfo.getGenerations()));
+            List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
+            for (GroupedNormalizedData groupedNormalizedData : networkInfo.getGroupedNormalizedDatum()) {
+                groupedNormalizedDatumIds.add(groupedNormalizedData.getId());
+            }
+            pstmt.setString(3, StringUtil.getStringFromIntegerList(groupedNormalizedDatumIds));
             pstmt.setInt(4, networkInfo.getNumberOfData());
             pstmt.setLong(5, networkInfo.getTrainingDuration());
             pstmt.setFloat(6, networkInfo.getWeightMinValue());
@@ -81,7 +87,14 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setId(rs.getInt("id"));
                 networkInfo.setWidth(rs.getInt("width"));
                 networkInfo.setHeight(rs.getInt("height"));
-                networkInfo.setGenerations(StringUtil.getListFromString(rs.getString("generations")));
+                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("groupedNormalizedDatum"));
+                List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
+                for (Integer groupedNormalizedDataId : groupedNormalizedDatumIds) {
+                    GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
+                    groupedNormalizedData.setId(groupedNormalizedDataId);
+                    groupedNormalizedDatum.add(groupedNormalizedData);
+                }
+                networkInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
                 networkInfo.setNumberOfData(rs.getInt("number_of_data"));
                 networkInfo.setTrainingDuration(rs.getLong("training_duration"));
                 networkInfo.setWeightMinValue(rs.getFloat("weight_min_value"));

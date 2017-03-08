@@ -1,5 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.model.network;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -7,7 +9,7 @@ public class TestingInfo implements Serializable {
 
     private int networkId;
 
-    private List<String> generations;
+    private List<GroupedNormalizedData> groupedNormalizedDatum;
 
     private int numberOfTest;
 
@@ -27,12 +29,12 @@ public class TestingInfo implements Serializable {
         this.networkId = networkId;
     }
 
-    public List<String> getGenerations() {
-        return generations;
+    public List<GroupedNormalizedData> getGroupedNormalizedDatum() {
+        return groupedNormalizedDatum;
     }
 
-    public void setGenerations(List<String> generations) {
-        this.generations = generations;
+    public void setGroupedNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
+        this.groupedNormalizedDatum = groupedNormalizedDatum;
     }
 
     public int getNumberOfTest() {

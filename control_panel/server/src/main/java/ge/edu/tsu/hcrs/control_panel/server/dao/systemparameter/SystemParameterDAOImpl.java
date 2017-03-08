@@ -1,10 +1,11 @@
-package ge.edu.tsu.hcrs.control_panel.server.dao;
+package ge.edu.tsu.hcrs.control_panel.server.dao.systemparameter;
 
 
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.SysParamType;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.SystemParameter;
 import ge.edu.tsu.hcrs.control_panel.server.caching.CachedSystemParameter;
+import ge.edu.tsu.hcrs.control_panel.server.dao.DatabaseUtil;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
