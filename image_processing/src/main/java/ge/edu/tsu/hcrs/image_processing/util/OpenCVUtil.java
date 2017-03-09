@@ -24,17 +24,27 @@ public class OpenCVUtil {
         return opencv_imgcodecs.cvLoadImage(absPath);
     }
 
-    public static opencv_core.IplImage toIplImage(BufferedImage bufImage) {
+    public static opencv_core.IplImage bufferedImageToIplImage(BufferedImage bufImage) {
         OpenCVFrameConverter.ToIplImage iplConverter = new OpenCVFrameConverter.ToIplImage();
         Java2DFrameConverter java2dConverter = new Java2DFrameConverter();
         opencv_core.IplImage iplImage = iplConverter.convert(java2dConverter.convert(bufImage));
         return iplImage;
     }
 
-    public static BufferedImage IplImageToBufferedImage(opencv_core.IplImage src) {
+    public static BufferedImage iplImageToBufferedImage(opencv_core.IplImage src) {
         OpenCVFrameConverter.ToIplImage grabberConverter = new OpenCVFrameConverter.ToIplImage();
         Java2DFrameConverter paintConverter = new Java2DFrameConverter();
         Frame frame = grabberConverter.convert(src);
         return paintConverter.getBufferedImage(frame,1);
+    }
+
+    public static opencv_core.Mat bufferedImageToMat(BufferedImage bufImage) {
+        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
+        return converter.convertToMat(converter.convert(bufferedImageToIplImage(bufImage)));
+    }
+
+    public static BufferedImage matToBufferedImage(opencv_core.Mat mat) {
+        OpenCVFrameConverter.ToMat converter = new OpenCVFrameConverter.ToMat();
+        return  iplImageToBufferedImage(converter.convertToIplImage(converter.convert(mat)));
     }
 }
