@@ -15,7 +15,7 @@ public class LinearByAreaNormalization extends NormalizationMethod {
         Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
         for (int i = 0; i < normalizedAreas.length; i++) {
             for (int j = 0; j < normalizedAreas[i].length; j++) {
-                data[i * normalizedAreas.length + j] = normalized(normalizedAreas[i][j], groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue());
+                data[i * normalizedAreas[i].length + j] = normalized(normalizedAreas[i][j], groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue());
             }
         }
         normalizedData.setData(data);

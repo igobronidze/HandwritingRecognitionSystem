@@ -21,7 +21,7 @@ public class DiscreteResizeNormalization extends NormalizationMethod {
         Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
         for (int i = 0; i < groupedNormalizedData.getHeight(); i++) {
             for (int j = 0; j < groupedNormalizedData.getWidth(); j++) {
-                data[i * groupedNormalizedData.getHeight() + j] = (resizedImage.getRGB(j, i)> coeficient) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
+                data[i * groupedNormalizedData.getWidth() + j] = (resizedImage.getRGB(j, i)> coeficient) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
             }
         }
         normalizedData.setData(data);

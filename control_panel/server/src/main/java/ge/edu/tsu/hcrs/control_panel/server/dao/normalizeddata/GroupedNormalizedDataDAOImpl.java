@@ -28,9 +28,6 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
                 int id = rs.getInt("id");
-                String updateSql = "UPDATE grouped_normalized_data SET duration = duration + ? WHERE id = ?";
-                pstmt = DatabaseUtil.getConnection().prepareStatement(updateSql);
-                pstmt.executeUpdate();
                 return id;
             } else {
                 String insertSql = "INSERT INTO grouped_normalized_data (height, width, min_value, max_value, name, normalization_type, count, duration) VALUES (?,?,?,?,?,?,?,?);";

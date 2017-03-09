@@ -71,28 +71,28 @@ public class TextCutter {
         String s;
         switch (c) {
             case '?' :
-                s = "question_mark";
+                s = "questionMark";
                 break;
             case '<' :
-                s = "less_than";
+                s = "lessThan";
                 break;
             case '>' :
-                s = "greater_than";
+                s = "greaterThan";
                 break;
             case ':' :
                 s = "colon";
                 break;
             case '"' :
-                s = "double_quote";
+                s = "doubleQuote";
                 break;
             case '/' :
-                s = "forward_slash";
+                s = "forwardSlash";
                 break;
             case '\\' :
                 s = "backslash";
                 break;
             case '|' :
-                s = "vertical_bar";
+                s = "verticalBar";
                 break;
             case '*' :
                 s = "asterisk";

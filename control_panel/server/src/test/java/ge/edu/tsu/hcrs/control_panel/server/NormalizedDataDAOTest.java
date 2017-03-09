@@ -26,6 +26,7 @@ public class NormalizedDataDAOTest {
         groupedNormalizedData.setMaxValue(1);
         groupedNormalizedData.setNormalizationType(NormalizationType.LINEAR_BY_AREA);
         groupedNormalizedData.setName("testName");
+        groupedNormalizedData.setDuration(100);
         System.out.println(groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData));
         System.out.println(groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData));
         groupedNormalizedData.setNormalizationType(NormalizationType.DISCRETE_RESIZE);
@@ -52,7 +53,10 @@ public class NormalizedDataDAOTest {
         normalizedDatum.add(normalizedData);
         normalizedDatum.add(normalizedData);
         normalizedDatum.add(normalizedData);
-        normalizedDataDAO.addNormalizedDatum(normalizedDatum, 4);
+        GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
+        groupedNormalizedData.setId(8);
+        groupedNormalizedData.setDuration(50);
+        normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedData);
     }
 
     @Test
@@ -61,11 +65,11 @@ public class NormalizedDataDAOTest {
         NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
         List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
         GroupedNormalizedData groupedNormalizedData1 = new GroupedNormalizedData();
-        groupedNormalizedData1.setId(4);
+        groupedNormalizedData1.setId(8);
         groupedNormalizedDatum.add(groupedNormalizedData1);
         System.out.println(normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum).size());
         GroupedNormalizedData groupedNormalizedData2 = new GroupedNormalizedData();
-        groupedNormalizedData2.setId(5);
+        groupedNormalizedData2.setId(9);
         groupedNormalizedDatum.add(groupedNormalizedData2);
         System.out.println(normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum).size());
     }

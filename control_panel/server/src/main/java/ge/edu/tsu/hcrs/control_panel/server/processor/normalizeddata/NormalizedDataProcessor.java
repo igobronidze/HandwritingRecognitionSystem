@@ -13,6 +13,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class NormalizedDataProcessor {
@@ -23,12 +24,15 @@ public class NormalizedDataProcessor {
 
     public void addNormalizedDatum(GroupedNormalizedData groupedNormalizedData, List<String> directories) {
         List<NormalizedData> normalizedDatum = new ArrayList<>();
+        Date date = new Date();
         for (String directory : directories) {
             File file = new File(directory);
             addNormalizedData(groupedNormalizedData, file, normalizedDatum);
         }
         int groupedNormalizedDataId = groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData);
-        normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedDataId);
+        groupedNormalizedData.setId(groupedNormalizedDataId);
+        groupedNormalizedData.setDuration((new Date().getTime() - date.getTime()));
+        normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedData);
     }
 
     private void addNormalizedData(GroupedNormalizedData groupedNormalizedData, File file, List<NormalizedData> normalizedDatum) {
@@ -65,6 +69,28 @@ public class NormalizedDataProcessor {
     private Character getLetterFromFile(File file) {
         String fileName = file.getName();
         String fileNameWithoutExtension = fileName.replaceFirst("[.][^.]+$", "");
-        return fileNameWithoutExtension.split("_")[1].charAt(0);
+        String text = fileNameWithoutExtension.split("_")[1];
+        switch (text) {
+            case "questionMark" :
+                return '?';
+            case "lessThan" :
+                return '<';
+            case "greaterThan" :
+                return '>';
+            case "colon" :
+                return ':';
+            case "doubleQuote" :
+                return '"';
+            case "forwardSlash" :
+                return '/';
+            case "backslash" :
+                return '\\';
+            case "verticalBar" :
+                return  '|';
+            case "asterisk" :
+                return '*';
+            default:
+                return text.charAt(0);
+        }
     }
 }

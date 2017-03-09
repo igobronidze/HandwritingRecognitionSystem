@@ -19,7 +19,7 @@ public class LinearResizeNormalization extends NormalizationMethod {
         Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
         for (int i = 0; i < groupedNormalizedData.getHeight(); i++) {
             for (int j = 0; j < groupedNormalizedData.getWidth(); j++) {
-                data[i * groupedNormalizedData.getHeight() + j] = (float)resizedImage.getRGB(j, i) / blackPixel;
+                data[i * groupedNormalizedData.getWidth() + j] = (float)resizedImage.getRGB(j, i) / blackPixel;
             }
         }
         normalizedData.setData(data);

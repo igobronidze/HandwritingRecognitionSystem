@@ -14,7 +14,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
     private PreparedStatement pstmt;
 
     @Override
-    public void addNormalizedDatum(List<NormalizedData> normalizedDatum, int groupedNormalizedDataId) {
+    public void addNormalizedDatum(List<NormalizedData> normalizedDatum, GroupedNormalizedData groupedNormalizedData) {
         try {
             StringBuilder sql = new StringBuilder("INSERT INTO normalized_data (letter, data, grouped_normalized_data_id) VALUES ");
             for (int i = 0; i < normalizedDatum.size() - 1; i++) {
@@ -26,8 +26,13 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
                 NormalizedData normalizedData = normalizedDatum.get(i);
                 pstmt.setString(i * 3 + 1, "" + normalizedData.getLetter());
                 pstmt.setArray(i * 3 + 2, DatabaseUtil.getConnection().createArrayOf("float4", normalizedData.getData()));
-                pstmt.setInt(i * 3 + 3, groupedNormalizedDataId);
+                pstmt.setInt(i * 3 + 3, groupedNormalizedData.getId());
             }
+            pstmt.executeUpdate();
+            String updateSql = "UPDATE grouped_normalized_data SET duration = duration + ? WHERE id = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(updateSql);
+            pstmt.setLong(1, groupedNormalizedData.getDuration());
+            pstmt.setInt(2, groupedNormalizedData.getId());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());

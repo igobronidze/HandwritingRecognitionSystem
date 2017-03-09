@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface NormalizedDataDAO {
 
-    void addNormalizedDatum(List<NormalizedData> normalizedDatum, int groupedNormalizedDataId);
+    void addNormalizedDatum(List<NormalizedData> normalizedDatum, GroupedNormalizedData groupedNormalizedData);
 
     List<NormalizedData> getNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum);
 }

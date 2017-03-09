@@ -17,7 +17,7 @@ public class DiscreteByAreaNormalization extends NormalizationMethod {
         Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
         for (int i = 0; i < normalizedAreas.length; i++) {
             for (int j = 0; j < normalizedAreas[i].length; j++) {
-                data[i * normalizedAreas.length + j] = (normalizedAreas[i][j] >= coeficient) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
+                data[i * normalizedAreas[i].length + j] = (normalizedAreas[i][j] >= coeficient) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
             }
         }
         normalizedData.setData(data);
