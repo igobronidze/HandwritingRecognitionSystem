@@ -28,7 +28,7 @@ public class NormalizedDataDAOTest {
         groupedNormalizedData.setName("testName");
         System.out.println(groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData));
         System.out.println(groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData));
-        groupedNormalizedData.setNormalizationType(NormalizationType.DISCRETE_BY_AT_LEAST_ONE);
+        groupedNormalizedData.setNormalizationType(NormalizationType.DISCRETE_RESIZE);
         System.out.println(groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData));
     }
 
@@ -37,7 +37,7 @@ public class NormalizedDataDAOTest {
     public void testGetGroupedNormalizedDatum() {
         GroupedNormalizedDataDAO groupedNormalizedDataDAO = new GroupedNormalizedDataDAOImpl();
         System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, null, null).size());
-        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, NormalizationType.DISCRETE_BY_AT_LEAST_ONE, null).size());
+        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, NormalizationType.LINEAR_BY_AREA, null).size());
         System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(23, 27, 0F, 1F, null, "test").size());
     }
 

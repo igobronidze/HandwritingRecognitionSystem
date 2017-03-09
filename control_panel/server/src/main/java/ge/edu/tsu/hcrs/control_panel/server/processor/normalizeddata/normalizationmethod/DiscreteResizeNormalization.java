@@ -7,9 +7,11 @@ import ge.edu.tsu.hcrs.image_processing.ImageProcessingManagerImpl;
 
 import java.awt.image.BufferedImage;
 
-public class ImageResizeNormalization extends NormalizationMethod {
+public class DiscreteResizeNormalization extends NormalizationMethod {
 
     private ImageProcessingManager imageProcessingManager = new ImageProcessingManagerImpl();
+
+    private float coeficient = 0.5F;
 
     @Override
     public NormalizedData getNormalizedDataFromImage(BufferedImage image, GroupedNormalizedData groupedNormalizedData, Character letter) {
@@ -19,7 +21,7 @@ public class ImageResizeNormalization extends NormalizationMethod {
         Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
         for (int i = 0; i < groupedNormalizedData.getHeight(); i++) {
             for (int j = 0; j < groupedNormalizedData.getWidth(); j++) {
-                data[i * groupedNormalizedData.getHeight() + j] = (float)resizedImage.getRGB(j, i) / blackPixel;
+                data[i * groupedNormalizedData.getHeight() + j] = (resizedImage.getRGB(j, i)> coeficient) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
             }
         }
         normalizedData.setData(data);

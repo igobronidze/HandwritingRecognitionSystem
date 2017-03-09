@@ -5,7 +5,9 @@ import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData
 
 import java.awt.image.BufferedImage;
 
-public class DiscreteByAtLeastOneNormalization extends NormalizationMethod {
+public class DiscreteByAreaNormalization extends NormalizationMethod {
+
+    private float coeficient = 0.5F;
 
     @Override
     public NormalizedData getNormalizedDataFromImage(BufferedImage image, GroupedNormalizedData groupedNormalizedData, Character letter) {
@@ -15,7 +17,7 @@ public class DiscreteByAtLeastOneNormalization extends NormalizationMethod {
         Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
         for (int i = 0; i < normalizedAreas.length; i++) {
             for (int j = 0; j < normalizedAreas[i].length; j++) {
-                data[i * normalizedAreas.length + j] = (normalizedAreas[i][j] > 0) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
+                data[i * normalizedAreas.length + j] = (normalizedAreas[i][j] >= coeficient) ? groupedNormalizedData.getMaxValue() : groupedNormalizedData.getMinValue();
             }
         }
         normalizedData.setData(data);

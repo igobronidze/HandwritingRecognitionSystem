@@ -25,22 +25,32 @@ public class NormalizedDataProcessor {
         List<NormalizedData> normalizedDatum = new ArrayList<>();
         for (String directory : directories) {
             File file = new File(directory);
-            for (File f : file.listFiles()) {
+            addNormalizedData(groupedNormalizedData, file, normalizedDatum);
+        }
+        int groupedNormalizedDataId = groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData);
+        normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedDataId);
+    }
+
+    private void addNormalizedData(GroupedNormalizedData groupedNormalizedData, File file, List<NormalizedData> normalizedDatum) {
+        for (File f : file.listFiles()) {
+            if (f.isDirectory()) {
+                addNormalizedData(groupedNormalizedData, f, normalizedDatum);
+            } else {
                 try {
                     BufferedImage image = ImageIO.read(f);
                     NormalizationMethod normalizationMethod = null;
                     switch (groupedNormalizedData.getNormalizationType()) {
-                        case DISCRETE_BY_AT_LEAST_ONE:
-                            normalizationMethod = new DiscreteByAtLeastOneNormalization();
+                        case DISCRETE_BY_AREA:
+                            normalizationMethod = new DiscreteByAreaNormalization();
                             break;
-                        case DISCRETE_BY_MOSTLY:
-                            normalizationMethod = new DiscreteByMostlyNormalization();
+                        case DISCRETE_RESIZE:
+                            normalizationMethod = new DiscreteResizeNormalization();
                             break;
                         case LINEAR_BY_AREA:
                             normalizationMethod = new LinearByAreaNormalization();
                             break;
-                        case IMAGE_RESIZE:
-                            normalizationMethod = new ImageResizeNormalization();
+                        case LINEAR_RESIZE:
+                            normalizationMethod = new LinearResizeNormalization();
                             break;
                     }
                     NormalizedData normalizedData = normalizationMethod.getNormalizedDataFromImage(image, groupedNormalizedData, getLetterFromFile(f));
@@ -50,8 +60,6 @@ public class NormalizedDataProcessor {
                 }
             }
         }
-        int groupedNormalizedDataId = groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData);
-        normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedDataId);
     }
 
     private Character getLetterFromFile(File file) {

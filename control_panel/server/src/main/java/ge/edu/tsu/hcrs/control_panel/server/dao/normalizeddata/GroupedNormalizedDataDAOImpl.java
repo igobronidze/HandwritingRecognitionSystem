@@ -27,9 +27,13 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
             pstmt.setString(6, groupedNormalizedData.getNormalizationType().name());
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                return rs.getInt("id");
+                int id = rs.getInt("id");
+                String updateSql = "UPDATE grouped_normalized_data SET duration = duration + ? WHERE id = ?";
+                pstmt = DatabaseUtil.getConnection().prepareStatement(updateSql);
+                pstmt.executeUpdate();
+                return id;
             } else {
-                String insertSql = "INSERT INTO grouped_normalized_data (height, width, min_value, max_value, name, normalization_type, count) VALUES (?,?,?,?,?,?,?);";
+                String insertSql = "INSERT INTO grouped_normalized_data (height, width, min_value, max_value, name, normalization_type, count, duration) VALUES (?,?,?,?,?,?,?,?);";
                 pstmt = DatabaseUtil.getConnection().prepareStatement(insertSql);
                 pstmt.setInt(1, groupedNormalizedData.getHeight());
                 pstmt.setInt(2, groupedNormalizedData.getWidth());
@@ -38,6 +42,7 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
                 pstmt.setString(5, groupedNormalizedData.getName());
                 pstmt.setString(6, groupedNormalizedData.getNormalizationType().name());
                 pstmt.setInt(7, groupedNormalizedData.getCount());
+                pstmt.setLong(8, groupedNormalizedData.getDuration());
                 pstmt.executeUpdate();
                 String maxIdSql = "SELECT MAX(id) AS max_id FROM grouped_normalized_data";
                 pstmt = DatabaseUtil.getConnection().prepareStatement(maxIdSql);
@@ -88,6 +93,7 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
                 groupedNormalizedData.setName(rs.getString("name"));
                 groupedNormalizedData.setCount(rs.getInt("count"));
                 groupedNormalizedData.setId(rs.getInt("id"));
+                groupedNormalizedData.setDuration(rs.getLong("duration"));
                 groupedNormalizedDatum.add(groupedNormalizedData);
             }
         } catch (SQLException ex) {

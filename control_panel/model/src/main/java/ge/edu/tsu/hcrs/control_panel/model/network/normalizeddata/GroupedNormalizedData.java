@@ -18,6 +18,8 @@ public class GroupedNormalizedData {
 
 	private int count;
 
+	private long duration;
+
 	public int getId() {
 		return id;
 	}
@@ -80,5 +82,13 @@ public class GroupedNormalizedData {
 
 	public void setCount(int count) {
 		this.count = count;
+	}
+
+	public long getDuration() {
+		return duration;
+	}
+
+	public void setDuration(long duration) {
+		this.duration = duration;
 	}
 }
