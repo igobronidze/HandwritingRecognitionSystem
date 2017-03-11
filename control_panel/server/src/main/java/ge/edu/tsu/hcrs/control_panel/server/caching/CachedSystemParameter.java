@@ -15,7 +15,7 @@ public class CachedSystemParameter {
 
     private static Map<String,String> cachedParameters;
 
-    public static String getParameterValue(Parameter parameter) {
+    public static String getStringParameterValue(Parameter parameter) {
         if (cachedParameters == null) {
             fillParameters();
         }

@@ -2,6 +2,8 @@ package ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizat
 
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
+import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.image_processing.ImageProcessingManager;
 import ge.edu.tsu.hcrs.image_processing.ImageProcessingManagerImpl;
 
@@ -11,7 +13,9 @@ public class DiscreteResizeNormalization extends NormalizationMethod {
 
     private ImageProcessingManager imageProcessingManager = new ImageProcessingManagerImpl();
 
-    private float coeficient = 0.5F;
+    private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
+
+    private float coeficient = systemParameterProcessor.getFloatParameterValue(new Parameter("discreteResizeNormalizationCoeficient", "0.5"));
 
     @Override
     public NormalizedData getNormalizedDataFromImage(BufferedImage image, GroupedNormalizedData groupedNormalizedData, Character letter) {

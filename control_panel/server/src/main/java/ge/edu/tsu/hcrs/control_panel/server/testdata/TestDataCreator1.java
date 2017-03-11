@@ -27,7 +27,7 @@ public class TestDataCreator1 {
         groupedNormalizedData.setNormalizationType(type);
         groupedNormalizedData.setMinValue(0);
         groupedNormalizedData.setMaxValue(1);
-        groupedNormalizedData.setName("asi");
+        groupedNormalizedData.setName("test");
         normalizedDataProcessor.addNormalizedDatum(groupedNormalizedData, directories);
     }
 }

@@ -56,17 +56,17 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         }
         MultiLayerPerceptron perceptron = null;
         try {
-            perceptron = (MultiLayerPerceptron) NeuralNetwork.createFromFile(systemParameterProcessor.getParameterValue(neuralNetworkPathParameter));
+            perceptron = (MultiLayerPerceptron) NeuralNetwork.createFromFile(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
         } catch (Exception ex) {
             perceptron = new MultiLayerPerceptron(layers, TransferFunctionType.SIGMOID);
         }
         perceptron.learn(trainingSet);
-        perceptron.save(systemParameterProcessor.getParameterValue(neuralNetworkPathParameter));
+        perceptron.save(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
     }
 
     @Override
     public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence) {
-        NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getParameterValue(neuralNetworkPathParameter));
+        NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
         DataSetRow dataSetRow = NetworkDataCreator.getDataSetRow(normalizedData, charSequence);
         neuralNetwork.setInput(dataSetRow.getInput());
         neuralNetwork.calculate();

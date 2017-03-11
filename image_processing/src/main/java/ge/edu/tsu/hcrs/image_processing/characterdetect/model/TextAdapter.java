@@ -1,7 +1,5 @@
 package ge.edu.tsu.hcrs.image_processing.characterdetect.model;
 
-import ge.edu.tsu.hcrs.image_processing.characterdetect.model.TextRow;
-
 import java.util.Comparator;
 import java.util.PriorityQueue;
 import java.util.Queue;

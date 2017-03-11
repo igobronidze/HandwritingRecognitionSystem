@@ -41,8 +41,8 @@ public class SystemParameterServiceImpl implements SystemParameterService {
     }
 
     @Override
-    public String getParameterValue(Parameter parameter) {
-        return systemParameterProcessor.getParameterValue(parameter);
+    public String getStringParameterValue(Parameter parameter) {
+        return systemParameterProcessor.getStringParameterValue(parameter);
     }
 
     @Override

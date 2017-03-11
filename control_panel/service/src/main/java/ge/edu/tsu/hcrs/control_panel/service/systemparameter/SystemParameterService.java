@@ -17,7 +17,7 @@ public interface SystemParameterService {
 
     List<SystemParameter> getSystemParameters(String key, SysParamType type);
 
-    String getParameterValue(Parameter parameter);
+    String getStringParameterValue(Parameter parameter);
 
     Integer getIntegerParameterValue(Parameter parameter);
 

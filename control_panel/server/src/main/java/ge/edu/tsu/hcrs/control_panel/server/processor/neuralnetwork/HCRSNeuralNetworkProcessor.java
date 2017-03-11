@@ -69,7 +69,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 try {
                     long trainingDuration = neuralNetwork.train(trainingProgress);
                     networkInfoDAO.updateTrainedState(trainingDuration, id);
-                    NeuralNetwork.save(systemParameterProcessor.getParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + width + "_" + height + ".nnet", neuralNetwork);
+                    NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + width + "_" + height + ".nnet", neuralNetwork);
                 } catch (NNException ex) {
                     System.out.println(ex.getMessage());
                 }

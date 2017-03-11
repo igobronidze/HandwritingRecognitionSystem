@@ -8,24 +8,24 @@ import java.util.List;
 
 public class SystemParameterProcessor {
 
-    public String getParameterValue(Parameter parameter) {
-        return CachedSystemParameter.getParameterValue(parameter);
+    public String getStringParameterValue(Parameter parameter) {
+        return CachedSystemParameter.getStringParameterValue(parameter);
     }
 
     public Integer getIntegerParameterValue(Parameter parameter) {
-        return Integer.parseInt(getParameterValue(parameter));
+        return Integer.parseInt(getStringParameterValue(parameter));
     }
 
     public Float getFloatParameterValue(Parameter parameter) {
-        return Float.parseFloat(getParameterValue(parameter));
+        return Float.parseFloat(getStringParameterValue(parameter));
     }
 
     public Long getLongParameterValue(Parameter parameter) {
-        return Long.parseLong(getParameterValue(parameter));
+        return Long.parseLong(getStringParameterValue(parameter));
     }
 
     public List<Integer> getIntegerListParameterValue(Parameter parameter) {
-        String text = getParameterValue(parameter);
+        String text = getStringParameterValue(parameter);
         if (text == null || text.isEmpty()) {
             return new ArrayList<>();
         }
