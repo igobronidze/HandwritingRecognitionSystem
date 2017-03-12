@@ -125,8 +125,9 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             testingInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
             testingInfo.setSquaredError(testResult.getSquaredError());
             testingInfo.setDiffBetweenAnsAndBest(testResult.getDiffBetweenAnsAndBest());
-            testingInfo.setPercentageOfCorrects(testResult.getPercentageOfCorrects());
+            testingInfo.setPercentageOfIncorrect(testResult.getPercentageOfIncorrect());
             testingInfo.setNormalizedGeneralError(testResult.getNormalizedGeneralError());
+            testingInfo.setDiffBetweenAnsAndBest(testResult.getDuration());
             testingInfoDAO.addTestingInfo(testingInfo);
             return testingInfo.getNormalizedGeneralError();
         } catch (Exception ex) {

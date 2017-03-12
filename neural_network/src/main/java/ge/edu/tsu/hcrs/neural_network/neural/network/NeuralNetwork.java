@@ -134,8 +134,9 @@ public class NeuralNetwork implements Serializable {
         if (trainingDataList.size() == 0) {
             throw new TrainingDataNNException("Test data size must not be zero");
         }
+        Date start = new Date();
         float squaredError = 0;
-        float numberOfCorrects = 0;
+        float numberOfIncorrects = 0;
         float diffBetweenAnsAndBest = 0;
         for (TrainingData trainingData : trainingDataList) {
             Activation.activate(this, trainingData);
@@ -144,15 +145,16 @@ public class NeuralNetwork implements Serializable {
                 outputActivation.add(neuron.getActivationValue());
             }
             squaredError += TestResultUtil.getSquaredError(trainingData.getOutput(), outputActivation);
-            numberOfCorrects += TestResultUtil.isCorrect(trainingData.getOutput(), outputActivation) ? 1 : 0;
+            numberOfIncorrects += TestResultUtil.isCorrect(trainingData.getOutput(), outputActivation) ? 0 : 1;
             diffBetweenAnsAndBest += TestResultUtil.getDiffBetweenAnsAndBest(trainingData.getOutput(), outputActivation);
         }
         TestResult testResult = new TestResult();
         testResult.setNumberOfData(trainingDataList.size());
         testResult.setSquaredError(squaredError);
-        testResult.setPercentageOfCorrects(numberOfCorrects * 100 / trainingDataList.size());
+        testResult.setPercentageOfIncorrect(numberOfIncorrects * 100 / trainingDataList.size());
         testResult.setDiffBetweenAnsAndBest(diffBetweenAnsAndBest);
         testResult.setNormalizedGeneralError(TestResultUtil.getNormalizedGeneralError(testResult));
+        testResult.setDuration(new Date().getTime() - start.getTime());
         return testResult;
     }
 

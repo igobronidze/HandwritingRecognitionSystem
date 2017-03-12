@@ -13,21 +13,24 @@ public class TestResultUtil {
     }
 
     public static boolean isCorrect(List<Float> outputList, List<Float> activatedList) {
-        return getIndexOfMax(outputList) == getIndexOfMax(activatedList);
+        return getIndexOfMax(outputList, -1) == getIndexOfMax(activatedList, -1);
     }
 
-    public static float   getDiffBetweenAnsAndBest(List<Float> outputList, List<Float> activatedList) {
-        return outputList.get(getIndexOfMax(outputList)) - outputList.get(getIndexOfMax(activatedList));
+    public static float getDiffBetweenAnsAndBest(List<Float> outputList, List<Float> activatedList) {
+        int ansIndex = getIndexOfMax(outputList, -1);
+        return outputList.get(getIndexOfMax(activatedList, ansIndex)) - outputList.get(ansIndex);
     }
 
-    // TODO[sg] დასამუშავებელია ფორმულა, რომელიც დათვლის საერთო შეცდომას
     public static float getNormalizedGeneralError(TestResult testResult) {
-        return testResult.getSquaredError() * testResult.getPercentageOfCorrects() * testResult.getDiffBetweenAnsAndBest() / testResult.getNumberOfData();
+        return testResult.getSquaredError() * testResult.getPercentageOfIncorrect() * testResult.getDiffBetweenAnsAndBest() / testResult.getNumberOfData();
     }
 
-    private static int getIndexOfMax(List<Float> list) {
+    private static int getIndexOfMax(List<Float> list, int except) {
         int maxIndex = 0;
         for (int i = 0; i < list.size(); i++) {
+            if (i == except) {
+                continue;
+            }
             if (list.get(i) > list.get(maxIndex)) {
                 maxIndex = i;
             }

@@ -18,8 +18,8 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
     @Override
     public void addTestingInfo(TestingInfo testingInfo) {
         try {
-            String sql = "INSERT INTO testing_info (generations, number_of_test, squared_error, percentage_of_corrects, " +
-                    "diff_between_ans_and_best, normalized_general_error, network_id) VALUES (?,?,?,?,?,?,?);";
+            String sql = "INSERT INTO testing_info (generations, number_of_test, squared_error, percentage_of_incorrect, " +
+                    "diff_between_ans_and_best, normalized_general_error, duration, network_id) VALUES (?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
             for (GroupedNormalizedData groupedNormalizedData : testingInfo.getGroupedNormalizedDatum()) {
@@ -28,10 +28,11 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
             pstmt.setString(1, StringUtil.getStringFromIntegerList(groupedNormalizedDatumIds));
             pstmt.setInt(2, testingInfo.getNumberOfTest());
             pstmt.setFloat(3, testingInfo.getSquaredError());
-            pstmt.setFloat(4, testingInfo.getPercentageOfCorrects());
+            pstmt.setFloat(4, testingInfo.getPercentageOfIncorrect());
             pstmt.setFloat(5, testingInfo.getDiffBetweenAnsAndBest());
             pstmt.setFloat(6, testingInfo.getNormalizedGeneralError());
-            pstmt.setInt(7, testingInfo.getNetworkId());
+            pstmt.setLong(7, testingInfo.getDuration());
+            pstmt.setInt(8, testingInfo.getNetworkId());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -61,9 +62,10 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 }
                 testingInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
                 testingInfo.setSquaredError(rs.getFloat("squared_error"));
-                testingInfo.setPercentageOfCorrects(rs.getFloat("percentage_of_corrects"));
+                testingInfo.setPercentageOfIncorrect(rs.getFloat("percentage_of_incorrect"));
                 testingInfo.setDiffBetweenAnsAndBest(rs.getFloat("diff_between_ans_and_best"));
                 testingInfo.setNormalizedGeneralError(rs.getFloat("normalized_general_error"));
+                testingInfo.setDuration(rs.getLong("duration"));
                 testingInfoList.add(testingInfo);
             }
         } catch (SQLException ex) {

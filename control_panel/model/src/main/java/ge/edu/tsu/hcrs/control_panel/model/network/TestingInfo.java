@@ -15,11 +15,13 @@ public class TestingInfo implements Serializable {
 
     private float squaredError;
 
-    private float percentageOfCorrects;
+    private float percentageOfIncorrect;
 
     private float diffBetweenAnsAndBest;
 
     private float normalizedGeneralError;
+
+    private long duration;
 
     public int getNetworkId() {
         return networkId;
@@ -53,12 +55,12 @@ public class TestingInfo implements Serializable {
         this.squaredError = squaredError;
     }
 
-    public float getPercentageOfCorrects() {
-        return percentageOfCorrects;
+    public float getPercentageOfIncorrect() {
+        return percentageOfIncorrect;
     }
 
-    public void setPercentageOfCorrects(float percentageOfCorrects) {
-        this.percentageOfCorrects = percentageOfCorrects;
+    public void setPercentageOfIncorrect(float percentageOfIncorrect) {
+        this.percentageOfIncorrect = percentageOfIncorrect;
     }
 
     public float getDiffBetweenAnsAndBest() {
@@ -75,5 +77,13 @@ public class TestingInfo implements Serializable {
 
     public void setNormalizedGeneralError(float normalizedGeneralError) {
         this.normalizedGeneralError = normalizedGeneralError;
+    }
+
+    public long getDuration() {
+        return duration;
+    }
+
+    public void setDuration(long duration) {
+        this.duration = duration;
     }
 }
