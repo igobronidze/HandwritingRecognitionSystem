@@ -20,8 +20,8 @@ public class NetworkInfoServiceImpl implements NetworkInfoService {
     }
 
     @Override
-    public List<NetworkInfo> getNetworkInfoList(Integer id, String generation) {
-        List<NetworkInfo> networkInfoList = networkInfoDAO.getNetworkInfoList(id, generation);
+    public List<NetworkInfo> getNetworkInfoList(Integer id) {
+        List<NetworkInfo> networkInfoList = networkInfoDAO.getNetworkInfoList(id);
         for (NetworkInfo networkInfo : networkInfoList) {
             networkInfo.setTestingInfoList(testingInfoDAO.getTestingInfoListByNetworkId(networkInfo.getId()));
         }

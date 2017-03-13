@@ -33,7 +33,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
-    private Parameter neuralNetworkDirectoryParameter = new Parameter("neuralNetworkDirectory", "D:\\sg\\handwriting_recognition\\network");
+    private Parameter neuralNetworkDirectoryParameter = new Parameter("neuralNetworkDirectory", "C:\\BachelorProject\\hcrs\\network");
 
     private Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
@@ -69,7 +69,8 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 try {
                     long trainingDuration = neuralNetwork.train(trainingProgress);
                     networkInfoDAO.updateTrainedState(trainingDuration, id);
-                    NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + "_" + width + "_" + height + ".nnet", neuralNetwork);
+                    networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
+                    NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + ".nnet", neuralNetwork);
                 } catch (NNException ex) {
                     System.out.println(ex.getMessage());
                 }

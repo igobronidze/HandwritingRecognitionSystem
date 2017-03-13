@@ -1,6 +1,6 @@
 CREATE TABLE testing_info (
     id SERIAL PRIMARY KEY NOT NULL,
-    groupedNormalizedDatum TEXT NOT NULL,
+    grouped_normalized_datum TEXT NOT NULL,
     number_of_test INT NOT NULL,
     squared_error REAL NOT NULL,
     percentage_of_incorrect REAL NOT NULL,
@@ -8,4 +8,4 @@ CREATE TABLE testing_info (
     normalized_general_error REAL NOT NULL,
     duration BIGINT DEFAULT 0,
     network_id INT REFERENCES network_info(id)
-    );
+);

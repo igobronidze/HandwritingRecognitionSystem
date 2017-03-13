@@ -2,7 +2,7 @@ CREATE TABLE network_info (
     id SERIAL PRIMARY KEY NOT NULL,
     width INT NOT NULL,
     height INT NOT NULL,
-    groupedNormalizedDatum TEXT NOT NULL,
+    grouped_normalized_datum TEXT NOT NULL,
     number_of_data INT DEFAULT 0,
     training_duration BIGINT DEFAULT 0,
     weight_min_value REAL NOT NULL,
@@ -14,13 +14,13 @@ CREATE TABLE network_info (
     min_error REAL NOT NULL,
     training_max_iteration BIGINT NOT NULL,
     number_of_training_data_in_one_iteration BIGINT NOT NULL,
-    char_sequence VARCHAR(3) NOT NULL,
+    char_sequence VARCHAR(200) NOT NULL,
     hidden_layer VARCHAR(100) NOT NULL,
     network_processor_type VARCHAR(50) NOT NULL,
     network_meta_info TEXT,
     description TEXT,
-    trainingStatus VARCHAR(50) NOT NULL,
-    currentSquaredError REAL NOT NULL DEFAULT 0.0,
-    currentIterations BIGINT NOT NULL DEFAULT 0,
-    currentDuration BIGINT NOT NULL DEFAULT 0
-    );
+    training_status VARCHAR(50) NOT NULL,
+    current_squared_error REAL NOT NULL DEFAULT 0.0,
+    current_iterations BIGINT NOT NULL DEFAULT 0,
+    current_duration BIGINT NOT NULL DEFAULT 0
+);

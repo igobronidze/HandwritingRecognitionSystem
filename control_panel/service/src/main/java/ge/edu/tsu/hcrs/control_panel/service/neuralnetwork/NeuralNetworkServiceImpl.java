@@ -16,7 +16,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
 
     public NeuralNetworkServiceImpl(NetworkProcessorType type) {
         switch (type) {
-            case MY_NEURAL_NETWORK:
+            case HCRS_NEURAL_NETWORK:
                 iNeuralNetworkProcessor = new HCRSNeuralNetworkProcessor();
             case NEUROPH_NEURAL_NETWORK:
                 iNeuralNetworkProcessor = new NeurophNeuralNetworkProcessor();

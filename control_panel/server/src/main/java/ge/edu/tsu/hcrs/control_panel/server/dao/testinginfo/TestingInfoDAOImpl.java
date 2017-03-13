@@ -18,7 +18,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
     @Override
     public void addTestingInfo(TestingInfo testingInfo) {
         try {
-            String sql = "INSERT INTO testing_info (generations, number_of_test, squared_error, percentage_of_incorrect, " +
+            String sql = "INSERT INTO testing_info (grouped_normalized_datum, number_of_test, squared_error, percentage_of_incorrect, " +
                     "diff_between_ans_and_best, normalized_general_error, duration, network_id) VALUES (?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
@@ -53,7 +53,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 TestingInfo testingInfo = new TestingInfo();
                 testingInfo.setNetworkId(rs.getInt("network_id"));
                 testingInfo.setNumberOfTest(rs.getInt("number_of_test"));
-                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("groupedNormalizedDatum"));
+                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("grouped_normalized_datum"));
                 List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
                 for (Integer groupedNormalizedDataId : groupedNormalizedDatumIds) {
                     GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();

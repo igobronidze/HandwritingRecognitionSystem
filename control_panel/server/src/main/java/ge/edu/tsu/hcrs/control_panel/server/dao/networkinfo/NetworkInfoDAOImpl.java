@@ -22,10 +22,10 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public int addNetworkInfo(NetworkInfo networkInfo) {
         try {
-            String sql = "INSERT INTO network_info (width, height, groupedNormalizedDatum, number_of_data, training_duration, weight_min_value," +
+            String sql = "INSERT INTO network_info (width, height, grouped_normalized_datum, number_of_data, training_duration, weight_min_value," +
                     " weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
                     " number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description," +
-                    " trainingStatus, currentSquaredError, currentIterations, currentDuration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    " training_status, current_squared_error, current_iterations, current_duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, networkInfo.getWidth());
             pstmt.setInt(2, networkInfo.getHeight());
@@ -69,15 +69,12 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     }
 
     @Override
-    public List<NetworkInfo> getNetworkInfoList(Integer id, String generation) {
+    public List<NetworkInfo> getNetworkInfoList(Integer id) {
         List<NetworkInfo> networkInfoList = new ArrayList<>();
         try {
             String sql = "SELECT * FROM network_info WHERE 1 = 1 ";
             if (id != null) {
                 sql += "AND id = '" + id + "' ";
-            }
-            if (generation != null) {
-                sql += "AND generation = '" + generation + "' ";
             }
             sql += " ORDER BY id DESC;";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
@@ -87,7 +84,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setId(rs.getInt("id"));
                 networkInfo.setWidth(rs.getInt("width"));
                 networkInfo.setHeight(rs.getInt("height"));
-                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("groupedNormalizedDatum"));
+                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("grouped_normalized_datum"));
                 List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
                 for (Integer groupedNormalizedDataId : groupedNormalizedDatumIds) {
                     GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
@@ -111,10 +108,10 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setNetworkProcessorType(NetworkProcessorType.valueOf(rs.getString("network_processor_type")));
                 networkInfo.setNetworkMetaInfo(rs.getString("network_meta_info"));
                 networkInfo.setDescription(rs.getString("description"));
-                networkInfo.setTrainingStatus(NetworkTrainingStatus.valueOf(rs.getString("trainingStatus")));
-                networkInfo.setCurrentSquaredError(rs.getFloat("currentSquaredError"));
-                networkInfo.setCurrentIterations(rs.getLong("currentIterations"));
-                networkInfo.setCurrentDuration(rs.getLong("currentDuration"));
+                networkInfo.setTrainingStatus(NetworkTrainingStatus.valueOf(rs.getString("training_status")));
+                networkInfo.setCurrentSquaredError(rs.getFloat("current_squared_error"));
+                networkInfo.setCurrentIterations(rs.getLong("current_iterations"));
+                networkInfo.setCurrentDuration(rs.getLong("current_duration"));
                 networkInfoList.add(networkInfo);
             }
         } catch (SQLException ex) {
@@ -147,15 +144,15 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     public Object[] getTrainingCurrentState(int id) {
         Object[] result = new Object[4];
         try {
-            String sql = "SELECT trainingStatus, currentSquaredError, currentIterations, currentDuration fROM testing_info WHERE network_id = ?";
+            String sql = "SELECT training_status, current_squaredError, current_iterations, current_duration fROM network_info WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
             if (rs.next()) {
-                result[0] = NetworkTrainingStatus.valueOf(rs.getString("trainingStatus"));
-                result[1] = rs.getFloat("currentSquaredError");
-                result[2] = rs.getLong("currentIterations");
-                result[3] = rs.getLong("currentDuration");
+                result[0] = NetworkTrainingStatus.valueOf(rs.getString("training_status"));
+                result[1] = rs.getFloat("current_squared_error");
+                result[2] = rs.getLong("current_iterations");
+                result[3] = rs.getLong("current_duration");
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -168,7 +165,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public void updateTrainingCurrentState(float currentSquaredError, long currentIterations, long currentDuration, int id) {
         try {
-            String sql = "UPDATE testing_info SET currentSquaredError = ?, currentIterations = ?, currentDuration = ? WHERE network_id = ?";
+            String sql = "UPDATE network_info SET current_squared_error = ?, current_iterations = ?, current_duration = ? WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setFloat(1, currentDuration);
             pstmt.setLong(2, currentIterations);
@@ -185,7 +182,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public void updateTrainedState(long trainingDuration, int id) {
         try {
-            String sql = "UPDATE testing_info SET trainingStatus = ?, trainingDuration = ? WHERE network_id = ?";
+            String sql = "UPDATE network_info SET training_status = ?, training_duration = ? WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setString(1, NetworkTrainingStatus.TRAINED.name());
             pstmt.setLong(2, trainingDuration);
