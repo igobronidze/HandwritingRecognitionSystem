@@ -9,5 +9,5 @@ public interface GroupedNormalizedDataDAO {
 
     Integer addOrGetGroupedNormalizedDataId(GroupedNormalizedData groupedNormalizedData);
 
-    List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name);
+    List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer id, Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name);
 }

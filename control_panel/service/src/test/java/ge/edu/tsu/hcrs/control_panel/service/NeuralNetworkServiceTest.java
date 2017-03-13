@@ -6,6 +6,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.TransferFunction;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizationType;
 import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkService;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkServiceImpl;
@@ -31,6 +32,11 @@ public class NeuralNetworkServiceTest {
 		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
 		GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
 		groupedNormalizedData.setId(17);
+		groupedNormalizedData.setWidth(23);
+		groupedNormalizedData.setHeight(29);
+		groupedNormalizedData.setMinValue(0);
+		groupedNormalizedData.setMaxValue(1F);
+		groupedNormalizedData.setNormalizationType(NormalizationType.LINEAR_BY_AREA);
 		groupedNormalizedDatum.add(groupedNormalizedData);
 		networkInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
 		networkInfo.setWeightMinValue(-0.5F);
@@ -41,11 +47,24 @@ public class NeuralNetworkServiceTest {
 		networkInfo.setNetworkMetaInfo("Network meta info");
 		networkInfo.setNetworkProcessorType(NetworkProcessorType.HCRS_NEURAL_NETWORK);
 		networkInfo.setNumberOfTrainingDataInOneIteration(100);
-		networkInfo.setTrainingMaxIteration(200);
+		networkInfo.setTrainingMaxIteration(5000);
 		networkInfo.setTransferFunction(TransferFunction.SIGMOID);
-		networkInfo.setWidth(23);
-		networkInfo.setHeight(29);
 
 		neuralNetworkService.trainNeural(networkInfo);
+	}
+
+	@Test
+	public void testTestNeural() throws ControlPanelException {
+		NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
+		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
+		GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
+		groupedNormalizedData.setId(17);
+		groupedNormalizedData.setWidth(23);
+		groupedNormalizedData.setHeight(29);
+		groupedNormalizedData.setMinValue(0);
+		groupedNormalizedData.setMaxValue(1F);
+		groupedNormalizedData.setNormalizationType(NormalizationType.LINEAR_BY_AREA);
+		groupedNormalizedDatum.add(groupedNormalizedData);
+		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 1));
 	}
 }

@@ -15,8 +15,8 @@ public class NormalizedDataServiceImpl implements NormalizedDataService {
     private NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
 
     @Override
-    public List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name) {
-        return groupedNormalizedDataDAO.getGroupedNormalizedDatum(height, width, minValue, maxValue, normalizationType, name);
+    public List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer id, Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name) {
+        return groupedNormalizedDataDAO.getGroupedNormalizedDatum(id, height, width, minValue, maxValue, normalizationType, name);
     }
 
     @Override

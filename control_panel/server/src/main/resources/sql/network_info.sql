@@ -1,7 +1,5 @@
 CREATE TABLE network_info (
     id SERIAL PRIMARY KEY NOT NULL,
-    width INT NOT NULL,
-    height INT NOT NULL,
     grouped_normalized_datum TEXT NOT NULL,
     number_of_data INT DEFAULT 0,
     training_duration BIGINT DEFAULT 0,

@@ -37,9 +37,9 @@ public class NormalizedDataDAOTest {
     @Ignore
     public void testGetGroupedNormalizedDatum() {
         GroupedNormalizedDataDAO groupedNormalizedDataDAO = new GroupedNormalizedDataDAOImpl();
-        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, null, null).size());
-        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, NormalizationType.LINEAR_BY_AREA, null).size());
-        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(23, 27, 0F, 1F, null, "test").size());
+        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, null, null, null).size());
+        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, null, null, null, null, NormalizationType.LINEAR_BY_AREA, null).size());
+        System.out.println(groupedNormalizedDataDAO.getGroupedNormalizedDatum(null, 23, 27, 0F, 1F, null, "test").size());
     }
 
     @Test

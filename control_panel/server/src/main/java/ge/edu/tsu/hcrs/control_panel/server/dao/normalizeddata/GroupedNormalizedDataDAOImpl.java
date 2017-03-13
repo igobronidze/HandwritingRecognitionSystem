@@ -56,10 +56,13 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
     }
 
     @Override
-    public List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name) {
+    public List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer id, Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name) {
         List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
         try {
             String sql = "SELECT * FROM grouped_normalized_data WHERE 1 = 1 ";
+            if (id != null) {
+                sql += "AND id = " + id + " ";
+            }
             if (height != null) {
                 sql += "AND height = " + height + " ";
             }

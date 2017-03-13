@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
+import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
@@ -12,6 +13,8 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
+import ge.edu.tsu.hcrs.control_panel.server.util.GroupedNormalizedDataUtil;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetworkParameter;
@@ -43,10 +46,13 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public void trainNeural(NetworkInfo networkInfo) {
+    public void trainNeural(NetworkInfo networkInfo) throws ControlPanelException {
         try {
-            int width = networkInfo.getWidth();
-            int height = networkInfo.getHeight();
+            if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(networkInfo.getGroupedNormalizedDatum())) {
+                throw new ControlPanelException();
+            }
+            int width = networkInfo.getGroupedNormalizedDatum().get(0).getWidth();
+            int height = networkInfo.getGroupedNormalizedDatum().get(0).getHeight();
             CharSequence charSequence = networkInfo.getCharSequence();
             List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
             List<Integer> layers = new ArrayList<>();
@@ -84,6 +90,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                     System.out.println(ex.getMessage());
                 }
             }
+            networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
         }
@@ -111,11 +118,20 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public float test(int width, int height, List<GroupedNormalizedData> groupedNormalizedDatum, String path, int networkId, CharSequence charSequence) {
+    public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
+        if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(groupedNormalizedDatum)) {
+            throw new ControlPanelException();
+        }
+        NetworkInfo networkInfo = networkInfoDAO.getNetworkInfoList(networkId).get(0);
+        if (!GroupedNormalizedDataUtil.compareGroupedNormalizedDatum(groupedNormalizedDatum.get(0), networkInfo.getGroupedNormalizedDatum().get(0))) {
+            throw new ControlPanelException();
+        }
         List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
         try {
-            NeuralNetwork neuralNetwork = NeuralNetwork.load(path);
+            NeuralNetwork neuralNetwork = NeuralNetwork.load(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + networkId + ".nnet");
             List<TrainingData> trainingDataList = new ArrayList<>();
+            CharSequence charSequence = networkInfo.getCharSequence();
+            CharSequenceInitializer.initializeCharSequence(charSequence);
             for (NormalizedData normalizedData : normalizedDataList) {
                 trainingDataList.add(NetworkDataCreator.getTrainingData(normalizedData, charSequence));
             }

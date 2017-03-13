@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
 
+import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
@@ -26,7 +27,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public void trainNeural(NetworkInfo networkInfo) {
+    public void trainNeural(NetworkInfo networkInfo) throws ControlPanelException {
         iNeuralNetworkProcessor.trainNeural(networkInfo);
     }
 
@@ -36,7 +37,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public float test(int width, int height, List<GroupedNormalizedData> groupedNormalizedDatum, String path, int networkId, CharSequence charSequence) {
-        return iNeuralNetworkProcessor.test(width, height, groupedNormalizedDatum, path, networkId, charSequence);
+    public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
+        return iNeuralNetworkProcessor.testNeural(groupedNormalizedDatum, networkId);
     }
 }

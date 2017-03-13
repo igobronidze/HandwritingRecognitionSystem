@@ -34,8 +34,8 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     @Override
     public void trainNeural(NetworkInfo networkInfo) {
-        int width = networkInfo.getWidth();
-        int height = networkInfo.getHeight();
+        int width = -1;
+        int height = -1;
         CharSequence charSequence = networkInfo.getCharSequence();
         List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
         List<Integer> layers = new ArrayList<>();
@@ -84,7 +84,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public float test(int width, int height, List<GroupedNormalizedData> groupedNormalizedDatum, String path, int networkId, CharSequence charSequence) {
+    public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) {
         throw new NotImplementedException("Not yet :D");
     }
 }
