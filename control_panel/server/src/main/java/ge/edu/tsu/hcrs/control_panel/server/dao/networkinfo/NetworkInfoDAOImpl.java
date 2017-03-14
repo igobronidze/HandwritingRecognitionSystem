@@ -197,4 +197,21 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             DatabaseUtil.closeConnection();
         }
     }
+
+    @Override
+    public CharSequence getCharSequenceById(int networkId) {
+        try {
+            String sql = "SELECT char_sequence FROM network_info WHERE id = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            pstmt.setInt(1, networkId);
+            ResultSet rs = pstmt.executeQuery();
+            rs.next();
+            return new CharSequence(rs.getString(1));
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+        return null;
+    }
 }

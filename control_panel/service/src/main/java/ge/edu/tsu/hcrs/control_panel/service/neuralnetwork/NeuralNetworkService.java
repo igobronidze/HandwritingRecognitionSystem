@@ -13,7 +13,7 @@ public interface NeuralNetworkService {
 
     void trainNeural(NetworkInfo networkInfo) throws ControlPanelException;
 
-    NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence);
+    NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId);
 
     float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException;
 }

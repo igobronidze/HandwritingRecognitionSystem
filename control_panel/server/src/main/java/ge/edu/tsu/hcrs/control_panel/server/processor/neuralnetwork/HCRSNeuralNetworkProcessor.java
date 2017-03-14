@@ -57,9 +57,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
             List<Integer> layers = new ArrayList<>();
             layers.add(width * height);
-            for (int x : networkInfo.getHiddenLayer()) {
-                layers.add(x);
-            }
+            layers.addAll(networkInfo.getHiddenLayer());
             layers.add(charSequence.getNumberOfChars());
             NeuralNetwork neuralNetwork = new NeuralNetwork(layers);
             setNeuralNetworkParameters(neuralNetwork, networkInfo);
@@ -97,9 +95,11 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence) {
+    public NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId) {
         try {
-            NeuralNetwork neuralNetwork = NeuralNetwork.load(networkPath);
+            NeuralNetwork neuralNetwork = NeuralNetwork.load(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + networkId + ".nnet");
+            CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
+            CharSequenceInitializer.initializeCharSequence(charSequence);
             TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
             List<Float> output = neuralNetwork.getOutputActivation(trainingData);
             int ans = 0;
@@ -109,9 +109,12 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 }
             }
             char c = charSequence.getIndexToCharMap().get(ans);
-            NetworkResult networkResult = new NetworkResult(output, c);
+            NetworkResult networkResult = new NetworkResult();
+            networkResult.setOutputActivation(output);
+            networkResult.setAnswer(c);
+            networkResult.setCharSequence(charSequence);
             return networkResult;
-        } catch (NNException ex) {
+        } catch (NNException | ControlPanelException ex) {
             System.out.println(ex.getMessage());
         }
         return null;

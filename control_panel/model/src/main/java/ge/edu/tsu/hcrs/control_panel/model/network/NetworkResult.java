@@ -10,12 +10,9 @@ public class NetworkResult implements Serializable {
 
     private List<Float> outputActivation = new ArrayList<>();
 
-    public NetworkResult() {
-    }
+    private CharSequence charSequence;
 
-    public NetworkResult(List<Float> outputActivation, char answer) {
-        this.outputActivation = outputActivation;
-        this.answer = answer;
+    public NetworkResult() {
     }
 
     public char getAnswer() {
@@ -32,5 +29,13 @@ public class NetworkResult implements Serializable {
 
     public void setOutputActivation(List<Float> outputActivation) {
         this.outputActivation = outputActivation;
+    }
+
+    public CharSequence getCharSequence() {
+        return charSequence;
+    }
+
+    public void setCharSequence(CharSequence charSequence) {
+        this.charSequence = charSequence;
     }
 }

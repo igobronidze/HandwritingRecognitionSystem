@@ -1,14 +1,18 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
+import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
+import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import org.apache.commons.lang3.NotImplementedException;
 import org.neuroph.core.NeuralNetwork;
 import org.neuroph.core.data.DataSet;
@@ -26,6 +30,8 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
     private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
+
+    private NetworkInfoDAO networkInfoDAO = new NetworkInfoDAOImpl();
 
     private Parameter neuralNetworkPathParameter = new Parameter("neuralNetworkPath", "D:\\sg\\handwriting_recognition\\network\\network.nnet");
 
@@ -54,7 +60,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         for (int i = 0; i < min; i++) {
             trainingSet.addRow(NetworkDataCreator.getDataSetRow(normalizedDataList.get(randomList.get(i)), charSequence));
         }
-        MultiLayerPerceptron perceptron = null;
+        MultiLayerPerceptron perceptron;
         try {
             perceptron = (MultiLayerPerceptron) NeuralNetwork.createFromFile(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
         } catch (Exception ex) {
@@ -65,22 +71,33 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public NetworkResult getNetworkResult(NormalizedData normalizedData, String networkPath, CharSequence charSequence) {
-        NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
-        DataSetRow dataSetRow = NetworkDataCreator.getDataSetRow(normalizedData, charSequence);
-        neuralNetwork.setInput(dataSetRow.getInput());
-        neuralNetwork.calculate();
-        double[] networkOutput = neuralNetwork.getOutput();
-        int ans = 0;
-        List<Float> output = new ArrayList<>();
-        for (int i = 1; i < charSequence.getNumberOfChars(); i++) {
-            output.add((float)networkOutput[i]);
-            if (networkOutput[i] > networkOutput[ans]) {
-                ans = i;
+    public NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId) {
+        try {
+            NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
+            CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
+            CharSequenceInitializer.initializeCharSequence(charSequence);
+            DataSetRow dataSetRow = NetworkDataCreator.getDataSetRow(normalizedData, charSequence);
+            neuralNetwork.setInput(dataSetRow.getInput());
+            neuralNetwork.calculate();
+            double[] networkOutput = neuralNetwork.getOutput();
+            int ans = 0;
+            List<Float> output = new ArrayList<>();
+            for (int i = 1; i < charSequence.getNumberOfChars(); i++) {
+                output.add((float) networkOutput[i]);
+                if (networkOutput[i] > networkOutput[ans]) {
+                    ans = i;
+                }
             }
+            char c = charSequence.getIndexToCharMap().get(ans);
+            NetworkResult networkResult = new NetworkResult();
+            networkResult.setOutputActivation(output);
+            networkResult.setAnswer(c);
+            networkResult.setCharSequence(charSequence);
+            return networkResult;
+        } catch (ControlPanelException ex) {
+            System.out.println(ex.getMessage());
         }
-        char c = charSequence.getIndexToCharMap().get(ans);
-        return new NetworkResult(output, c);
+        return null;
     }
 
     @Override

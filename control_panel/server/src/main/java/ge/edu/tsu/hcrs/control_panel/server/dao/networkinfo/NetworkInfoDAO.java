@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 
 import java.util.List;
@@ -17,4 +18,6 @@ public interface NetworkInfoDAO {
     void updateTrainingCurrentState(float currentSquaredError, long currentIterations, long currentDuration, int id);
 
     void updateTrainedState(long trainingDuration, int id);
+
+    CharSequence getCharSequenceById(int networkId);
 }
