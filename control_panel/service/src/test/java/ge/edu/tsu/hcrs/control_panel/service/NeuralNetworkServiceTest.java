@@ -10,6 +10,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizationT
 import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkService;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkServiceImpl;
+import org.junit.Ignore;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -19,9 +20,9 @@ import java.util.List;
 public class NeuralNetworkServiceTest {
 
 	@Test
+	@Ignore
 	public void testTrainNeural() throws ControlPanelException {
 		NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
-
 		NetworkInfo networkInfo = new NetworkInfo();
 		networkInfo.setDescription("Description");
 		networkInfo.setBiasMinValue(-0.5F);
@@ -49,11 +50,11 @@ public class NeuralNetworkServiceTest {
 		networkInfo.setNumberOfTrainingDataInOneIteration(100);
 		networkInfo.setTrainingMaxIteration(5000);
 		networkInfo.setTransferFunction(TransferFunction.SIGMOID);
-
 		neuralNetworkService.trainNeural(networkInfo);
 	}
 
 	@Test
+	@Ignore
 	public void testTestNeural() throws ControlPanelException {
 		NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
 		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
@@ -65,6 +66,6 @@ public class NeuralNetworkServiceTest {
 		groupedNormalizedData.setMaxValue(1F);
 		groupedNormalizedData.setNormalizationType(NormalizationType.LINEAR_BY_AREA);
 		groupedNormalizedDatum.add(groupedNormalizedData);
-		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 1));
+		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 3));
 	}
 }

@@ -26,7 +26,7 @@ public class TestResultUtil {
     }
 
     private static int getIndexOfMax(List<Float> list, int except) {
-        int maxIndex = 0;
+        int maxIndex = except == 0 ? 1 : 0;
         for (int i = 0; i < list.size(); i++) {
             if (i == except) {
                 continue;

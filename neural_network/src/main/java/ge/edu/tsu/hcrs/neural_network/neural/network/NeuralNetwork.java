@@ -141,9 +141,6 @@ public class NeuralNetwork implements Serializable {
         for (TrainingData trainingData : trainingDataList) {
             Activation.activate(this, trainingData);
             List<Float> outputActivation = getOutputActivation(trainingData);
-            for (Neuron neuron : outputNeurons) {
-                outputActivation.add(neuron.getActivationValue());
-            }
             squaredError += TestResultUtil.getSquaredError(trainingData.getOutput(), outputActivation);
             numberOfIncorrects += TestResultUtil.isCorrect(trainingData.getOutput(), outputActivation) ? 0 : 1;
             diffBetweenAnsAndBest += TestResultUtil.getDiffBetweenAnsAndBest(trainingData.getOutput(), outputActivation);

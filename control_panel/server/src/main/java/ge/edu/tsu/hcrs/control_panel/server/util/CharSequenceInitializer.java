@@ -25,14 +25,15 @@ public class CharSequenceInitializer {
 			Map<Character, Integer> charToIndexMap = new HashMap<>();
 			Map<Integer, Character> indexToCharMap = new HashMap<>();
 			String regex = charSequence.getCharactersRegex();
-			for (int i = 0; i < regex.length(); i++) {
+			int i = 0;
+			while (i < regex.length()) {
 				char c = regex.charAt(i);
 				if (c == transferSymbol) {
-					i++;
-					c = regex.charAt(i);
+					c = regex.charAt(i + 1);
 					charToIndexMap.put(c, index);
 					indexToCharMap.put(index, c);
 					index++;
+					i += 2;
 				} else if (c == sequenceStartSymbol) {
 					if (regex.charAt(i + 2) != divisorSymbol || regex.charAt(i + 4) != sequenceEndSymbol) {
 						throw new ControlPanelException("Not supported regex!");
@@ -44,10 +45,12 @@ public class CharSequenceInitializer {
 						indexToCharMap.put(index, (char) j);
 						index++;
 					}
+					i += 5;
 				} else {
 					charToIndexMap.put(c, index);
 					indexToCharMap.put(index, c);
 					index++;
+					i++;
 				}
 			}
 			charSequence.setCharToIndexMap(charToIndexMap);

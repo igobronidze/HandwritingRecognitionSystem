@@ -144,11 +144,11 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             testingInfo.setDiffBetweenAnsAndBest(testResult.getDiffBetweenAnsAndBest());
             testingInfo.setPercentageOfIncorrect(testResult.getPercentageOfIncorrect());
             testingInfo.setNormalizedGeneralError(testResult.getNormalizedGeneralError());
-            testingInfo.setDiffBetweenAnsAndBest(testResult.getDuration());
+            testingInfo.setDuration(testResult.getDuration());
             testingInfoDAO.addTestingInfo(testingInfo);
             return testingInfo.getNormalizedGeneralError();
         } catch (Exception ex) {
-            System.out.println("Neural network don's exist");
+            System.out.println(ex.getMessage());
         }
         return -1;
     }

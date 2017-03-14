@@ -66,6 +66,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 testingInfo.setDiffBetweenAnsAndBest(rs.getFloat("diff_between_ans_and_best"));
                 testingInfo.setNormalizedGeneralError(rs.getFloat("normalized_general_error"));
                 testingInfo.setDuration(rs.getLong("duration"));
+                testingInfo.setId(rs.getInt("id"));
                 testingInfoList.add(testingInfo);
             }
         } catch (SQLException ex) {

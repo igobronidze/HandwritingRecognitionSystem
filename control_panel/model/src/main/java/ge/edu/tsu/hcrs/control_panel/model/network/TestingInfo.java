@@ -7,6 +7,8 @@ import java.util.List;
 
 public class TestingInfo implements Serializable {
 
+    private int id;
+
     private int networkId;
 
     private List<GroupedNormalizedData> groupedNormalizedDatum;
@@ -22,6 +24,14 @@ public class TestingInfo implements Serializable {
     private float normalizedGeneralError;
 
     private long duration;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public int getNetworkId() {
         return networkId;
