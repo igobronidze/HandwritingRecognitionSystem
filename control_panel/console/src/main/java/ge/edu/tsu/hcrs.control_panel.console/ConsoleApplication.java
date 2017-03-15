@@ -1,5 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.console;
 
+import ge.edu.tsu.hcrs.control_panel.service.startup.StartUpService;
+import ge.edu.tsu.hcrs.control_panel.service.startup.StartUpServiceImpl;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
@@ -14,8 +16,11 @@ import java.util.Locale;
 @SpringBootApplication
 public class ConsoleApplication extends WebMvcConfigurerAdapter {
 
+	private static StartUpService startUpService = new StartUpServiceImpl();
+
 	public static void main(String[] args) {
 		SpringApplication.run(ConsoleApplication.class, args);
+		startUpService.process();
 	}
 
 	@Bean

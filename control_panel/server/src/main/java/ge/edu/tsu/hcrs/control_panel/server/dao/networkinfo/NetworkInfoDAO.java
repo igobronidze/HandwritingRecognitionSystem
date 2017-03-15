@@ -20,4 +20,6 @@ public interface NetworkInfoDAO {
     void updateTrainedState(long trainingDuration, int id);
 
     CharSequence getCharSequenceById(int networkId);
+
+    void setFailedNetworkInfos();
 }

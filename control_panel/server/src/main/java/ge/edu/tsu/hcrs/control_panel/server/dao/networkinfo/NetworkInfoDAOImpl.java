@@ -214,4 +214,19 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
         }
         return null;
     }
+
+    @Override
+    public void setFailedNetworkInfos() {
+        try {
+            String sql = "UPDATE network_info SET training_status = ? WHERE training_status = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            pstmt.setString(1, NetworkTrainingStatus.FAILED.name());
+            pstmt.setString(2, NetworkTrainingStatus.TRAINING.name());
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+    }
 }
