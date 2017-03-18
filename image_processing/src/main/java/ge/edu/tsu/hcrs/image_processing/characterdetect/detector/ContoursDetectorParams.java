@@ -4,6 +4,13 @@ public class ContoursDetectorParams {
 
     private int checkedRGBMaxValue = -2;
 
+    public ContoursDetectorParams() {
+    }
+
+    public ContoursDetectorParams(int checkedRGBMaxValue) {
+        this.checkedRGBMaxValue = checkedRGBMaxValue;
+    }
+
     public int getCheckedRGBMaxValue() {
         return checkedRGBMaxValue;
     }

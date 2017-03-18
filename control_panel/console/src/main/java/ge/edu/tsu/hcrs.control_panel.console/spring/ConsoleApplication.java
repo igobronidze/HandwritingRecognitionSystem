@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.control_panel.console;
+package ge.edu.tsu.hcrs.control_panel.console.spring;
 
 import ge.edu.tsu.hcrs.control_panel.service.startup.StartUpService;
 import ge.edu.tsu.hcrs.control_panel.service.startup.StartUpServiceImpl;

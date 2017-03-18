@@ -1,4 +1,4 @@
-package ge.edu.tsu.hcrs.control_panel.console;
+package ge.edu.tsu.hcrs.control_panel.console.spring;
 
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.SysParamType;

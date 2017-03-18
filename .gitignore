@@ -5,4 +5,4 @@
 target
 target/*
 *.log
-test_images/result_images/*
+test_directory/*
