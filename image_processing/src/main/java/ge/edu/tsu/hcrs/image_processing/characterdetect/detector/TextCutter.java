@@ -26,13 +26,8 @@ public class TextCutter {
                 text += line + System.lineSeparator();
             }
             TextAdapter textAdapter = ContoursDetector.detectContours(image, contoursDetectorParams);
-            int resultCount = TextAdapterUtil.countCharacters(textAdapter);
-            int expectedCount = 0;
-            for (char c : text.toCharArray()) {
-                if (!isUnnecessaryCharacter(c)) {
-                    expectedCount++;
-                }
-            }
+            int resultCount = TextAdapterUtil.countCharactersFromTextAdapter(textAdapter);
+            int expectedCount = TextAdapterUtil.countCharactersFromText(text);
             if (resultCount != expectedCount) {
                 if (saveAnyway) {
                     int i = 1;
@@ -49,7 +44,7 @@ public class TextCutter {
                 int i = 0;
                 for (TextRow textRow : textAdapter.getRows()) {
                     for (Contour contour : textRow.getContours()) {
-                        while (i < text.length() && isUnnecessaryCharacter(text.charAt(i))) {
+                        while (i < text.length() && TextAdapterUtil.isUnnecessaryCharacter(text.charAt(i))) {
                             i++;
                         }
                         BufferedImage resultImage = ContourUtil.getBufferedImageFromContour(contour);
@@ -61,10 +56,6 @@ public class TextCutter {
         } catch (IOException ex) {
             System.out.println(ex.getMessage());
         }
-    }
-
-    private static boolean isUnnecessaryCharacter(char c) {
-        return c == ' ' || c == '\n' || c == '\r';
     }
 
     private static String getForbiddenCharsValue(char c) {
