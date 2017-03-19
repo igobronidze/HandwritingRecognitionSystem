@@ -13,13 +13,13 @@ public class TextAdapterUtil {
         return count;
     }
 
-    public static int countCharactersFromText(String text) {
+    public static int countCharactersFromText(String text, boolean doubleQuoteAsTwoChar) {
         int count = 0;
         for (char c : text.toCharArray()) {
             if (!isUnnecessaryCharacter(c)) {
                 count++;
             }
-            if (isDoubleCharacter(c)) {
+            if (doubleQuoteAsTwoChar && isDoubleCharacter(c)) {
                 count++;
             }
         }

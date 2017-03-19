@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class TextCutter {
 
-    public static void saveCutCharacters(String srcImagePath, String srcTextPath, String resultImagesPath, ContoursDetectorParams contoursDetectorParams, boolean saveAnyway) throws TextAdapterSizeException {
+    public static void saveCutCharacters(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams params) throws TextAdapterSizeException {
         try {
             BufferedImage image = ImageIO.read(new File(srcImagePath));
             BufferedReader br = new BufferedReader(new FileReader(srcTextPath));
@@ -25,11 +25,13 @@ public class TextCutter {
             while ((line = br.readLine()) != null) {
                 text += line + System.lineSeparator();
             }
-            TextAdapter textAdapter = ContoursDetector.detectContours(image, contoursDetectorParams);
+            TextAdapter textAdapter = ContoursDetector.detectContours(image, params);
             int resultCount = TextAdapterUtil.countCharactersFromTextAdapter(textAdapter);
-            int expectedCount = TextAdapterUtil.countCharactersFromText(text);
+            int expectedCount = TextAdapterUtil.countCharactersFromText(text, params.isDoubleQuoteAsTwoChar());
+            File file = new File(resultImagesPath);
+            file.mkdirs();
             if (resultCount != expectedCount) {
-                if (saveAnyway) {
+                if (params.isSaveAnyway()) {
                     int i = 1;
                     for (TextRow textRow : textAdapter.getRows()) {
                         for (Contour contour : textRow.getContours()) {

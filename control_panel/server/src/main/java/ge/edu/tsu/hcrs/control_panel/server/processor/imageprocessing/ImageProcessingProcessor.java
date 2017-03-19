@@ -1,6 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.imageprocessing;
 
-import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.ContoursDetectorParams;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutterParams;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutter;
 import ge.edu.tsu.hcrs.image_processing.exception.TextAdapterSizeException;
 import ge.edu.tsu.hcrs.image_processing.opencv.ImageResizer;
@@ -12,9 +12,9 @@ import java.awt.image.BufferedImage;
 
 public class ImageProcessingProcessor {
 
-    public void cutAndSaveCharactersFromText(String srcImagePath, String srcTextPath, String resultImagesPath, ContoursDetectorParams contoursDetectorParams, boolean saveAnyway) {
+    public void cutAndSaveCharactersFromText(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams textCutterParams) {
         try {
-            TextCutter.saveCutCharacters(srcImagePath, srcTextPath, resultImagesPath, contoursDetectorParams, saveAnyway);
+            TextCutter.saveCutCharacters(srcImagePath, srcTextPath, resultImagesPath, textCutterParams);
         } catch (TextAdapterSizeException ex) {
             System.out.println("Expected Size - " + ex.getExpectedSize() + ", Result Size - " + ex.getResultSize());
         }

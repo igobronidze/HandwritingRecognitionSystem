@@ -1,7 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.console.cmd;
 
 import ge.edu.tsu.hcrs.control_panel.server.processor.imageprocessing.ImageProcessingProcessor;
-import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.ContoursDetectorParams;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutterParams;
 
 import java.util.Scanner;
 
@@ -50,27 +50,90 @@ public class TextCutterMain {
             System.out.println("რეზულტატური სურათების დირექტორიის სრული მისამართია - " + resultImagesDirectory);
             System.out.println();
 
-            System.out.println("შესამოწმებელი პიქსელის RGB მაქსიმალური მნიშვნელობა:");
-            s = scanner.nextLine();
-            if (isRetry(s)) {
+            TextCutterParams textCutterParams = new TextCutterParams();
+            System.out.println("დაიწყო პარამეტრების შერჩევის რეჟიმი(ჯერ აირჩიეთ პარამეტრის ნომერი შემდეგ კი სასურველი პარამეტრი)");
+            boolean retry = false;
+            while (true) {
+                System.out.println("0 - პარამეტრების რეჟიმიდან გასვლა");
+                System.out.println("1 - შესამოწმებელი პიქსელის RGB მაქსიმალური მნიშვნელობა: არსებული მნიშვნელობა - " + textCutterParams.getCheckedRGBMaxValue());
+                System.out.println("2 - მეზობლებზე გადასასვლელი პიქსელი RGB მაქსიმალური მნიშვნელობა: არსებული მნიშვნელობა - " + textCutterParams.getCheckNeighborRGBMaxValue());
+                System.out.println("3 - ბრჭყალების ორ სიმბოლოდ ჩათვლა: არსებული მნიშვნელობა - " + textCutterParams.isDoubleQuoteAsTwoChar());
+                System.out.println("4 - გამოიყენოს შეერთების ფუნქციონალი: არსებული მნიშვნელობა - " + textCutterParams.isUseJoiningFunctional());
+                System.out.println("5 - შეცდომის მიუხედავად სურათების ბეჭდვა: არსებული მნიშვნელობა - " + textCutterParams.isSaveAnyway());
+                System.out.println("6 - საერთოების რაოდონობა, რომ ორი სიმბოლო ერთად გამოცხადდეს: არსებული მნიშვნელობა -  " + textCutterParams.getNumberOfSameForJoining());
+                s = scanner.nextLine();
+                if (isRetry(s)) {
+                    retry = true;
+                    break;
+                }
+                boolean end = false;
+                try {
+                    switch (s) {
+                        case "1":
+                            System.out.println("შესაძლო მნიშვნელობები: [-1  -  -16777216]");
+                            s = scanner.nextLine();
+                            if (isRetry(s)) {
+                                retry = true;
+                                break;
+                            }
+                            textCutterParams.setCheckedRGBMaxValue(Integer.parseInt(s));
+                            break;
+                        case "2":
+                            System.out.println("შესაძლო მნიშვნელობები: [-1  -  -16777216]");
+                            s = scanner.nextLine();
+                            if (isRetry(s)) {
+                                retry = true;
+                                break;
+                            }
+                            textCutterParams.setCheckNeighborRGBMaxValue(Integer.parseInt(s));
+                            break;
+                        case "3":
+                            System.out.println("შესაძლო მნიშვნელობები: true/false");
+                            s = scanner.nextLine();
+                            if (isRetry(s)) {
+                                retry = true;
+                                break;
+                            }
+                            textCutterParams.setDoubleQuoteAsTwoChar(Boolean.parseBoolean(s));
+                            break;
+                        case "4":
+                            System.out.println("შესაძლო მნიშვნელობები: true/false");
+                            s = scanner.nextLine();
+                            if (isRetry(s)) {
+                                retry = true;
+                                break;
+                            }
+                            textCutterParams.setUseJoiningFunctional(Boolean.parseBoolean(s));
+                            break;
+                        case "5":
+                            System.out.println("შესაძლო მნიშვნელობები: true/false");
+                            s = scanner.nextLine();
+                            if (isRetry(s)) {
+                                retry = true;
+                                break;
+                            }
+                            textCutterParams.setSaveAnyway(Boolean.parseBoolean(s));
+                            break;
+                        case "6":
+                            s = scanner.nextLine();
+                            if (isRetry(s)) {
+                                retry = true;
+                                break;
+                            }
+                            textCutterParams.setNumberOfSameForJoining(Integer.parseInt(s));
+                            break;
+                        default:
+                            end = true;
+                    }
+                } catch (NumberFormatException ex) {
+                }
+                if (end) {
+                    break;
+                }
+            }
+            if (retry) {
                 continue;
             }
-            int checkedRGBMaxValue = -2;
-            try {
-                checkedRGBMaxValue = Integer.parseInt(s);
-            } catch (NumberFormatException ex) {
-                System.out.println("დაფიქსირდა შეცდომა! პარამეტრი უნდა იყოს ნამდვილი მნიშნელობა!");
-                break;
-            }
-            System.out.println();
-
-            System.out.println("გსურთ თუ არა სურათების შენახვა შეცდომის მიუხედავად (true/false)");
-            s = scanner.nextLine();
-            if (isRetry(s)) {
-                continue;
-            }
-            boolean saveAnyway = Boolean.parseBoolean(s);
-            System.out.println();
 
             System.out.println("პარამეტრების შევსება დასრულდა. გსურთ დაპროცესირება? (true/false)");
             s = scanner.nextLine();
@@ -79,7 +142,7 @@ public class TextCutterMain {
             }
             boolean process = Boolean.parseBoolean(s);
             if (process) {
-                imageProcessingProcessor.cutAndSaveCharactersFromText(srcImagePath, srcTextPath, resultImagesDirectory, new ContoursDetectorParams(checkedRGBMaxValue), saveAnyway);
+                imageProcessingProcessor.cutAndSaveCharactersFromText(srcImagePath, srcTextPath, resultImagesDirectory, textCutterParams);
             }
             System.out.println();
 
