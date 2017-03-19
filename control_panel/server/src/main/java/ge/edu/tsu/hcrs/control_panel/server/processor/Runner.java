@@ -4,12 +4,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormali
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
-import ge.edu.tsu.hcrs.image_processing.ImageProcessingManager;
-import ge.edu.tsu.hcrs.image_processing.ImageProcessingManagerImpl;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
