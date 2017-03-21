@@ -1,6 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.console.cmd;
 
 import ge.edu.tsu.hcrs.control_panel.server.processor.imageprocessing.ImageProcessingProcessor;
+import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutterParams;
 
 import java.util.Scanner;
@@ -9,11 +10,11 @@ public class TextCutterMain {
 
     private static ImageProcessingProcessor imageProcessingProcessor = new ImageProcessingProcessor();
 
-    private static final String srcImageRootDirectory = "test_directory/src_images/";
+    private static final String srcImageRootDirectory = SystemPathUtil.getOriginalImagesPath();
 
-    private static final String srcTextRootDirectory = "test_directory/src_texts/";
+    private static final String srcTextRootDirectory = SystemPathUtil.getTextsPath();
 
-    private static final String resultImagesRootDirectory = "test_directory/result_images/";
+    private static final String resultImagesRootDirectory = SystemPathUtil.getCutCharactersPath();
 
     public static void main(String[] args) {
         while (true) {

@@ -1,16 +1,12 @@
 package ge.edu.tsu.hcrs.control_panel.server.dao;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
+import ge.edu.tsu.hcrs.control_panel.server.util.HcrsPropertiesUtil;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.util.Properties;
 
 public class DatabaseUtil {
-
-    private static final String dbPropertyPath = "properties/db.properties";
 
     private static String databaseDriver;
 
@@ -22,11 +18,11 @@ public class DatabaseUtil {
 
     private static Connection connection;
 
-    public static Connection getConnection(){
+    public static Connection getConnection() {
         try {
-            File file = new File(dbPropertyPath);
-            System.out.println(file.getAbsolutePath());
-            initParams();
+            if (databaseDriver == null) {
+                initParams();
+            }
             Class.forName(databaseDriver);
             connection = DriverManager.getConnection(databaseURL, databaseUsername, databasePassword);
         } catch (Exception ex) {
@@ -47,17 +43,10 @@ public class DatabaseUtil {
 
     private static void initParams() {
         if (databaseDriver == null) {
-            try {
-                Properties properties = new Properties();
-                FileInputStream fis = new FileInputStream(dbPropertyPath);
-                properties.load(fis);
-                databaseDriver = properties.getProperty("jdbc.driver");
-                databaseURL = properties.getProperty("jdbc.url");
-                databaseUsername = properties.getProperty("jdbc.username");
-                databasePassword = properties.getProperty("jdbc.password");
-            } catch (IOException ex) {
-                System.out.println(ex.getMessage());
-            }
+            databaseDriver = HcrsPropertiesUtil.getProperty("jdbc.driver");
+            databaseURL = HcrsPropertiesUtil.getProperty("jdbc.url");
+            databaseUsername = HcrsPropertiesUtil.getProperty("jdbc.username");
+            databasePassword = HcrsPropertiesUtil.getProperty("jdbc.password");
         }
     }
 }
