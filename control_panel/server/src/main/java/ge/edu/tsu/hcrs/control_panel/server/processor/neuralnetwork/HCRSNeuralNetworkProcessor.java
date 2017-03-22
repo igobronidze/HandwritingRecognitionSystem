@@ -8,6 +8,8 @@ import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.neuralnetwork.NeuralNetworkDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.neuralnetwork.NeuralNetworkDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
@@ -15,6 +17,7 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hcrs.control_panel.server.util.GroupedNormalizedDataUtil;
+import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetworkParameter;
@@ -23,6 +26,7 @@ import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingProgress;
 import ge.edu.tsu.hcrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunctionType;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +40,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
-    private Parameter neuralNetworkDirectoryParameter = new Parameter("neuralNetworkDirectory", "C:\\BachelorProject\\hcrs\\network");
+    private NeuralNetworkDAO neuralNetworkDAO = new NeuralNetworkDAOImpl();
 
     private Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
@@ -46,7 +50,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public void trainNeural(NetworkInfo networkInfo) throws ControlPanelException {
+    public void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException {
         try {
             if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(networkInfo.getGroupedNormalizedDatum())) {
                 throw new ControlPanelException();
@@ -74,7 +78,10 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                     long trainingDuration = neuralNetwork.train(trainingProgress);
                     networkInfoDAO.updateTrainedState(trainingDuration, id);
                     networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
-                    NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + id + ".nnet", neuralNetwork);
+                    NeuralNetwork.save(SystemPathUtil.getNeuralNetworkPath() + "/" + id + ".nnet", neuralNetwork);
+                    if (saveInDatabase) {
+                        saveNeuralNetwork(id, neuralNetwork);
+                    }
                 } catch (NNException ex) {
                     System.out.println(ex.getMessage());
                 }
@@ -94,10 +101,22 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         }
     }
 
+    private void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ObjectOutput out = new ObjectOutputStream(bos)) {
+            out.writeObject(neuralNetwork);
+            out.flush();
+            byte[] bytes = bos.toByteArray();
+            neuralNetworkDAO.addNeuralNetwork(id, bytes);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     @Override
     public NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId) {
         try {
-            NeuralNetwork neuralNetwork = NeuralNetwork.load(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + networkId + ".nnet");
+            NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
             CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
             CharSequenceInitializer.initializeCharSequence(charSequence);
             TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
@@ -114,7 +133,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             networkResult.setAnswer(c);
             networkResult.setCharSequence(charSequence);
             return networkResult;
-        } catch (NNException | ControlPanelException ex) {
+        } catch (ControlPanelException ex) {
             System.out.println(ex.getMessage());
         }
         return null;
@@ -131,7 +150,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         }
         List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
         try {
-            NeuralNetwork neuralNetwork = NeuralNetwork.load(systemParameterProcessor.getStringParameterValue(neuralNetworkDirectoryParameter) + "\\" + networkId + ".nnet");
+            NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
             List<TrainingData> trainingDataList = new ArrayList<>();
             CharSequence charSequence = networkInfo.getCharSequence();
             CharSequenceInitializer.initializeCharSequence(charSequence);
@@ -167,5 +186,31 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         parameter.setMinError(networkInfo.getMinError());
         parameter.setTrainingMaxIteration(networkInfo.getTrainingMaxIteration());
         parameter.setNumberOfTrainingDataInOneIteration(networkInfo.getNumberOfTrainingDataInOneIteration());
+    }
+
+    private NeuralNetwork loadNeuralNetwork(int id) {
+        NeuralNetwork neuralNetwork;
+        try {
+            neuralNetwork = NeuralNetwork.load(SystemPathUtil.getNeuralNetworkPath() + "/" + id + ".nnet");
+        } catch (NNException ex) {
+            System.out.println(ex.getMessage());
+            neuralNetwork = loadFromDatabase(id);
+        }
+        return neuralNetwork;
+    }
+
+    private NeuralNetwork loadFromDatabase(int id) {
+        NeuralNetwork neuralNetwork = null;
+        byte[] bytes = neuralNetworkDAO.getNeuralNetworkData(id);
+        if (bytes == null) {
+            return null;
+        }
+        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
+        try (ObjectInput in = new ObjectInputStream(bis)){
+            neuralNetwork = (NeuralNetwork)in.readObject();
+        } catch (IOException | ClassCastException | ClassNotFoundException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return neuralNetwork;
     }
 }

@@ -13,6 +13,8 @@ public class SystemPathUtil {
 
     private static Parameter textsPath = new Parameter("textsPath", "hcrs/texts/");
 
+    private static Parameter neuralNetworksPath = new Parameter("neuralNetworksPath", "hcrs/networks");
+
     public static String getOriginalImagesPath() {
         return HcrsPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(originalImagesPath);
     }
@@ -23,5 +25,9 @@ public class SystemPathUtil {
 
     public static String getTextsPath() {
         return HcrsPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(textsPath);
+    }
+
+    public static String getNeuralNetworkPath() {
+        return HcrsPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(neuralNetworksPath);
     }
 }

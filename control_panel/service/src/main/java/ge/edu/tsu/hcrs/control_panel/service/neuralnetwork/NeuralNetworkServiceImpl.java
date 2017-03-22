@@ -26,8 +26,8 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public void trainNeural(NetworkInfo networkInfo) throws ControlPanelException {
-        iNeuralNetworkProcessor.trainNeural(networkInfo);
+    public void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException {
+        iNeuralNetworkProcessor.trainNeural(networkInfo, saveInDatabase);
     }
 
     @Override

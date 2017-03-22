@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface NeuralNetworkService {
 
-    void trainNeural(NetworkInfo networkInfo) throws ControlPanelException;
+    void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException;
 
     NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId);
 

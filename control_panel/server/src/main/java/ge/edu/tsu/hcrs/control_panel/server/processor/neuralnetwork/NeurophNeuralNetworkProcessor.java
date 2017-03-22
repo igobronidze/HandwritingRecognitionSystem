@@ -39,7 +39,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public void trainNeural(NetworkInfo networkInfo) {
+    public void trainNeural(NetworkInfo networkInfo, boolean saveInDataBase) {
         int width = -1;
         int height = -1;
         CharSequence charSequence = networkInfo.getCharSequence();

@@ -51,7 +51,7 @@ public class NeuralNetworkServiceTest {
 		networkInfo.setNumberOfTrainingDataInOneIteration(100);
 		networkInfo.setTrainingMaxIteration(5000);
 		networkInfo.setTransferFunction(TransferFunction.SIGMOID);
-		neuralNetworkService.trainNeural(networkInfo);
+		neuralNetworkService.trainNeural(networkInfo, true);
 	}
 
 	@Test
