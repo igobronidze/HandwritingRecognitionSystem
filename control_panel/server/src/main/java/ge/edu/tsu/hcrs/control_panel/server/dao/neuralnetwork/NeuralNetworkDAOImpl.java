@@ -28,11 +28,13 @@ public class NeuralNetworkDAOImpl implements NeuralNetworkDAO {
     @Override
     public byte[] getNeuralNetworkData(int id) {
         try {
-            String sql = "SELECT FROM neural_network WHERE id = ?";
+            String sql = "SELECT * FROM neural_network WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
-            return rs.getBytes("data");
+            if (rs.next()) {
+                return rs.getBytes("data");
+            }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         } finally {
