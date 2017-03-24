@@ -1,13 +1,14 @@
 package ge.edu.tsu.hcrs.control_panel.service.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
-import ge.edu.tsu.hcrs.control_panel.model.network.*;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
-import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.HCRSNeuralNetworkProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.INeuralNetworkProcessor;
-import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.NeurophNeuralNetworkProcessor;
 
+import java.awt.image.BufferedImage;
 import java.util.List;
 
 public class NeuralNetworkServiceImpl implements NeuralNetworkService {
@@ -18,8 +19,8 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
         switch (type) {
             case HCRS_NEURAL_NETWORK:
                 iNeuralNetworkProcessor = new HCRSNeuralNetworkProcessor();
-            case NEUROPH_NEURAL_NETWORK:
-                iNeuralNetworkProcessor = new NeurophNeuralNetworkProcessor();
+//            case NEUROPH_NEURAL_NETWORK:
+//                iNeuralNetworkProcessor = new NeurophNeuralNetworkProcessor();
             default:
                 iNeuralNetworkProcessor = new HCRSNeuralNetworkProcessor();
         }
@@ -31,8 +32,8 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId) {
-        return iNeuralNetworkProcessor.getNetworkResult(normalizedData, networkId);
+    public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
+        return iNeuralNetworkProcessor.getNetworkResult(image, networkId);
     }
 
     @Override

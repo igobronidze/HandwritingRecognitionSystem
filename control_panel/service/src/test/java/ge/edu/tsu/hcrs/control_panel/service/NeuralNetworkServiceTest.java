@@ -80,7 +80,7 @@ public class NeuralNetworkServiceTest {
 		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
 		groupedNormalizedDatum.add(groupedNormalizedData);
 		List<NormalizedData> normalizedDatum = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
-		NetworkResult networkResult = neuralNetworkService.getNetworkResult(normalizedDatum.get(0), 4);
-		System.out.println(networkResult.getAnswer());
+//		NetworkResult networkResult = neuralNetworkService.getNetworkResult(normalizedDatum.get(0), 4);
+//		System.out.println(networkResult.getAnswer());
 	}
 }

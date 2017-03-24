@@ -2,9 +2,6 @@ package ge.edu.tsu.hcrs.control_panel.console.cmd;
 
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
-import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
-import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearByAreaNormalization;
-import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.NormalizationMethod;
 import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkService;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkServiceImpl;
@@ -23,11 +20,7 @@ public class NetworkResultMain {
 
     private static final String cutCharactersRootDirectory = SystemPathUtil.getCutCharactersPath();
 
-    private static NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
-
-    private static NormalizationMethod normalizationMethod = new LinearByAreaNormalization();
-
-    private static GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
+    private static final NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
 
     public static void main(String[] args) {
         while (true) {
@@ -45,19 +38,6 @@ public class NetworkResultMain {
             String symbolPath = cutCharactersRootDirectory + s;
             System.out.println("სიმბოლოს სრული მისამართია - " + symbolPath);
             System.out.println();
-
-            System.out.println("ნორმალიზაციის ჯგუფის id:");
-            s = scanner.nextLine();
-            if (isRetry(s)) {
-                continue;
-            }
-            int groupedNormalizedDataId = -1;
-            try {
-                groupedNormalizedDataId = Integer.parseInt(s);
-            } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
-                continue;
-            }
 
             System.out.println("ქსელის id:");
             s = scanner.nextLine();
@@ -82,8 +62,7 @@ public class NetworkResultMain {
             }
             try {
                 BufferedImage image = ImageIO.read(new File(symbolPath));
-                GroupedNormalizedData groupedNormalizedData = groupedNormalizedDataService.getGroupedNormalizedData(groupedNormalizedDataId);
-                NetworkResult networkResult = neuralNetworkService.getNetworkResult(normalizationMethod.getNormalizedDataFromImage(image, groupedNormalizedData, null), networkId);
+                NetworkResult networkResult = neuralNetworkService.getNetworkResult(image, networkId);
                 System.out.println("ქსელის პასუხია - " + networkResult.getAnswer());
                 System.out.println();
 

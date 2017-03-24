@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata;
 
+import ge.edu.tsu.hcrs.control_panel.model.network.TrainingDataInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.GroupedNormalizedDataDAO;
@@ -18,16 +19,22 @@ import java.util.List;
 
 public class NormalizedDataProcessor {
 
-    private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
+    private final NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
-    private GroupedNormalizedDataDAO groupedNormalizedDataDAO = new GroupedNormalizedDataDAOImpl();
+    private final GroupedNormalizedDataDAO groupedNormalizedDataDAO = new GroupedNormalizedDataDAOImpl();
 
     public void addNormalizedDatum(GroupedNormalizedData groupedNormalizedData, List<String> directories) {
+        TrainingDataInfo trainingDataInfo = new TrainingDataInfo();
+        trainingDataInfo.setWidth(groupedNormalizedData.getWidth());
+        trainingDataInfo.setHeight(groupedNormalizedData.getHeight());
+        trainingDataInfo.setMinValue(groupedNormalizedData.getMinValue());
+        trainingDataInfo.setMaxValue(groupedNormalizedData.getMaxValue());
+        trainingDataInfo.setNormalizationType(groupedNormalizedData.getNormalizationType());
         List<NormalizedData> normalizedDatum = new ArrayList<>();
         Date date = new Date();
         for (String directory : directories) {
             File file = new File(directory);
-            addNormalizedData(groupedNormalizedData, file, normalizedDatum);
+            addNormalizedData(trainingDataInfo, file, normalizedDatum);
         }
         int groupedNormalizedDataId = groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData);
         groupedNormalizedData.setId(groupedNormalizedDataId);
@@ -35,15 +42,15 @@ public class NormalizedDataProcessor {
         normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedData);
     }
 
-    private void addNormalizedData(GroupedNormalizedData groupedNormalizedData, File file, List<NormalizedData> normalizedDatum) {
+    private void addNormalizedData(TrainingDataInfo trainingDataInfo, File file, List<NormalizedData> normalizedDatum) {
         for (File f : file.listFiles()) {
             if (f.isDirectory()) {
-                addNormalizedData(groupedNormalizedData, f, normalizedDatum);
+                addNormalizedData(trainingDataInfo, f, normalizedDatum);
             } else {
                 try {
                     BufferedImage image = ImageIO.read(f);
                     NormalizationMethod normalizationMethod = null;
-                    switch (groupedNormalizedData.getNormalizationType()) {
+                    switch (trainingDataInfo.getNormalizationType()) {
                         case DISCRETE_BY_AREA:
                             normalizationMethod = new DiscreteByAreaNormalization();
                             break;
@@ -57,7 +64,7 @@ public class NormalizedDataProcessor {
                             normalizationMethod = new LinearResizeNormalization();
                             break;
                     }
-                    NormalizedData normalizedData = normalizationMethod.getNormalizedDataFromImage(image, groupedNormalizedData, getLetterFromFile(f));
+                    NormalizedData normalizedData = normalizationMethod.getNormalizedDataFromImage(image, trainingDataInfo, getLetterFromFile(f));
                     normalizedDatum.add(normalizedData);
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());

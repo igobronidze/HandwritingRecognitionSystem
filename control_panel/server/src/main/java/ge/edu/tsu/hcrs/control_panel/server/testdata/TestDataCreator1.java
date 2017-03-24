@@ -9,9 +9,9 @@ import java.util.List;
 
 public class TestDataCreator1 {
 
-    private static NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
+    private static final NormalizedDataProcessor normalizedDataProcessor = new NormalizedDataProcessor();
 
-    private static String directory = "D:\\Bachelor Project\\HandwrittenRecognitionSystem\\test_images\\result_images\\sylfaen_13";
+    private static final String directory = "D:\\Bachelor Project\\HandwrittenRecognitionSystem\\test_images\\result_images\\sylfaen_13";
 
     public static void main(String[] args) {
         addGroupedNormalizedData(NormalizationType.DISCRETE_BY_AREA);
@@ -28,6 +28,6 @@ public class TestDataCreator1 {
         groupedNormalizedData.setMinValue(0);
         groupedNormalizedData.setMaxValue(1);
         groupedNormalizedData.setName("test");
-        normalizedDataProcessor.addNormalizedDatum(groupedNormalizedData, directories);
+//        normalizedDataProcessor.addNormalizedDatum(groupedNormalizedData, directories);
     }
 }

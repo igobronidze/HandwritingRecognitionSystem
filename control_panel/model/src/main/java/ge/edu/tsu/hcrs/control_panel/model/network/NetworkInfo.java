@@ -11,8 +11,6 @@ public class NetworkInfo implements Serializable {
 
     private List<GroupedNormalizedData> groupedNormalizedDatum;
 
-    private int numberOfData;
-
     private long trainingDuration;
 
     private float weightMinValue;
@@ -67,14 +65,6 @@ public class NetworkInfo implements Serializable {
 
     public void setGroupedNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
         this.groupedNormalizedDatum = groupedNormalizedDatum;
-    }
-
-    public int getNumberOfData() {
-        return numberOfData;
-    }
-
-    public void setNumberOfData(int numberOfData) {
-        this.numberOfData = numberOfData;
     }
 
     public long getTrainingDuration() {

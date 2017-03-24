@@ -1,6 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.TrainingDataInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 
 import java.awt.image.BufferedImage;
@@ -8,14 +8,14 @@ import java.awt.image.BufferedImage;
 public class LinearByAreaNormalization extends NormalizationMethod {
 
     @Override
-    public NormalizedData getNormalizedDataFromImage(BufferedImage image, GroupedNormalizedData groupedNormalizedData, Character letter) {
+    public NormalizedData getNormalizedDataFromImage(BufferedImage image, TrainingDataInfo trainingDataInfo, Character letter) {
         NormalizedData normalizedData = new NormalizedData();
         normalizedData.setLetter(letter);
-        float[][] normalizedAreas = super.getNormalizedAreas(image, groupedNormalizedData.getHeight(), groupedNormalizedData.getWidth());
-        Float[] data = new Float[groupedNormalizedData.getHeight() * groupedNormalizedData.getWidth()];
+        float[][] normalizedAreas = super.getNormalizedAreas(image, trainingDataInfo.getHeight(), trainingDataInfo.getWidth());
+        Float[] data = new Float[trainingDataInfo.getHeight() * trainingDataInfo.getWidth()];
         for (int i = 0; i < normalizedAreas.length; i++) {
             for (int j = 0; j < normalizedAreas[i].length; j++) {
-                data[i * normalizedAreas[i].length + j] = normalized(normalizedAreas[i][j], groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue());
+                data[i * normalizedAreas[i].length + j] = normalized(normalizedAreas[i][j], trainingDataInfo.getMinValue(), trainingDataInfo.getMaxValue());
             }
         }
         normalizedData.setData(data);

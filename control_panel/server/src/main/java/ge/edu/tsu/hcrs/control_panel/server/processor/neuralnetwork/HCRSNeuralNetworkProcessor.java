@@ -14,6 +14,9 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
+import ge.edu.tsu.hcrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.NormalizationMethod;
 import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hcrs.control_panel.server.util.GroupedNormalizedDataUtil;
@@ -26,25 +29,28 @@ import ge.edu.tsu.hcrs.neural_network.neural.network.TrainingProgress;
 import ge.edu.tsu.hcrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunctionType;
 
+import java.awt.image.BufferedImage;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
-    private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
+    private final SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
+    private final NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
 
-    private NetworkInfoDAO networkInfoDAO = new NetworkInfoDAOImpl();
+    private final NetworkInfoDAO networkInfoDAO = new NetworkInfoDAOImpl();
 
-    private TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
+    private final TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
-    private NeuralNetworkDAO neuralNetworkDAO = new NeuralNetworkDAOImpl();
+    private final NeuralNetworkDAO neuralNetworkDAO = new NeuralNetworkDAOImpl();
 
-    private Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
+    private final TrainingDataInfoDAO trainingDataInfoDAO = new TrainingDataInfoDAOImpl();
 
-    private Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
+    private final Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
+
+    private final Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
 
     public HCRSNeuralNetworkProcessor() {
     }
@@ -55,8 +61,9 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(networkInfo.getGroupedNormalizedDatum())) {
                 throw new ControlPanelException();
             }
-            int width = networkInfo.getGroupedNormalizedDatum().get(0).getWidth();
-            int height = networkInfo.getGroupedNormalizedDatum().get(0).getHeight();
+            GroupedNormalizedData groupedNormalizedData = networkInfo.getGroupedNormalizedDatum().get(0);
+            int width = groupedNormalizedData.getWidth();
+            int height = groupedNormalizedData.getHeight();
             CharSequence charSequence = networkInfo.getCharSequence();
             List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
             List<Integer> layers = new ArrayList<>();
@@ -71,8 +78,10 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             TrainingProgress trainingProgress = new TrainingProgress();
             trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
             networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINING);
-            networkInfo.setNumberOfData(neuralNetwork.getTrainingDataList().size());
             int id = networkInfoDAO.addNetworkInfo(networkInfo);
+            TrainingDataInfo trainingDataInfo = new TrainingDataInfo(id, getIdsFromFromGroupedNormalizedDatum(networkInfo.getGroupedNormalizedDatum()), height, width, groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue(),
+                    groupedNormalizedData.getNormalizationType(), neuralNetwork.getTrainingDataList().size());
+            trainingDataInfoDAO.addTrainingDataInfo(trainingDataInfo);
             Runnable run = () -> {
                 try {
                     long trainingDuration = neuralNetwork.train(trainingProgress);
@@ -101,6 +110,14 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         }
     }
 
+    private List<Integer> getIdsFromFromGroupedNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
+        List<Integer> ids = new ArrayList<>();
+        for (GroupedNormalizedData groupedNormalizedData : groupedNormalizedDatum) {
+            ids.add(groupedNormalizedData.getId());
+        }
+        return ids;
+    }
+
     private void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork) {
         ByteArrayOutputStream bos = new ByteArrayOutputStream();
         try (ObjectOutput out = new ObjectOutputStream(bos)) {
@@ -114,10 +131,13 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId) {
+    public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
         try {
             NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
             CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
+            TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
+            NormalizationMethod normalizationMethod = NormalizationMethod.getInstance(trainingDataInfo.getNormalizationType());
+            NormalizedData normalizedData = normalizationMethod.getNormalizedDataFromImage(image, trainingDataInfo, null);
             CharSequenceInitializer.initializeCharSequence(charSequence);
             TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
             List<Float> output = neuralNetwork.getOutputActivation(trainingData);

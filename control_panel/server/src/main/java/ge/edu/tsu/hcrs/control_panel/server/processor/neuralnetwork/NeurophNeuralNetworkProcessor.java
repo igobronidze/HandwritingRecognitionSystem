@@ -25,7 +25,7 @@ import java.util.Collections;
 import java.util.List;
 
 @Deprecated
-public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
+public class NeurophNeuralNetworkProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
@@ -38,7 +38,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
     public NeurophNeuralNetworkProcessor() {
     }
 
-    @Override
+//    @Override
     public void trainNeural(NetworkInfo networkInfo, boolean saveInDataBase) {
         int width = -1;
         int height = -1;
@@ -70,7 +70,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         perceptron.save(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
     }
 
-    @Override
+//    @Override
     public NetworkResult getNetworkResult(NormalizedData normalizedData, int networkId) {
         try {
             NeuralNetwork neuralNetwork = NeuralNetwork.createFromFile(systemParameterProcessor.getStringParameterValue(neuralNetworkPathParameter));
@@ -100,7 +100,7 @@ public class NeurophNeuralNetworkProcessor implements INeuralNetworkProcessor {
         return null;
     }
 
-    @Override
+//    @Override
     public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) {
         throw new NotImplementedException("Not yet :D");
     }

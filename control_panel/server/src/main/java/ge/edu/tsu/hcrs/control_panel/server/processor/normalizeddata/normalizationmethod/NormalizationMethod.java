@@ -1,6 +1,7 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod;
 
-import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hcrs.control_panel.model.network.TrainingDataInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizationType;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 
 import java.awt.image.BufferedImage;
@@ -9,7 +10,21 @@ public abstract class NormalizationMethod {
 
     protected static final int blackPixel = -16777216;
 
-    public abstract NormalizedData getNormalizedDataFromImage(BufferedImage image, GroupedNormalizedData groupedNormalizedData, Character letter);
+    public static NormalizationMethod getInstance(NormalizationType normalizationType) {
+        switch (normalizationType) {
+            case DISCRETE_BY_AREA:
+                return new DiscreteByAreaNormalization();
+            case DISCRETE_RESIZE:
+                return new DiscreteResizeNormalization();
+            case LINEAR_BY_AREA:
+                return new LinearByAreaNormalization();
+            case LINEAR_RESIZE:
+                return new LinearResizeNormalization();
+        }
+        return null;
+    }
+
+    public abstract NormalizedData getNormalizedDataFromImage(BufferedImage image, TrainingDataInfo TrainingDataInfo, Character letter);
 
     protected float[][] getNormalizedAreas(BufferedImage image, int height, int width) {
         float areas[][] = getAreas(image);
