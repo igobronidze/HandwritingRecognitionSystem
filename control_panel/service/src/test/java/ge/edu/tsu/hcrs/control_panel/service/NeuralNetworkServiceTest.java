@@ -1,8 +1,10 @@
 package ge.edu.tsu.hcrs.control_panel.service;
 
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
-import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
+import ge.edu.tsu.hcrs.control_panel.model.network.TransferFunction;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizationType;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;

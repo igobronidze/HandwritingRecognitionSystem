@@ -3,14 +3,16 @@ package ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizat
 import ge.edu.tsu.hcrs.control_panel.model.network.TrainingDataInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizationType;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.Contour;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.Point;
 
 import java.awt.image.BufferedImage;
 
-public abstract class NormalizationMethod {
+public abstract class Normalization {
 
-    protected static final int blackPixel = -16777216;
+    static final int blackPixel = -16777216;
 
-    public static NormalizationMethod getInstance(NormalizationType normalizationType) {
+    public static Normalization getInstance(NormalizationType normalizationType) {
         switch (normalizationType) {
             case DISCRETE_BY_AREA:
                 return new DiscreteByAreaNormalization();
@@ -19,18 +21,27 @@ public abstract class NormalizationMethod {
             case LINEAR_BY_AREA:
                 return new LinearByAreaNormalization();
             case LINEAR_RESIZE:
+                default:
                 return new LinearResizeNormalization();
         }
-        return null;
     }
 
-    public abstract NormalizedData getNormalizedDataFromImage(BufferedImage image, TrainingDataInfo TrainingDataInfo, Character letter);
+    public abstract NormalizedData getNormalizedDataFromImage(BufferedImage image, TrainingDataInfo trainingDataInfo, Character letter);
 
-    protected float[][] getNormalizedAreas(BufferedImage image, int height, int width) {
-        float areas[][] = getAreas(image);
+    public abstract NormalizedData getNormalizedDataFromContour(Contour contour, TrainingDataInfo trainingDataInfo);
+
+    float[][] getNormalizedAreas(Contour contour, int height, int width) {
+        return getNormalizedAreas(getAreasFromContour(contour), height, width, contour.getBottomPoint() - contour.getTopPoint() + 1, contour.getRightPoint() - contour.getLeftPoint() + 1);
+    }
+
+    float[][] getNormalizedAreas(BufferedImage image, int height, int width) {
+        return getNormalizedAreas(getAreasFromBufferedImage(image), height, width, image.getHeight(), image.getWidth());
+    }
+
+    private float[][] getNormalizedAreas(float areas[][], int height, int width, int realHeight, int realWidth) {
         float normalizedAreas[][] = new float[height][width];
-        float deltaI = (float) image.getHeight() / height;
-        float deltaJ = (float) image.getWidth() / width;
+        float deltaI = (float) realHeight / height;
+        float deltaJ = realWidth / width;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 float topI = i * deltaI;
@@ -41,8 +52,8 @@ public abstract class NormalizationMethod {
                 bottomI = (int) bottomI == bottomI ? bottomI - 0.000001F : bottomI;
                 leftJ = (int) leftJ == leftJ ? leftJ + 0.00001F : leftJ;
                 rightJ = (int) rightJ == rightJ ? rightJ - 0.000001F : rightJ;
-                rightJ = (int) rightJ == image.getWidth() ? image.getWidth() - 0.0001F : rightJ;
-                bottomI = (int) bottomI == image.getHeight() ? image.getHeight() - 0.0001F : bottomI;
+                rightJ = (int) rightJ == realWidth ? realWidth - 0.0001F : rightJ;
+                bottomI = (int) bottomI == realHeight ? realHeight - 0.0001F : bottomI;
                 float area = 0F;
                 for (int ii = (int)topI + 1; ii < (int)bottomI; ii++) {
                     for (int jj = (int)leftJ + 1; jj < (int)rightJ; jj++) {
@@ -83,12 +94,22 @@ public abstract class NormalizationMethod {
         return normalizedAreas;
     }
 
-    private float[][] getAreas(BufferedImage image) {
+    private float[][] getAreasFromBufferedImage(BufferedImage image) {
         float[][] areas = new float[image.getHeight()][image.getWidth()];
         for (int i = 0; i < image.getHeight(); i++) {
             for (int j = 0; j < image.getWidth(); j++) {
                 areas[i][j] = (float)((int)(((float)image.getRGB(j, i) / blackPixel) * 10000)) / 10000;
             }
+        }
+        return areas;
+    }
+
+    private float[][] getAreasFromContour(Contour contour) {
+        int height = contour.getBottomPoint() - contour.getTopPoint() + 1;
+        int width = contour.getRightPoint() - contour.getLeftPoint() + 1;
+        float[][] areas = new float[height][width];
+        for (Point point : contour.getContourCoordinates()) {
+            areas[point.getX()][point.getY()] = (float)((int)(((float)point.getColor() / blackPixel) * 10000)) / 10000;
         }
         return areas;
     }

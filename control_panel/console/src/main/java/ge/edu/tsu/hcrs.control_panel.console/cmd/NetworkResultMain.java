@@ -5,8 +5,6 @@ import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
 import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkService;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkServiceImpl;
-import ge.edu.tsu.hcrs.control_panel.service.normalizeddata.GroupedNormalizedDataService;
-import ge.edu.tsu.hcrs.control_panel.service.normalizeddata.GroupedNormalizedDataServiceImpl;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

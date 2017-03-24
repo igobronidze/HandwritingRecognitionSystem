@@ -5,7 +5,10 @@ import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData
 import ge.edu.tsu.hcrs.control_panel.server.dao.DatabaseUtil;
 import org.apache.commons.lang3.text.StrBuilder;
 
-import java.sql.*;
+import java.sql.Array;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 

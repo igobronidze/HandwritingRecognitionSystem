@@ -7,7 +7,11 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.GroupedNormalized
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.GroupedNormalizedDataDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.normalizeddata.NormalizedDataDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.*;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.DiscreteByAreaNormalization;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.DiscreteResizeNormalization;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearByAreaNormalization;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearResizeNormalization;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -49,22 +53,22 @@ public class NormalizedDataProcessor {
             } else {
                 try {
                     BufferedImage image = ImageIO.read(f);
-                    NormalizationMethod normalizationMethod = null;
+                    Normalization normalization = null;
                     switch (trainingDataInfo.getNormalizationType()) {
                         case DISCRETE_BY_AREA:
-                            normalizationMethod = new DiscreteByAreaNormalization();
+                            normalization = new DiscreteByAreaNormalization();
                             break;
                         case DISCRETE_RESIZE:
-                            normalizationMethod = new DiscreteResizeNormalization();
+                            normalization = new DiscreteResizeNormalization();
                             break;
                         case LINEAR_BY_AREA:
-                            normalizationMethod = new LinearByAreaNormalization();
+                            normalization = new LinearByAreaNormalization();
                             break;
                         case LINEAR_RESIZE:
-                            normalizationMethod = new LinearResizeNormalization();
+                            normalization = new LinearResizeNormalization();
                             break;
                     }
-                    NormalizedData normalizedData = normalizationMethod.getNormalizedDataFromImage(image, trainingDataInfo, getLetterFromFile(f));
+                    NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, getLetterFromFile(f));
                     normalizedDatum.add(normalizedData);
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());

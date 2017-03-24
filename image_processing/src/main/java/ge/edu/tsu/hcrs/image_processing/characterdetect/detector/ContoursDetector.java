@@ -7,7 +7,12 @@ import ge.edu.tsu.hcrs.image_processing.characterdetect.model.TextRow;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.util.ElementsAddUtil;
 
 import java.awt.image.BufferedImage;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 public class ContoursDetector {
 
@@ -102,14 +107,7 @@ public class ContoursDetector {
     }
 
     private static boolean isInSameTextRow(TextRow textRow, Contour contour) {
-        if (textRow.getContours().size() == 0) {
-            return true;
-        }
-        if (textRow.getBottomPoint() >= contour.getTopPoint()) {
-            return true;
-        } else {
-            return false;
-        }
+        return textRow.getContours().size() == 0 || textRow.getBottomPoint() >= contour.getTopPoint();
     }
 
     private static List<Point> getConnectedPoints(short i, short j, TextCutterParams params) {

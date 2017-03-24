@@ -1,7 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata;
 
 import java.io.Serializable;
-import java.lang.*;
 import java.util.Arrays;
 
 public class NormalizedData implements Serializable {

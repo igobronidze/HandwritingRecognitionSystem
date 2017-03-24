@@ -15,4 +15,6 @@ public interface INeuralNetworkProcessor {
     NetworkResult getNetworkResult(BufferedImage image, int networkId);
 
     float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException;
+
+    String recognizeText(BufferedImage image, int networkId);
 }

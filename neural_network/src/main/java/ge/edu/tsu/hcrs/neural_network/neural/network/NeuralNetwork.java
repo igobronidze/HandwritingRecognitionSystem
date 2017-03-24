@@ -9,7 +9,12 @@ import ge.edu.tsu.hcrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hcrs.neural_network.neural.testresult.TestResultUtil;
 import ge.edu.tsu.hcrs.neural_network.util.Randomizer;
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -78,11 +83,11 @@ public class NeuralNetwork implements Serializable {
                     hiddenNeurons.add(neuron);
                 }
                 tmpNeurons.add(neuron);
-                for (int k = 0; k < lastLayerNeurons.size(); k++) {
-                    Connection connection = Randomizer.getRandomConnection(this, lastLayerNeurons.get(k), neuron);
+                for (Neuron lastLayerNeuron : lastLayerNeurons) {
+                    Connection connection = Randomizer.getRandomConnection(this, lastLayerNeuron, neuron);
                     neuron.getInConnections().add(connection);
-                    lastLayerNeurons.get(k).getOutConnections().add(connection);
-                    connection.setLeftNeuron(lastLayerNeurons.get(k));
+                    lastLayerNeuron.getOutConnections().add(connection);
+                    connection.setLeftNeuron(lastLayerNeuron);
                     connection.setRightNeuron(neuron);
                 }
             }

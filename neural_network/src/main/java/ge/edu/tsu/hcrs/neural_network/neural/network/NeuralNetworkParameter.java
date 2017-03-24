@@ -1,6 +1,12 @@
 package ge.edu.tsu.hcrs.neural_network.neural.network;
 
-import ge.edu.tsu.hcrs.neural_network.transfer.*;
+import ge.edu.tsu.hcrs.neural_network.transfer.HyperbolicTangentFunction;
+import ge.edu.tsu.hcrs.neural_network.transfer.LinearFunction;
+import ge.edu.tsu.hcrs.neural_network.transfer.PieceWiseLinearFunction;
+import ge.edu.tsu.hcrs.neural_network.transfer.SigmoidFunction;
+import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunction;
+import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunctionType;
+import ge.edu.tsu.hcrs.neural_network.transfer.UnitStepFunction;
 
 import java.io.Serializable;
 

@@ -1,8 +1,12 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
-import ge.edu.tsu.hcrs.control_panel.model.network.*;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
+import ge.edu.tsu.hcrs.control_panel.model.network.NetworkTrainingStatus;
+import ge.edu.tsu.hcrs.control_panel.model.network.TestingInfo;
+import ge.edu.tsu.hcrs.control_panel.model.network.TrainingDataInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hcrs.control_panel.model.sysparam.Parameter;
@@ -16,11 +20,17 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
-import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.NormalizationMethod;
+import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
 import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hcrs.control_panel.server.util.GroupedNormalizedDataUtil;
 import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.ContoursDetector;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutterParams;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.Contour;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.TextAdapter;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.model.TextRow;
+import ge.edu.tsu.hcrs.image_processing.characterdetect.util.TextAdapterUtil;
 import ge.edu.tsu.hcrs.neural_network.exception.NNException;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetwork;
 import ge.edu.tsu.hcrs.neural_network.neural.network.NeuralNetworkParameter;
@@ -30,7 +40,13 @@ import ge.edu.tsu.hcrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hcrs.neural_network.transfer.TransferFunctionType;
 
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInput;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutput;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -52,8 +68,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private final Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
 
-    public HCRSNeuralNetworkProcessor() {
-    }
+    private final Parameter deltaForNotSpaces = new Parameter("deltaForNotSpaces", "3");
 
     @Override
     public void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException {
@@ -72,8 +87,8 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             layers.add(charSequence.getNumberOfChars());
             NeuralNetwork neuralNetwork = new NeuralNetwork(layers);
             setNeuralNetworkParameters(neuralNetwork, networkInfo);
-            for (int i = 0; i < normalizedDataList.size(); i++) {
-                neuralNetwork.addTrainingData(NetworkDataCreator.getTrainingData(normalizedDataList.get(i), charSequence));
+            for (NormalizedData aNormalizedDataList : normalizedDataList) {
+                neuralNetwork.addTrainingData(NetworkDataCreator.getTrainingData(aNormalizedDataList, charSequence));
             }
             TrainingProgress trainingProgress = new TrainingProgress();
             trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
@@ -110,55 +125,6 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         }
     }
 
-    private List<Integer> getIdsFromFromGroupedNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
-        List<Integer> ids = new ArrayList<>();
-        for (GroupedNormalizedData groupedNormalizedData : groupedNormalizedDatum) {
-            ids.add(groupedNormalizedData.getId());
-        }
-        return ids;
-    }
-
-    private void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (ObjectOutput out = new ObjectOutputStream(bos)) {
-            out.writeObject(neuralNetwork);
-            out.flush();
-            byte[] bytes = bos.toByteArray();
-            neuralNetworkDAO.addNeuralNetwork(id, bytes);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
-    @Override
-    public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
-        try {
-            NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
-            CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
-            TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
-            NormalizationMethod normalizationMethod = NormalizationMethod.getInstance(trainingDataInfo.getNormalizationType());
-            NormalizedData normalizedData = normalizationMethod.getNormalizedDataFromImage(image, trainingDataInfo, null);
-            CharSequenceInitializer.initializeCharSequence(charSequence);
-            TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
-            List<Float> output = neuralNetwork.getOutputActivation(trainingData);
-            int ans = 0;
-            for (int i = 1; i < charSequence.getNumberOfChars(); i++) {
-                if (output.get(i) > output.get(ans)) {
-                    ans = i;
-                }
-            }
-            char c = charSequence.getIndexToCharMap().get(ans);
-            NetworkResult networkResult = new NetworkResult();
-            networkResult.setOutputActivation(output);
-            networkResult.setAnswer(c);
-            networkResult.setCharSequence(charSequence);
-            return networkResult;
-        } catch (ControlPanelException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return null;
-    }
-
     @Override
     public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
         if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(groupedNormalizedDatum)) {
@@ -193,6 +159,85 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
             System.out.println(ex.getMessage());
         }
         return -1;
+    }
+
+    @Override
+    public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
+        try {
+            NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
+            CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
+            TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
+            Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
+            NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, null);
+            CharSequenceInitializer.initializeCharSequence(charSequence);
+            TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
+            List<Float> output = neuralNetwork.getOutputActivation(trainingData);
+            NetworkResult networkResult = new NetworkResult();
+            networkResult.setOutputActivation(output);
+            networkResult.setAnswer(getAns(output, charSequence));
+            networkResult.setCharSequence(charSequence);
+            return networkResult;
+        } catch (ControlPanelException ex) {
+            System.out.println(ex.getMessage());
+        }
+        return null;
+    }
+
+    @Override
+    public String recognizeText(BufferedImage image, int networkId) {
+        StringBuilder text = new StringBuilder();
+        NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
+        CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
+        TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
+        Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
+        TextAdapter textAdapter = ContoursDetector.detectContours(image, new TextCutterParams());
+        for (TextRow textRow : textAdapter.getRows()) {
+            int rightPoint = -1;
+            for (Contour contour : textRow.getContours()) {
+                if (rightPoint != -1) {
+                    if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint + 1, systemParameterProcessor.getIntegerParameterValue(deltaForNotSpaces))) {
+                        text.append(" ");
+                    }
+                }
+                rightPoint = contour.getRightPoint();
+                NormalizedData normalizedData = normalization.getNormalizedDataFromContour(contour, trainingDataInfo);
+                TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
+                List<Float> output = neuralNetwork.getOutputActivation(trainingData);
+                text.append(getAns(output, charSequence));
+            }
+            text.append(System.lineSeparator());
+        }
+        return text.toString();
+    }
+
+    private char getAns(List<Float> output, CharSequence charSequence) {
+        int ans = 0;
+        for (int i = 1; i < charSequence.getNumberOfChars(); i++) {
+            if (output.get(i) > output.get(ans)) {
+                ans = i;
+            }
+        }
+        return charSequence.getIndexToCharMap().get(ans);
+    }
+
+    private List<Integer> getIdsFromFromGroupedNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
+        List<Integer> ids = new ArrayList<>();
+        for (GroupedNormalizedData groupedNormalizedData : groupedNormalizedDatum) {
+            ids.add(groupedNormalizedData.getId());
+        }
+        return ids;
+    }
+
+    private void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork) {
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        try (ObjectOutput out = new ObjectOutputStream(bos)) {
+            out.writeObject(neuralNetwork);
+            out.flush();
+            byte[] bytes = bos.toByteArray();
+            neuralNetworkDAO.addNeuralNetwork(id, bytes);
+        } catch (IOException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void setNeuralNetworkParameters(NeuralNetwork neuralNetwork, NetworkInfo networkInfo) {

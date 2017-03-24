@@ -40,4 +40,9 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
         return iNeuralNetworkProcessor.testNeural(groupedNormalizedDatum, networkId);
     }
+
+    @Override
+    public String recognizeText(BufferedImage image, int networkId) {
+        return iNeuralNetworkProcessor.recognizeText(image, networkId);
+    }
 }
