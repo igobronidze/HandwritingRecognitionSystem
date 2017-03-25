@@ -61,7 +61,7 @@ public class TextCutterMain {
                 System.out.println("3 - ბრჭყალების ორ სიმბოლოდ ჩათვლა: არსებული მნიშვნელობა - " + textCutterParams.isDoubleQuoteAsTwoChar());
                 System.out.println("4 - გამოიყენოს შეერთების ფუნქციონალი: არსებული მნიშვნელობა - " + textCutterParams.isUseJoiningFunctional());
                 System.out.println("5 - შეცდომის მიუხედავად სურათების ბეჭდვა: არსებული მნიშვნელობა - " + textCutterParams.isSaveAnyway());
-                System.out.println("6 - საერთოების რაოდონობა, რომ ორი სიმბოლო ერთად გამოცხადდეს: არსებული მნიშვნელობა -  " + textCutterParams.getNumberOfSameForJoining());
+                System.out.println("6 - პროცენტული დამთხვევა, რომ ორი სიმბოლო ერთად გამოცხადდეს: არსებული მნიშვნელობა -  " + textCutterParams.getPercentageOfSameForJoining());
                 s = scanner.nextLine();
                 if (isRetry(s)) {
                     retry = true;
@@ -121,7 +121,7 @@ public class TextCutterMain {
                                 retry = true;
                                 break;
                             }
-                            textCutterParams.setNumberOfSameForJoining(Integer.parseInt(s));
+                            textCutterParams.setPercentageOfSameForJoining(Integer.parseInt(s));
                             break;
                         default:
                             end = true;

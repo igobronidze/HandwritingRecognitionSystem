@@ -41,7 +41,7 @@ public abstract class Normalization {
     private float[][] getNormalizedAreas(float areas[][], int height, int width, int realHeight, int realWidth) {
         float normalizedAreas[][] = new float[height][width];
         float deltaI = (float) realHeight / height;
-        float deltaJ = realWidth / width;
+        float deltaJ = (float) realWidth / width;
         for (int i = 0; i < height; i++) {
             for (int j = 0; j < width; j++) {
                 float topI = i * deltaI;

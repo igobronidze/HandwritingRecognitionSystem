@@ -44,14 +44,16 @@ public class TextCutter {
                 throw new TextAdapterSizeException(expectedCount, resultCount);
             } else {
                 int i = 0;
+                int id = 0;
                 for (TextRow textRow : textAdapter.getRows()) {
                     for (Contour contour : textRow.getContours()) {
                         while (i < text.length() && TextAdapterUtil.isUnnecessaryCharacter(text.charAt(i))) {
                             i++;
                         }
                         BufferedImage resultImage = ContourUtil.getBufferedImageFromContour(contour);
-                        ImageIO.write(resultImage, "png", new File(resultImagesPath + "/" + (i + 1) + "_" + getForbiddenCharsValue(text.charAt(i)) + ".png"));
+                        ImageIO.write(resultImage, "png", new File(resultImagesPath + "/" + (id + 1) + "_" + getForbiddenCharsValue(text.charAt(i)) + ".png"));
                         i++;
+                        id++;
                     }
                 }
             }

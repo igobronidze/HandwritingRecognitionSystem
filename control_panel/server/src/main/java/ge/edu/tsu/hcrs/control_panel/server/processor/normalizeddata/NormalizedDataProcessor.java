@@ -27,7 +27,7 @@ public class NormalizedDataProcessor {
 
     private final GroupedNormalizedDataDAO groupedNormalizedDataDAO = new GroupedNormalizedDataDAOImpl();
 
-    public void addNormalizedDatum(GroupedNormalizedData groupedNormalizedData, List<String> directories) {
+    public void addNormalizedDatum(GroupedNormalizedData groupedNormalizedData, List<String> files) {
         TrainingDataInfo trainingDataInfo = new TrainingDataInfo();
         trainingDataInfo.setWidth(groupedNormalizedData.getWidth());
         trainingDataInfo.setHeight(groupedNormalizedData.getHeight());
@@ -36,13 +36,13 @@ public class NormalizedDataProcessor {
         trainingDataInfo.setNormalizationType(groupedNormalizedData.getNormalizationType());
         List<NormalizedData> normalizedDatum = new ArrayList<>();
         Date date = new Date();
-        for (String directory : directories) {
+        for (String directory : files) {
             File file = new File(directory);
             addNormalizedData(trainingDataInfo, file, normalizedDatum);
         }
+        groupedNormalizedData.setDuration((new Date().getTime() - date.getTime()));
         int groupedNormalizedDataId = groupedNormalizedDataDAO.addOrGetGroupedNormalizedDataId(groupedNormalizedData);
         groupedNormalizedData.setId(groupedNormalizedDataId);
-        groupedNormalizedData.setDuration((new Date().getTime() - date.getTime()));
         normalizedDataDAO.addNormalizedDatum(normalizedDatum, groupedNormalizedData);
     }
 

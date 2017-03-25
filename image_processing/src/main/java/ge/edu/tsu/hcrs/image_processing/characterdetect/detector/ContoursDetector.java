@@ -91,7 +91,7 @@ public class ContoursDetector {
             newContours.add(lContour);
             while (contours.size() != 0) {
                 Contour contour = contours.poll();
-                if (isUnitedContours(lContour, contour, params.getNumberOfSameForJoining())) {
+                if (isUnitedContours(lContour, contour, params.getPercentageOfSameForJoining())) {
                     lContour.setUnitedContour(contour);
                 } else {
                     newContours.add(contour);
@@ -103,7 +103,9 @@ public class ContoursDetector {
     }
 
     private static boolean isUnitedContours(Contour contour1, Contour contour2, int numberOfSameForJoining) {
-        return (contour1.getRightPoint() - contour2.getLeftPoint()) >= (numberOfSameForJoining - 1);
+        int samePixels = contour1.getRightPoint() - contour2.getLeftPoint() + 1;
+        return samePixels > 0 && ((float) samePixels / (contour1.getRightPoint() - contour1.getLeftPoint() + 1) * 100 >= numberOfSameForJoining ||
+                (float) samePixels / (contour2.getRightPoint() - contour2.getLeftPoint() + 1) * 100 >= numberOfSameForJoining);
     }
 
     private static boolean isInSameTextRow(TextRow textRow, Contour contour) {
