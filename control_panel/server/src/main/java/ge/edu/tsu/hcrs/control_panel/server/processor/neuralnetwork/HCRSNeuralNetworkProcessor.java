@@ -1,5 +1,6 @@
 package ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork;
 
+import ge.edu.tsu.hcrs.control_panel.model.common.HCRSPath;
 import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
@@ -20,11 +21,11 @@ import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hcrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
 import ge.edu.tsu.hcrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
+import ge.edu.tsu.hcrs.control_panel.server.processor.common.HCRSPathProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
 import ge.edu.tsu.hcrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hcrs.control_panel.server.util.GroupedNormalizedDataUtil;
-import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.ContoursDetector;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutterParams;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.model.Contour;
@@ -64,6 +65,8 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
     private final TrainingDataInfoDAO trainingDataInfoDAO = new TrainingDataInfoDAOImpl();
 
+    private final HCRSPathProcessor hcrsPathProcessor = new HCRSPathProcessor();
+
     private final Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
     private final Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
@@ -102,7 +105,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                     long trainingDuration = neuralNetwork.train(trainingProgress);
                     networkInfoDAO.updateTrainedState(trainingDuration, id);
                     networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
-                    NeuralNetwork.save(SystemPathUtil.getNeuralNetworkPath() + "/" + id + ".nnet", neuralNetwork);
+                    NeuralNetwork.save(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + "/" + id + ".nnet", neuralNetwork);
                     if (saveInDatabase) {
                         saveNeuralNetwork(id, neuralNetwork);
                     }
@@ -204,10 +207,22 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
                 List<Float> output = neuralNetwork.getOutputActivation(trainingData);
                 text.append(getAns(output, charSequence));
+                updateDoubleQuotes(text);
             }
             text.append(System.lineSeparator());
         }
+
         return text.toString();
+    }
+
+    private void updateDoubleQuotes(StringBuilder text) {
+        if (text.length() <=1 ) {
+            return;
+        }
+        int lastIndex = text.length() - 1;
+        if ((text.charAt(lastIndex) == ',' || text.charAt(lastIndex) == '\'') && (text.charAt(lastIndex - 1) == ',' || text.charAt(lastIndex - 1) == '\'')) {
+            text.delete(lastIndex - 1, lastIndex);
+        }
     }
 
     private char getAns(List<Float> output, CharSequence charSequence) {
@@ -256,7 +271,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     private NeuralNetwork loadNeuralNetwork(int id) {
         NeuralNetwork neuralNetwork;
         try {
-            neuralNetwork = NeuralNetwork.load(SystemPathUtil.getNeuralNetworkPath() + "/" + id + ".nnet");
+            neuralNetwork = NeuralNetwork.load(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + "/" + id + ".nnet");
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
             neuralNetwork = loadFromDatabase(id);

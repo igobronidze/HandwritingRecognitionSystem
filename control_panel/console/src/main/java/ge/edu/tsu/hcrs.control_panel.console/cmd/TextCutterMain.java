@@ -1,20 +1,23 @@
 package ge.edu.tsu.hcrs.control_panel.console.cmd;
 
+import ge.edu.tsu.hcrs.control_panel.model.common.HCRSPath;
+import ge.edu.tsu.hcrs.control_panel.server.processor.common.HCRSPathProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.imageprocessing.ImageProcessingProcessor;
-import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
 import ge.edu.tsu.hcrs.image_processing.characterdetect.detector.TextCutterParams;
 
 import java.util.Scanner;
 
 public class TextCutterMain {
 
-    private static ImageProcessingProcessor imageProcessingProcessor = new ImageProcessingProcessor();
+    private static final ImageProcessingProcessor imageProcessingProcessor = new ImageProcessingProcessor();
 
-    private static final String srcImageRootDirectory = SystemPathUtil.getOriginalImagesPath();
+    private static final HCRSPathProcessor hcrsPathProcessor = new HCRSPathProcessor();
 
-    private static final String srcTextRootDirectory = SystemPathUtil.getTextsPath();
+    private static final String srcImageRootDirectory = hcrsPathProcessor.getPath(HCRSPath.ORIGINAL_IMAGES_PATH);
 
-    private static final String resultImagesRootDirectory = SystemPathUtil.getCutCharactersPath();
+    private static final String srcTextRootDirectory = hcrsPathProcessor.getPath(HCRSPath.TEXTS_PATH);
+
+    private static final String resultImagesRootDirectory = hcrsPathProcessor.getPath(HCRSPath.CUT_CHARACTERS_PATH);
 
     public static void main(String[] args) {
         while (true) {
