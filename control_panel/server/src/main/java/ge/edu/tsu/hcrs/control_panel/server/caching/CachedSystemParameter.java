@@ -19,6 +19,9 @@ public class CachedSystemParameter {
         if (cachedParameters == null) {
             fillParameters();
         }
+        if (cachedParameters == null) {
+            return parameter.getDefaultValue();
+        }
         String value = cachedParameters.get(parameter.getKey());
         if (value != null) {
             return value;
@@ -42,10 +45,16 @@ public class CachedSystemParameter {
     }
 
     public static void fillParameters() {
-        cachedParameters = new HashMap<>();
-        List<SystemParameter> systemParameterList = systemParameterDAO.getSystemParameters(null, null);
-        for (SystemParameter systemParameter : systemParameterList) {
-            cachedParameters.put(systemParameter.getKey(), systemParameter.getValue());
+        try {
+            cachedParameters = new HashMap<>();
+            List<SystemParameter> systemParameterList = systemParameterDAO.getSystemParameters(null, null);
+            for (SystemParameter systemParameter : systemParameterList) {
+                cachedParameters.put(systemParameter.getKey(), systemParameter.getValue());
+            }
+        } catch (Exception ex) {
+            cachedParameters = null;
+            System.out.println(ex.getMessage());
+            System.out.println("can't catch system parameters... all parameter value mast be default...");
         }
     }
 }

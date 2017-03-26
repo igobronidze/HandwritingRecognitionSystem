@@ -6,6 +6,7 @@ import ge.edu.tsu.hcrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkTrainingStatus;
+import ge.edu.tsu.hcrs.control_panel.model.network.RecognitionInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.TestingInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.TrainingDataInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
@@ -49,6 +50,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
@@ -66,6 +68,8 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     private final TrainingDataInfoDAO trainingDataInfoDAO = new TrainingDataInfoDAOImpl();
 
     private final HCRSPathProcessor hcrsPathProcessor = new HCRSPathProcessor();
+
+    private final ProductionNetworkProcessor productionNetworkProcessor = new ProductionNetworkProcessor();
 
     private final Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
@@ -107,7 +111,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                     networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
                     NeuralNetwork.save(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + "/" + id + ".nnet", neuralNetwork);
                     if (saveInDatabase) {
-                        saveNeuralNetwork(id, neuralNetwork);
+                        NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork);
                     }
                 } catch (NNException ex) {
                     System.out.println(ex.getMessage());
@@ -139,7 +143,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         }
         List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
         try {
-            NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
+            NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId);
             List<TrainingData> trainingDataList = new ArrayList<>();
             CharSequence charSequence = networkInfo.getCharSequence();
             CharSequenceInitializer.initializeCharSequence(charSequence);
@@ -167,7 +171,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     @Override
     public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
         try {
-            NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
+            NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId);
             CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
             TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
             Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
@@ -187,36 +191,67 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
     }
 
     @Override
-    public String recognizeText(BufferedImage image, int networkId) {
-        StringBuilder text = new StringBuilder();
-        NeuralNetwork neuralNetwork = loadNeuralNetwork(networkId);
-        CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
-        TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
-        Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
-        TextAdapter textAdapter = ContoursDetector.detectContours(image, new TextCutterParams());
-        for (TextRow textRow : textAdapter.getRows()) {
-            int rightPoint = -1;
-            for (Contour contour : textRow.getContours()) {
-                if (rightPoint != -1) {
-                    if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint + 1, systemParameterProcessor.getIntegerParameterValue(deltaForNotSpaces))) {
-                        text.append(" ");
-                    }
-                }
-                rightPoint = contour.getRightPoint();
-                NormalizedData normalizedData = normalization.getNormalizedDataFromContour(contour, trainingDataInfo);
-                TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
-                List<Float> output = neuralNetwork.getOutputActivation(trainingData);
-                text.append(getAns(output, charSequence));
-                updateDoubleQuotes(text);
+    public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId) {
+        List<RecognitionInfo> recognitionInfos = new ArrayList<>();
+        for (BufferedImage image : images) {
+            Date date = new Date();
+            RecognitionInfo recognitionInfo = new RecognitionInfo();
+            StringBuilder text = new StringBuilder();
+            NeuralNetwork neuralNetwork;
+            TrainingDataInfo trainingDataInfo;
+            CharSequence charSequence;
+            if (networkId == null || networkId == -1) {
+                neuralNetwork = productionNetworkProcessor.getProductionNeuralNetwork();
+                trainingDataInfo = productionNetworkProcessor.getProductionTrainingDataInfo();
+                charSequence = productionNetworkProcessor.getProductionCharSequence();
+            } else {
+                neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId);
+                charSequence = networkInfoDAO.getCharSequenceById(networkId);
+                trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
             }
-            text.append(System.lineSeparator());
+            Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
+            recognitionInfo.setNetworkInfoGatheringDuration(new Date().getTime() - date.getTime());
+            date = new Date();
+            TextAdapter textAdapter = ContoursDetector.detectContours(image, new TextCutterParams());
+            recognitionInfo.setDetectContoursDuration(new Date().getTime() - date.getTime());
+            long inputDataGatheringDuration = 0;
+            long activationDuration = 0;
+            long extraDuration = 0;
+            for (TextRow textRow : textAdapter.getRows()) {
+                int rightPoint = -1;
+                for (Contour contour : textRow.getContours()) {
+                    date = new Date();
+                    if (rightPoint != -1) {
+                        if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint + 1, systemParameterProcessor.getIntegerParameterValue(deltaForNotSpaces))) {
+                            text.append(" ");
+                        }
+                    }
+                    extraDuration += new Date().getTime() - date.getTime();
+                    date = new Date();
+                    rightPoint = contour.getRightPoint();
+                    NormalizedData normalizedData = normalization.getNormalizedDataFromContour(contour, trainingDataInfo);
+                    TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
+                    inputDataGatheringDuration += new Date().getTime() - date.getTime();
+                    date = new Date();
+                    List<Float> output = neuralNetwork.getOutputActivation(trainingData);
+                    activationDuration += new Date().getTime() - date.getTime();
+                    date = new Date();
+                    text.append(getAns(output, charSequence));
+                    updateDoubleQuotes(text);
+                    extraDuration += new Date().getTime() - date.getTime();
+                }
+                text.append(System.lineSeparator());
+            }
+            recognitionInfo.setInputDataGatheringDuration(inputDataGatheringDuration);
+            recognitionInfo.setActivationDuration(activationDuration);
+            recognitionInfo.setExtraDuration(extraDuration);
+            recognitionInfos.add(recognitionInfo);
         }
-
-        return text.toString();
+        return recognitionInfos;
     }
 
     private void updateDoubleQuotes(StringBuilder text) {
-        if (text.length() <=1 ) {
+        if (text.length() <= 1) {
             return;
         }
         int lastIndex = text.length() - 1;
@@ -243,18 +278,6 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         return ids;
     }
 
-    private void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork) {
-        ByteArrayOutputStream bos = new ByteArrayOutputStream();
-        try (ObjectOutput out = new ObjectOutputStream(bos)) {
-            out.writeObject(neuralNetwork);
-            out.flush();
-            byte[] bytes = bos.toByteArray();
-            neuralNetworkDAO.addNeuralNetwork(id, bytes);
-        } catch (IOException ex) {
-            System.out.println(ex.getMessage());
-        }
-    }
-
     private void setNeuralNetworkParameters(NeuralNetwork neuralNetwork, NetworkInfo networkInfo) {
         NeuralNetworkParameter parameter = neuralNetwork.getNeuralNetworkParameter();
         parameter.setWeightMinValue(networkInfo.getWeightMinValue());
@@ -266,31 +289,5 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
         parameter.setMinError(networkInfo.getMinError());
         parameter.setTrainingMaxIteration(networkInfo.getTrainingMaxIteration());
         parameter.setNumberOfTrainingDataInOneIteration(networkInfo.getNumberOfTrainingDataInOneIteration());
-    }
-
-    private NeuralNetwork loadNeuralNetwork(int id) {
-        NeuralNetwork neuralNetwork;
-        try {
-            neuralNetwork = NeuralNetwork.load(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + "/" + id + ".nnet");
-        } catch (NNException ex) {
-            System.out.println(ex.getMessage());
-            neuralNetwork = loadFromDatabase(id);
-        }
-        return neuralNetwork;
-    }
-
-    private NeuralNetwork loadFromDatabase(int id) {
-        NeuralNetwork neuralNetwork = null;
-        byte[] bytes = neuralNetworkDAO.getNeuralNetworkData(id);
-        if (bytes == null) {
-            return null;
-        }
-        ByteArrayInputStream bis = new ByteArrayInputStream(bytes);
-        try (ObjectInput in = new ObjectInputStream(bis)){
-            neuralNetwork = (NeuralNetwork)in.readObject();
-        } catch (IOException | ClassCastException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return neuralNetwork;
     }
 }

@@ -8,11 +8,11 @@ public class CharSequence implements Serializable {
 
     private String charactersRegex;
 
-    private Map<Character, Integer> charToIndexMap = new HashMap<>();
+    private transient Map<Character, Integer> charToIndexMap = new HashMap<>();
 
-    private Map<Integer, Character> indexToCharMap = new HashMap<>();
+    private transient Map<Integer, Character> indexToCharMap = new HashMap<>();
 
-    int numberOfChars;
+    private transient int numberOfChars;
 
     public CharSequence() {
     }

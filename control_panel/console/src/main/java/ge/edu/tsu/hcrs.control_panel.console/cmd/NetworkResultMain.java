@@ -27,7 +27,7 @@ public class NetworkResultMain {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             System.out.println();
-            System.out.println("ჩაირთო სიმბოლოს ამოცნობის აპლიკაცია აპლიკაცია!");
+            System.out.println("ჩაირთო სიმბოლოს ამოცნობის აპლიკაცია!");
             System.out.println("ნებისმიერ მომენტში შეიყვანეთ retry აპლიკაციის თავიდან გასაშვებად");
             System.out.println();
 
