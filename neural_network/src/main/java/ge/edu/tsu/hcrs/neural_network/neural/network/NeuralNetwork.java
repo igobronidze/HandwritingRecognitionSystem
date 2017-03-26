@@ -170,8 +170,7 @@ public class NeuralNetwork implements Serializable {
     }
 
     public static void save(String url, NeuralNetwork neuralNetwork) throws NNException {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(url));
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(url))) {
             out.writeObject(neuralNetwork);
         } catch (IOException ex) {
             throw new NNException(ex.getMessage());
@@ -179,8 +178,7 @@ public class NeuralNetwork implements Serializable {
     }
 
     public static NeuralNetwork load(String url) throws NNException {
-        try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(url));
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(url))) {
             return (NeuralNetwork)in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             throw new NNException(ex.getMessage());

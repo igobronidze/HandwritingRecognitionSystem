@@ -16,10 +16,10 @@ public class TMPRunner {
         groupedNormalizedData.setWidth(23);
         groupedNormalizedData.setMinValue(0);
         groupedNormalizedData.setMaxValue(1);
-        groupedNormalizedData.setName("კრწანისის ყაყაჩოების პირველი სტროფი 11 განსხვავებული ფონტით");
+        groupedNormalizedData.setName("კრწანისის ყაყაჩოების პირველი სტროფი ერთი ფონტით სატესტოდ");
         groupedNormalizedData.setNormalizationType(NormalizationType.LINEAR_BY_AREA);
 
-        String file = "D:\\hcrs\\images\\cut_characters\\krw_yay";
+        String file = "D:\\hcrs\\images\\cut_characters\\test\\krw_yay\\alk_life";
         List<String> files = new ArrayList<>();
         files.add(file);
 

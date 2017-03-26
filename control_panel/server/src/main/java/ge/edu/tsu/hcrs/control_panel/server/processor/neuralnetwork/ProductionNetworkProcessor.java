@@ -55,8 +55,7 @@ public class ProductionNetworkProcessor {
     }
 
     public TrainingDataInfo getProductionTrainingDataInfo() {
-        try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(systemParameterProcessor.getStringParameterValue(productionTrainingDataInfoPath)));
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(systemParameterProcessor.getStringParameterValue(productionTrainingDataInfoPath)))) {
             return (TrainingDataInfo) in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
@@ -65,8 +64,7 @@ public class ProductionNetworkProcessor {
     }
 
     public CharSequence getProductionCharSequence() {
-        try {
-            ObjectInputStream in = new ObjectInputStream(new FileInputStream(systemParameterProcessor.getStringParameterValue(productionCharSequencePath)));
+        try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(systemParameterProcessor.getStringParameterValue(productionCharSequencePath)))){
             return (CharSequence) in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
             System.out.println(ex.getMessage());
@@ -77,10 +75,12 @@ public class ProductionNetworkProcessor {
     private void serializeTrainingDataInfo(TrainingDataInfo trainingDataInfo, String path) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
         out.writeObject(trainingDataInfo);
+        out.close();
     }
 
     private void serializeCharSequence(CharSequence charSequence, String path) throws IOException {
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path));
         out.writeObject(charSequence);
+        out.close();
     }
 }
