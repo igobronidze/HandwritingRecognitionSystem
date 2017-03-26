@@ -47,31 +47,33 @@ public class NormalizedDataProcessor {
     }
 
     private void addNormalizedData(TrainingDataInfo trainingDataInfo, File file, List<NormalizedData> normalizedDatum) {
-        for (File f : file.listFiles()) {
-            if (f.isDirectory()) {
-                addNormalizedData(trainingDataInfo, f, normalizedDatum);
-            } else {
-                try {
-                    BufferedImage image = ImageIO.read(f);
-                    Normalization normalization = null;
-                    switch (trainingDataInfo.getNormalizationType()) {
-                        case DISCRETE_BY_AREA:
-                            normalization = new DiscreteByAreaNormalization();
-                            break;
-                        case DISCRETE_RESIZE:
-                            normalization = new DiscreteResizeNormalization();
-                            break;
-                        case LINEAR_BY_AREA:
-                            normalization = new LinearByAreaNormalization();
-                            break;
-                        case LINEAR_RESIZE:
-                            normalization = new LinearResizeNormalization();
-                            break;
-                    }
-                    NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, getLetterFromFile(f));
-                    normalizedDatum.add(normalizedData);
-                } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+        if (!file.isDirectory()) {
+            try {
+                BufferedImage image = ImageIO.read(file);
+                Normalization normalization = null;
+                switch (trainingDataInfo.getNormalizationType()) {
+                    case DISCRETE_BY_AREA:
+                        normalization = new DiscreteByAreaNormalization();
+                        break;
+                    case DISCRETE_RESIZE:
+                        normalization = new DiscreteResizeNormalization();
+                        break;
+                    case LINEAR_BY_AREA:
+                        normalization = new LinearByAreaNormalization();
+                        break;
+                    case LINEAR_RESIZE:
+                        normalization = new LinearResizeNormalization();
+                        break;
+                }
+                NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, getLetterFromFile(file));
+                normalizedDatum.add(normalizedData);
+            } catch (IOException ex) {
+                System.out.println(ex.getMessage());
+            }
+        } else {
+            if (file.listFiles() != null) {
+                for (File f : file.listFiles()) {
+                    addNormalizedData(trainingDataInfo, f, normalizedDatum);
                 }
             }
         }
