@@ -1,0 +1,141 @@
+@font-face {
+    font-family: alk;
+    src: url("../fonts/bpg_nino_mtavruli_bold.ttf");
+}
+
+.container{
+    padding: 0;
+    padding: 0;
+}
+
+body{
+    font-family: alk;
+    background: #eee;
+}
+
+.panel-heading{
+    padding:20px 30px;
+}
+
+.panel{
+    border: none;
+    margin-top: 40px;
+    -webkit-box-shadow: 0px 7px 10px -7px rgba(115,115,115,1);
+    -moz-box-shadow: 0px 7px 10px -7px rgba(115,115,115,1);
+    box-shadow: 0px 7px 10px -7px rgba(115,115,115,1);
+}
+
+.input-group{
+    margin-left: 10px;
+}
+    
+.input-group-addon{
+    background-color: none !important;
+}
+
+.btn, .input-group-addon{
+    padding-top: 10px;
+}
+
+.form-control{ 
+    padding-top: 10px;
+    text-align: center; 
+    font-style: bold;
+}
+
+.tableHead{
+    background-color: #737373 !important;
+    color: white;
+}
+
+.tableHead th{
+    text-align: center;
+}
+
+
+.t-switch{
+    background-color: none;
+    border: none;
+    border-radius: 10px;
+    padding: 0;
+    margin-right: 10px; 
+}
+
+.switch-wrapper{
+    border-bottom: 2px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 20px;
+}
+
+
+tbody {
+    display:block;
+    height:200px;
+    overflow:auto;
+}
+thead, tbody tr {
+    display:table;
+    width:99.5%;
+    table-layout:fixed;
+}
+thead {
+    width: calc( 100% - 1em )
+}
+
+.t-head th{
+    background: #737373;
+    color: white;
+    text-align: center;
+}
+
+#demo{
+    padding: 0 100px 0 80px;
+}
+
+::-webkit-scrollbar {
+    width: 8px;
+    margin-left: -10px;
+}
+ 
+::-webkit-scrollbar-track {
+    -webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3); 
+    border-radius: 8 px;
+}
+ 
+::-webkit-scrollbar-thumb {
+    border-radius: 4px;
+    background: #737373;
+}
+
+#fileList {
+  padding: 10px;
+}
+
+ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.nested_dir {
+  padding-left: 20px;
+}
+
+ul span {
+  margin-right: 5px;
+}
+
+ul > li {
+  padding-left: 15px;
+}
+
+.chevron-span {
+  font-size: 10px;
+}
+
+.chevron-span:hover {
+  cursor: pointer;
+}
+
+input[type="checkbox"] {
+  margin: 0 3px;
+}

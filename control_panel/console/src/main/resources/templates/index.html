@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8"></meta>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
+    <meta name="viewport" content="width=device-width, initial-scale=1"></meta>
+    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+    <title>Form</title>
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet"></link>
+    <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" rel="stylesheet"></link>
+    <link href="../../css/style.css" rel="stylesheet"></link>
+</head>
+
+<body>
+<div class="container">
+    <form class="form-inline ">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <div class="input-group col-md-3">
+                    <span class="input-group-addon">სახელი</span>
+                    <input type="text" class="form-control"></input>
+                </div>
+                <div class="input-group col-md-2">
+                    <span class="input-group-addon">სიგრძე</span>
+                    <input type="text" class="form-control"></input>
+                </div>
+                <div class="input-group col-md-2">
+                    <span class="input-group-addon">სიგანე</span>
+                    <input type="text" class="form-control"></input>
+                </div>
+                <div class="input-group col-md-3">
+                    <span class="input-group-addon">ნორმ.ტიპი</span>
+                    <select id="company" class="form-control text-center">
+                        <option></option>
+                        <option>DISCRETE_RESIZE</option>
+                        <option>DISCRETE_BY_AREA</option>
+                        <option>LIENAR_BY_AREA</option>
+                        <option>LIENAR_RESIZE</option>
+                    </select>
+                </div>
+                <button type="button" class="btn btn-success input-group">ნორმალიზება</button>
+            </div>
+        </div>
+    </form>
+    <div class="row">
+        <div id="fileList">
+
+        </div>
+    </div>
+    <div class="panel-body">
+        <div class="container-fluid text-right switch-wrapper">
+            <h10>პარამეტრების ჩართვა</h10>
+            <button data-toggle="collapse" data-target="#demo" class="t-switch">
+                <input type="checkbox" data-off=" " data-on=" " data-onstyle="success" data-toggle="toggle"
+                       data-size="mini"></input>
+            </button>
+        </div>
+        <div class="container collapse" id="demo">
+            <table class="table  table-striped">
+                <thead>
+                <tr class="t-head">
+                    <th class="tg-s6z2">ID</th>
+                    <th class="tg-yw4l">სიგრძე</th>
+                    <th class="tg-yw4l">სიგანე</th>
+                    <th class="tg-yw4l">სახელი</th>
+                    <th class="tg-yw4l">მინიმუმი</th>
+                    <th class="tg-yw4l">მახიმუმი</th>
+                    <th class="tg-yw4l">ტიპი</th>
+                    <th class="tg-yw4l">საშუალო დრო</th>
+                </tr>
+                </thead>
+                <tbody class="text-center">
+                <tr>
+                    <td class="tg-yw4l">1</td>
+                    <td class="tg-yw4l">3</td>
+                    <td class="tg-yw4l">2</td>
+                    <td class="tg-yw4l">3</td>
+                    <td class="tg-yw4l">3</td>
+                    <td class="tg-yw4l">3</td>
+                    <td class="tg-yw4l">4</td>
+                    <td class="tg-yw4l">4</td>
+                </tr>
+
+                </tbody>
+            </table>
+            <hr></hr>
+        </div>
+    </div>
+</div>
+    <script src="http://ajax.aspnetcdn.com/ajax/jQuery/jquery-3.1.1.js"></script>
+    <script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+    <script src="../../js/main.js"></script>
+</body>
+
+</html>
