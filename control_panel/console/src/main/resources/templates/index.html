@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="utf-8"></meta>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"></meta>
@@ -14,32 +13,31 @@
 
 <body>
 <div class="container">
-    <form class="form-inline ">
+    <form class="form-inline " method="POST" action="/normalize"  id="norm-form">
         <div class="panel panel-primary">
             <div class="panel-heading">
                 <div class="input-group col-md-3">
                     <span class="input-group-addon">სახელი</span>
-                    <input type="text" class="form-control"></input>
+                    <input name="norm-name" type="text" class="form-control input-norm-name"></input>
                 </div>
                 <div class="input-group col-md-2">
                     <span class="input-group-addon">სიგრძე</span>
-                    <input type="text" class="form-control"></input>
+                    <input name="norm-width" type="text" class="form-control input-norm-width"></input>
                 </div>
                 <div class="input-group col-md-2">
                     <span class="input-group-addon">სიგანე</span>
-                    <input type="text" class="form-control"></input>
+                    <input name="norm-height" type="text" class="form-control input-norm-height"></input>
                 </div>
                 <div class="input-group col-md-3">
                     <span class="input-group-addon">ნორმ.ტიპი</span>
-                    <select id="company" class="form-control text-center">
+                    <select name="norm-type" id="company" class="form-control text-center input-norm-type">
                         <option></option>
-                        <option>DISCRETE_RESIZE</option>
-                        <option>DISCRETE_BY_AREA</option>
-                        <option>LIENAR_BY_AREA</option>
-                        <option>LIENAR_RESIZE</option>
+                        <option th:each="normType : ${normalizationTypes}"
+                                th:value="${normType}" th:text="${normType}">
+                        </option>
                     </select>
                 </div>
-                <button type="button" class="btn btn-success input-group">ნორმალიზება</button>
+                <button type="submit" class="btn btn-success input-group">ნორმალიზება</button>
             </div>
         </div>
     </form>
@@ -71,15 +69,15 @@
                 </tr>
                 </thead>
                 <tbody class="text-center">
-                <tr>
-                    <td class="tg-yw4l">1</td>
-                    <td class="tg-yw4l">3</td>
-                    <td class="tg-yw4l">2</td>
-                    <td class="tg-yw4l">3</td>
-                    <td class="tg-yw4l">3</td>
-                    <td class="tg-yw4l">3</td>
-                    <td class="tg-yw4l">4</td>
-                    <td class="tg-yw4l">4</td>
+                <tr th:each="normData : ${groupedNormalizedDatum}">
+                    <td class="tg-yw4l" th:text="${normData.id}"></td>
+                    <td class="tg-yw4l norm-width" th:text="${normData.width}"></td>
+                    <td class="tg-yw4l norm-height" th:text="${normData.height}"></td>
+                    <td class="tg-yw4l norm-name" th:text="${normData.name}"></td>
+                    <td class="tg-yw4l" th:text="${normData.minValue}"></td>
+                    <td class="tg-yw4l" th:text="${normData.maxValue}"></td>
+                    <td class="tg-yw4l norm-type" th:text="${normData.normalizationType}"></td>
+                    <td class="tg-yw4l" th:text="${normData.duration}"></td>
                 </tr>
 
                 </tbody>
