@@ -12,7 +12,7 @@ public class TrainingDataInfo implements Serializable {
 
 	private int id;
 
-	private List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
+	private transient List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
 
 	private int height;
 

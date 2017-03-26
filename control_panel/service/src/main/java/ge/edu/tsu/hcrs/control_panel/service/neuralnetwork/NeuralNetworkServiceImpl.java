@@ -4,6 +4,7 @@ import ge.edu.tsu.hcrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
+import ge.edu.tsu.hcrs.control_panel.model.network.RecognitionInfo;
 import ge.edu.tsu.hcrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.HCRSNeuralNetworkProcessor;
 import ge.edu.tsu.hcrs.control_panel.server.processor.neuralnetwork.INeuralNetworkProcessor;
@@ -42,7 +43,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public String recognizeText(BufferedImage image, int networkId) {
-        return iNeuralNetworkProcessor.recognizeText(image, networkId);
+    public List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId) {
+        return iNeuralNetworkProcessor.recognizeText(images, networkId);
     }
 }

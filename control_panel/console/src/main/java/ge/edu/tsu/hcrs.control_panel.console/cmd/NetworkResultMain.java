@@ -1,8 +1,9 @@
 package ge.edu.tsu.hcrs.control_panel.console.cmd;
 
+import ge.edu.tsu.hcrs.control_panel.model.common.HCRSPath;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hcrs.control_panel.model.network.NetworkResult;
-import ge.edu.tsu.hcrs.control_panel.server.util.SystemPathUtil;
+import ge.edu.tsu.hcrs.control_panel.server.processor.common.HCRSPathProcessor;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkService;
 import ge.edu.tsu.hcrs.control_panel.service.neuralnetwork.NeuralNetworkServiceImpl;
 
@@ -16,7 +17,9 @@ public class NetworkResultMain {
 
     private static String s;
 
-    private static final String cutCharactersRootDirectory = SystemPathUtil.getCutCharactersPath();
+    private static final HCRSPathProcessor hcrsPathProcessor = new HCRSPathProcessor();
+
+    private static final String cutCharactersRootDirectory = hcrsPathProcessor.getPath(HCRSPath.CUT_CHARACTERS_PATH);
 
     private static final NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
 
@@ -24,7 +27,7 @@ public class NetworkResultMain {
         while (true) {
             Scanner scanner = new Scanner(System.in);
             System.out.println();
-            System.out.println("ჩაირთო სიმბოლოს ამოცნობის აპლიკაცია აპლიკაცია!");
+            System.out.println("ჩაირთო სიმბოლოს ამოცნობის აპლიკაცია!");
             System.out.println("ნებისმიერ მომენტში შეიყვანეთ retry აპლიკაციის თავიდან გასაშვებად");
             System.out.println();
 

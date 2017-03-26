@@ -12,7 +12,7 @@ public class TextCutterParams {
 
     private boolean saveAnyway = true;
 
-    private int numberOfSameForJoining = 2;
+    private int percentageOfSameForJoining = 35;
 
     public int getCheckedRGBMaxValue() {
         return checkedRGBMaxValue;
@@ -54,11 +54,11 @@ public class TextCutterParams {
         this.saveAnyway = saveAnyway;
     }
 
-    public int getNumberOfSameForJoining() {
-        return numberOfSameForJoining;
+    public int getPercentageOfSameForJoining() {
+        return percentageOfSameForJoining;
     }
 
-    public void setNumberOfSameForJoining(int numberOfSameForJoining) {
-        this.numberOfSameForJoining = numberOfSameForJoining;
+    public void setPercentageOfSameForJoining(int percentageOfSameForJoining) {
+        this.percentageOfSameForJoining = percentageOfSameForJoining;
     }
 }
