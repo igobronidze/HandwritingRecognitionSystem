@@ -40,13 +40,13 @@ public class NeuralNetworkServiceTest {
 		networkInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
 		networkInfo.setWeightMinValue(-0.5F);
 		networkInfo.setWeightMaxValue(0.5F);
-		networkInfo.setHiddenLayer(new ArrayList<>(Arrays.asList(35,35,35,35)));
+		networkInfo.setHiddenLayer(new ArrayList<>(Arrays.asList(45,55,55,45)));
 		networkInfo.setLearningRate(0.25F);
 		networkInfo.setMinError(0.00005F);
 		networkInfo.setNetworkMetaInfo("ქსელი გაშებულია 11 განსხვავებულ ფონტზე, ერთი ტექსტით");
 		networkInfo.setNetworkProcessorType(NetworkProcessorType.HCRS_NEURAL_NETWORK);
 		networkInfo.setNumberOfTrainingDataInOneIteration(300);
-		networkInfo.setTrainingMaxIteration(8000);
+		networkInfo.setTrainingMaxIteration(3000);
 		networkInfo.setTransferFunction(TransferFunction.SIGMOID);
 		neuralNetworkService.trainNeural(networkInfo, true);
 	}
@@ -57,8 +57,8 @@ public class NeuralNetworkServiceTest {
 		NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HCRS_NEURAL_NETWORK);
 		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
 		GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
-		groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(33));
-		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 19));
+		groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(32));
+		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 32));
 	}
 
 	@Test

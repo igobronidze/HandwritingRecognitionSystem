@@ -36,7 +36,7 @@ public class NeuralNetworkHelper {
     public static NeuralNetwork loadNeuralNetwork(int id) {
         NeuralNetwork neuralNetwork;
         try {
-            neuralNetwork = NeuralNetwork.load(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + "/" + id + ".nnet");
+            neuralNetwork = NeuralNetwork.load(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet");
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
             neuralNetwork = loadFromDatabase(id);

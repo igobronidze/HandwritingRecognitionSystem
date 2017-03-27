@@ -169,8 +169,8 @@ public class NeuralNetwork implements Serializable {
         return output;
     }
 
-    public static void save(String url, NeuralNetwork neuralNetwork) throws NNException {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(url))) {
+    public static void save(String path, NeuralNetwork neuralNetwork) throws NNException {
+        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
             out.writeObject(neuralNetwork);
         } catch (IOException ex) {
             throw new NNException(ex.getMessage());

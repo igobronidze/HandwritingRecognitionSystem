@@ -15,7 +15,7 @@ public class HCRSPathProcessor {
 
     private final Parameter textsPath = new Parameter("textsPath", "hcrs/texts/");
 
-    private final Parameter neuralNetworksPath = new Parameter("neuralNetworksPath", "hcrs/networks");
+    private final Parameter neuralNetworksPath = new Parameter("neuralNetworksPath", "hcrs/networks/");
 
     public String getPath(HCRSPath hcrsPath) {
         switch (hcrsPath) {

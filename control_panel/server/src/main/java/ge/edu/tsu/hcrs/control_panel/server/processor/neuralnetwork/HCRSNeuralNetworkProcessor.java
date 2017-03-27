@@ -98,26 +98,26 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                     groupedNormalizedData.getNormalizationType(), neuralNetwork.getTrainingDataList().size());
             trainingDataInfoDAO.addTrainingDataInfo(trainingDataInfo);
             Runnable run = () -> {
-                try {
-                    long trainingDuration = neuralNetwork.train(trainingProgress);
-                    networkInfoDAO.updateTrainedState(trainingDuration, id);
-                    networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
-                    NeuralNetwork.save(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + "/" + id + ".nnet", neuralNetwork);
-                    if (saveInDatabase) {
-                        NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork);
+                while (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+                    try {
+                        networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
+                        Thread.sleep(systemParameterProcessor.getIntegerParameterValue(updatePerSeconds) * 1000);
+                    } catch (InterruptedException ex) {
+                        System.out.println(ex.getMessage());
                     }
-                } catch (NNException ex) {
-                    System.out.println(ex.getMessage());
                 }
             };
             new Thread(run).start();
-            while (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
-                try {
-                    networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
-                    Thread.sleep(systemParameterProcessor.getIntegerParameterValue(updatePerSeconds) * 1000);
-                } catch (InterruptedException ex) {
-                    System.out.println(ex.getMessage());
-                }
+            long trainingDuration = neuralNetwork.train(trainingProgress);
+            networkInfoDAO.updateTrainedState(trainingDuration, id);
+            networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
+            try {
+                NeuralNetwork.save(hcrsPathProcessor.getPath(HCRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet", neuralNetwork);
+            } catch (NNException ex) {
+                System.out.println(ex.getMessage());
+            }
+            if (saveInDatabase) {
+                NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork);
             }
             networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
         } catch (NNException ex) {
