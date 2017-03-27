@@ -197,9 +197,15 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 neuralNetwork = productionNetworkProcessor.getProductionNeuralNetwork();
                 trainingDataInfo = productionNetworkProcessor.getProductionTrainingDataInfo();
                 charSequence = productionNetworkProcessor.getProductionCharSequence();
+                try {
+                    CharSequenceInitializer.initializeCharSequence(charSequence);
+                } catch (ControlPanelException ex) {}
             } else {
                 neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId);
                 charSequence = networkInfoDAO.getCharSequenceById(networkId);
+                try {
+                    CharSequenceInitializer.initializeCharSequence(charSequence);
+                } catch (ControlPanelException ex) {}
                 trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
             }
             Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
@@ -235,6 +241,7 @@ public class HCRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
                 }
                 text.append(System.lineSeparator());
             }
+            recognitionInfo.setText(text.toString());
             recognitionInfo.setInputDataGatheringDuration(inputDataGatheringDuration);
             recognitionInfo.setActivationDuration(activationDuration);
             recognitionInfo.setExtraDuration(extraDuration);

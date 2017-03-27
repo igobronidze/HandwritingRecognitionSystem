@@ -1,11 +1,8 @@
 package ge.edu.tsu.hcrs.control_panel.model.network;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class RecognitionInfo {
 
-    private List<String> texts = new ArrayList<>();
+    private String text;
 
     private long networkInfoGatheringDuration;
 
@@ -25,12 +22,12 @@ public class RecognitionInfo {
         this.networkInfoGatheringDuration = networkInfoGatheringDuration;
     }
 
-    public List<String> getTexts() {
-        return texts;
+    public String getText() {
+        return text;
     }
 
-    public void setTexts(List<String> texts) {
-        this.texts = texts;
+    public void setText(String text) {
+        this.text = text;
     }
 
     public long getDetectContoursDuration() {

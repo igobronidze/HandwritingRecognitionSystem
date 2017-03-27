@@ -109,7 +109,7 @@ public abstract class Normalization {
         int width = contour.getRightPoint() - contour.getLeftPoint() + 1;
         float[][] areas = new float[height][width];
         for (Point point : contour.getContourCoordinates()) {
-            areas[point.getX()][point.getY()] = (float)((int)(((float)point.getColor() / blackPixel) * 10000)) / 10000;
+            areas[point.getX() - contour.getTopPoint()][point.getY() - contour.getLeftPoint()] = (float)((int)(((float)point.getColor() / blackPixel) * 10000)) / 10000;
         }
         return areas;
     }

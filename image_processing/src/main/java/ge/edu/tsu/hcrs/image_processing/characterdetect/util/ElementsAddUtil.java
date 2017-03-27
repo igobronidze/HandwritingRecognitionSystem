@@ -39,7 +39,7 @@ public class ElementsAddUtil {
         for (Integer distance : textRow.getDistanceBetweenContours().keySet()) {
             Map<Integer, Integer> distanceBetweenContours = textAdapter.getDistanceBetweenContours();
             if (distanceBetweenContours.get(distance) == null) {
-                distanceBetweenContours.put(distance, textAdapter.getDistanceBetweenContours().get(distance));
+                distanceBetweenContours.put(distance, 1);
             } else {
                 distanceBetweenContours.put(distance, textAdapter.getDistanceBetweenContours().get(distance) + distanceBetweenContours.get(distance));
             }
