@@ -17,7 +17,7 @@ public class SystemParametersController {
 
     private SystemParameterService systemParameterService = new SystemParameterServiceImpl();
 
-    @RequestMapping(value = "/", method=RequestMethod.GET)
+    @RequestMapping(value = "/sysparams", method=RequestMethod.GET)
     public String sysparams(Map<String, Object> model) {
         model.put("systemParameters", systemParameterService.getSystemParameters(null, null));
         model.put("sysParamTypes", SysParamType.values());

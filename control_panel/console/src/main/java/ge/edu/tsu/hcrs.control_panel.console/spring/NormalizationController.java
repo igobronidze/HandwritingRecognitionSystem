@@ -36,7 +36,7 @@ public class NormalizationController {
         List<GroupedNormalizedData> groupedNormalizedDatum = normalizedDataService.getGroupedNormalizedDatum(null, null, null, null, null, null, null);
         model.put("groupedNormalizedDatum", groupedNormalizedDatum);
         model.put("normalizationTypes", NormalizationType.values());
-        return "index";
+        return "normalization";
     }
 
     @RequestMapping(value = "/fs", method = RequestMethod.POST, produces="application/json")
@@ -59,6 +59,8 @@ public class NormalizationController {
                               @RequestParam("norm-width") String width,
                               @RequestParam("norm-height") String height,
                               @RequestParam("norm-type") String type,
+                              @RequestParam("norm-min-value") String minValue,
+                              @RequestParam("norm-max-value") String maxValue,
                               @RequestParam(value = "files", required = false, defaultValue = "{}") String jsonString) throws IOException {
         List<String> files = new ArrayList<>();
         ObjectMapper mapper = new ObjectMapper();
@@ -70,13 +72,17 @@ public class NormalizationController {
             files.add(rootPath + jsonNode.toString().substring(1, jsonNode.toString().length() - 1));
         }
         GroupedNormalizedData groupedNormalizedData = new GroupedNormalizedData();
-        groupedNormalizedData.setName(name);
-        groupedNormalizedData.setWidth(Integer.parseInt(width));
-        groupedNormalizedData.setHeight(Integer.parseInt(height));
-        groupedNormalizedData.setNormalizationType(NormalizationType.valueOf(type));
-        groupedNormalizedData.setMaxValue(0);
-        groupedNormalizedData.setMaxValue(1);
-        normalizedDataService.addNormalizedDatum(groupedNormalizedData, files);
+        try {
+            groupedNormalizedData.setName(name);
+            groupedNormalizedData.setWidth(Integer.parseInt(width));
+            groupedNormalizedData.setHeight(Integer.parseInt(height));
+            groupedNormalizedData.setNormalizationType(NormalizationType.valueOf(type));
+            groupedNormalizedData.setMaxValue(Float.parseFloat(minValue));
+            groupedNormalizedData.setMaxValue(Float.parseFloat(maxValue));
+            normalizedDataService.addNormalizedDatum(groupedNormalizedData, files);
+        } catch (Exception ex) {
+
+        }
         return "redirect:normalization";
     }
 

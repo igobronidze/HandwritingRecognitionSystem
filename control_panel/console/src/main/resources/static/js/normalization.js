@@ -54,9 +54,14 @@ $('.text-center tr').click(function(e) {
     var width = $this.find('.norm-width').text();
     var height = $this.find('.norm-height').text();
     var type = $this.find('.norm-type').text();
+    var minValue = $this.find('.norm-min-value').text();
+    var maxValue = $this.find('.norm-max-value').text();
     $('.input-norm-name').val(name);
     $('.input-norm-width').val(width);
     $('.input-norm-height').val(height);
+    $('.input-norm-min-value').val(minValue);
+    $('.input-norm-max-value').val(maxValue);
+
     $(".input-norm-type option:contains('" + type + "')").prop('selected', true);
 });
 
