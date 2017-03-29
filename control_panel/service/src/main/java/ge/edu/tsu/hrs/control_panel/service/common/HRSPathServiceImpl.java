@@ -1,6 +1,5 @@
 package ge.edu.tsu.hrs.control_panel.service.common;
 
-
 import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
 import ge.edu.tsu.hrs.control_panel.server.processor.common.HRSPathProcessor;
 

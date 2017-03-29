@@ -10,6 +10,8 @@ import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormaliz
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.NormalizationType;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathService;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.normalizeddata.GroupedNormalizedDataService;
+import ge.edu.tsu.hrs.control_panel.service.normalizeddata.GroupedNormalizedDataServiceImpl;
 import ge.edu.tsu.hrs.control_panel.service.normalizeddata.NormalizedDataService;
 import ge.edu.tsu.hrs.control_panel.service.normalizeddata.NormalizedDataServiceImpl;
 import org.springframework.stereotype.Controller;
@@ -29,11 +31,13 @@ public class NormalizationController {
 
     private NormalizedDataService normalizedDataService = new NormalizedDataServiceImpl();
 
+    private GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
+
     private HRSPathService hrsPathService = new HRSPathServiceImpl();
 
     @RequestMapping(value = "/normalization", method=RequestMethod.GET)
     public String index(Map<String, Object> model) {
-        List<GroupedNormalizedData> groupedNormalizedDatum = normalizedDataService.getGroupedNormalizedDatum(null, null, null, null, null, null, null);
+        List<GroupedNormalizedData> groupedNormalizedDatum = groupedNormalizedDataService.getGroupedNormalizedDatum(null, null, null, null, null, null, null);
         model.put("groupedNormalizedDatum", groupedNormalizedDatum);
         model.put("normalizationTypes", NormalizationType.values());
         return "normalization";

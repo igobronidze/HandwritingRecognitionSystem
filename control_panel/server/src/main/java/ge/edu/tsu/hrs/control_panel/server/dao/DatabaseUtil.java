@@ -1,6 +1,6 @@
 package ge.edu.tsu.hrs.control_panel.server.dao;
 
-import ge.edu.tsu.hrs.control_panel.server.util.hrsPropertiesUtil;
+import ge.edu.tsu.hrs.control_panel.server.util.HRSPropertiesUtil;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -43,10 +43,10 @@ public class DatabaseUtil {
 
     private static void initParams() {
         if (databaseDriver == null) {
-            databaseDriver = hrsPropertiesUtil.getProperty("jdbc.driver");
-            databaseURL = hrsPropertiesUtil.getProperty("jdbc.url");
-            databaseUsername = hrsPropertiesUtil.getProperty("jdbc.username");
-            databasePassword = hrsPropertiesUtil.getProperty("jdbc.password");
+            databaseDriver = HRSPropertiesUtil.getProperty("jdbc.driver");
+            databaseURL = HRSPropertiesUtil.getProperty("jdbc.url");
+            databaseUsername = HRSPropertiesUtil.getProperty("jdbc.username");
+            databasePassword = HRSPropertiesUtil.getProperty("jdbc.password");
         }
     }
 }

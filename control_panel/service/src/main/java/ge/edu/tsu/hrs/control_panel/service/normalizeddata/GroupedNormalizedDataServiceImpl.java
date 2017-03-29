@@ -1,6 +1,7 @@
 package ge.edu.tsu.hrs.control_panel.service.normalizeddata;
 
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.NormalizationType;
 import ge.edu.tsu.hrs.control_panel.server.dao.normalizeddata.GroupedNormalizedDataDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.normalizeddata.GroupedNormalizedDataDAOImpl;
 
@@ -17,5 +18,10 @@ public class GroupedNormalizedDataServiceImpl implements GroupedNormalizedDataSe
             return groupedNormalizedDatum.get(0);
         }
         return null;
+    }
+
+    @Override
+    public List<GroupedNormalizedData> getGroupedNormalizedDatum(Integer id, Integer height, Integer width, Float minValue, Float maxValue, NormalizationType normalizationType, String name) {
+        return groupedNormalizedDataDAO.getGroupedNormalizedDatum(id, height, width, minValue, maxValue, normalizationType, name);
     }
 }

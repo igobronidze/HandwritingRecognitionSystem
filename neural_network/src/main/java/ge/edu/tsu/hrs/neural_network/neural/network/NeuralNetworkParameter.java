@@ -4,6 +4,7 @@ import ge.edu.tsu.hrs.neural_network.transfer.HyperbolicTangentFunction;
 import ge.edu.tsu.hrs.neural_network.transfer.LinearFunction;
 import ge.edu.tsu.hrs.neural_network.transfer.PieceWiseLinearFunction;
 import ge.edu.tsu.hrs.neural_network.transfer.SigmoidFunction;
+import ge.edu.tsu.hrs.neural_network.transfer.SignFunction;
 import ge.edu.tsu.hrs.neural_network.transfer.TransferFunction;
 import ge.edu.tsu.hrs.neural_network.transfer.TransferFunctionType;
 import ge.edu.tsu.hrs.neural_network.transfer.UnitStepFunction;
@@ -112,7 +113,7 @@ public class NeuralNetworkParameter implements Serializable {
             case UNIT_STEP:
                 transferFunction = new UnitStepFunction();
             case SIGN:
-                transferFunction = new SigmoidFunction();
+                transferFunction = new SignFunction();
             case LINEAR:
                 transferFunction = new LinearFunction();
             case PIECE_WISE_LINEAR:

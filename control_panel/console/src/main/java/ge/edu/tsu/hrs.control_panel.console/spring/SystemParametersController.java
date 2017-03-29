@@ -56,6 +56,6 @@ public class SystemParametersController {
                 System.out.println(e.getMessage());
             }
         }
-        return "redirect:";
+        return "redirect:sysparams";
     }
 }

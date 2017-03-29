@@ -9,7 +9,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-public class Randomizer {
+public class RandomUtil {
 
     private static Random random = new Random();
 

@@ -7,7 +7,7 @@ import ge.edu.tsu.hrs.neural_network.neural.action.Activation;
 import ge.edu.tsu.hrs.neural_network.neural.action.Backpropagation;
 import ge.edu.tsu.hrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hrs.neural_network.neural.testresult.TestResultUtil;
-import ge.edu.tsu.hrs.neural_network.util.Randomizer;
+import ge.edu.tsu.hrs.neural_network.util.RandomUtil;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -67,7 +67,7 @@ public class NeuralNetwork implements Serializable {
         List<Neuron> lastLayerNeurons = new ArrayList<>();
         List<Neuron> tmpNeurons = new ArrayList<>();
         for (int i = 0; i < layersSize.get(0); i++) {
-            Neuron neuron = Randomizer.getRandomNeuron(this);
+            Neuron neuron = RandomUtil.getRandomNeuron(this);
             inputNeurons.add(neuron);
             tmpNeurons.add(neuron);
         }
@@ -76,7 +76,7 @@ public class NeuralNetwork implements Serializable {
         tmpNeurons.clear();
         for (int i = 1; i < layersSize.size(); i++) {
             for (int j = 0; j < layersSize.get(i); j++) {
-                Neuron neuron = Randomizer.getRandomNeuron(this);
+                Neuron neuron = RandomUtil.getRandomNeuron(this);
                 if (i == layersSize.size() - 1) {
                     outputNeurons.add(neuron);
                 } else {
@@ -84,7 +84,7 @@ public class NeuralNetwork implements Serializable {
                 }
                 tmpNeurons.add(neuron);
                 for (Neuron lastLayerNeuron : lastLayerNeurons) {
-                    Connection connection = Randomizer.getRandomConnection(this, lastLayerNeuron, neuron);
+                    Connection connection = RandomUtil.getRandomConnection(this, lastLayerNeuron, neuron);
                     neuron.getInConnections().add(connection);
                     lastLayerNeuron.getOutConnections().add(connection);
                     connection.setLeftNeuron(lastLayerNeuron);
@@ -113,7 +113,7 @@ public class NeuralNetwork implements Serializable {
         long startTime = new Date().getTime();
         do {
             error = 0.0f;
-            List<Integer> randomList = Randomizer.getRandomIntegerList(trainingDataList.size());
+            List<Integer> randomList = RandomUtil.getRandomIntegerList(trainingDataList.size());
             long min = Math.min(neuralNetworkParameter.getNumberOfTrainingDataInOneIteration(), trainingDataList.size());
             for (int i = 0; i < min; i++) {
                 TrainingData trainingData = trainingDataList.get(randomList.get(i));
