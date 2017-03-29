@@ -2,17 +2,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>hcrs</artifactId>
-    <groupId>ge.edu.tsu.hcrs</groupId>
+    <artifactId>hrs</artifactId>
+    <groupId>ge.edu.tsu.hrs</groupId>
     <version>0.0.1</version>
     <packaging>pom</packaging>
 
-    <name>Handwriting Recognition System</name>
+    <name>Handwritten Recognition System</name>
 
     <contributors>
         <contributor>
-            <name>Iosebi Gobronidze</name>
-            <email>ioseb.gobronidze@azry.com</email>
+            <name>Ioseb Gobronidze</name>
+            <email>gobronidze.ioseb@gmail.com</email>
             <roles>
                 <role>developer</role>
             </roles>
