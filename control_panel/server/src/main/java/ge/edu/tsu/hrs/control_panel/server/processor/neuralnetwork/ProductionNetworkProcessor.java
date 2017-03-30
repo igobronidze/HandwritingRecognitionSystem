@@ -8,7 +8,6 @@ import ge.edu.tsu.hrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
-import ge.edu.tsu.hrs.neural_network.exception.NNException;
 import ge.edu.tsu.hrs.neural_network.neural.network.NeuralNetwork;
 
 import java.io.FileInputStream;
@@ -33,20 +32,12 @@ public class ProductionNetworkProcessor {
 
     public void updateProductionNetwork(int networkId) {
         try {
-            NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId);
-            Thread saveThread = new Thread(null, () -> {
-                try {
-                    NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(productionNetworkPath), neuralNetwork);
-                } catch (NNException ex) {
-                    System.out.println(ex.getMessage());
-                }
-            }, "Save network in file system thread", 1 << 26);
-            saveThread.start();
+            NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
+            NeuralNetworkHelper.saveNeuralNetwork(networkId, neuralNetwork, false, systemParameterProcessor.getStringParameterValue(productionNetworkPath));
             TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
             serializeTrainingDataInfo(trainingDataInfo, systemParameterProcessor.getStringParameterValue(productionTrainingDataInfoPath));
             CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
             serializeCharSequence(charSequence, systemParameterProcessor.getStringParameterValue(productionCharSequencePath));
-            saveThread.join();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             System.out.println("can't update production network");
@@ -54,12 +45,7 @@ public class ProductionNetworkProcessor {
     }
 
     public NeuralNetwork getProductionNeuralNetwork() {
-        try {
-            return NeuralNetwork.load(systemParameterProcessor.getStringParameterValue(productionNetworkPath));
-        } catch (NNException ex) {
-            System.out.println(ex.getMessage());
-        }
-        return null;
+        return NeuralNetworkHelper.loadNeuralNetwork(-1, false, systemParameterProcessor.getStringParameterValue(productionNetworkPath));
     }
 
     public TrainingDataInfo getProductionTrainingDataInfo() {

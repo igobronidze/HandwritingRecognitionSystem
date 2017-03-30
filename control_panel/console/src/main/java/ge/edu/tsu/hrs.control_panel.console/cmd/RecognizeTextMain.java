@@ -40,7 +40,7 @@ public class RecognizeTextMain {
 			System.out.println("ტექსტის სრული მისამართია - " + textPath);
 			System.out.println();
 
-			System.out.println("ქსელის id:");
+			System.out.println("ქსელის id:  (-1 თუ იყენებთ default ქსელს)");
 			s = scanner.nextLine();
 			if (isRetry(s)) {
 				continue;

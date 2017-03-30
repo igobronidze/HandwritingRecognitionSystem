@@ -59,6 +59,33 @@ public class NeuralNetwork implements Serializable {
         return layersSize;
     }
 
+    public void setNeuralNetworkParameter(NeuralNetworkParameter neuralNetworkParameter) {
+        this.neuralNetworkParameter = neuralNetworkParameter;
+    }
+
+    public void setLayersSize(List<Integer> layersSize) {
+        this.layersSize = layersSize;
+    }
+
+    public void setInputNeurons(List<Neuron> inputNeurons) {
+        this.inputNeurons = inputNeurons;
+    }
+
+    public void setHiddenNeurons(List<Neuron> hiddenNeurons) {
+        this.hiddenNeurons = hiddenNeurons;
+    }
+
+    public void setOutputNeurons(List<Neuron> outputNeurons) {
+        this.outputNeurons = outputNeurons;
+    }
+
+    public void setTrainingDataList(List<TrainingData> trainingDataList) {
+        this.trainingDataList = trainingDataList;
+    }
+
+    public NeuralNetwork() {
+    }
+
     public NeuralNetwork(List<Integer> layersSize) throws LayersSizeNNException {
         this.layersSize = layersSize;
         if (layersSize.size() < 2) {
@@ -183,5 +210,14 @@ public class NeuralNetwork implements Serializable {
         } catch (IOException | ClassNotFoundException ex) {
             throw new NNException(ex.getMessage());
         }
+    }
+
+    public static void copyNetwork(NeuralNetwork srcNetwork, NeuralNetwork newNetwork) {
+        newNetwork.setHiddenNeurons(srcNetwork.getHiddenNeurons());
+        newNetwork.setInputNeurons(srcNetwork.getInputNeurons());
+        newNetwork.setLayersSize(srcNetwork.getLayersSize());
+        newNetwork.setNeuralNetworkParameter(srcNetwork.getNeuralNetworkParameter());
+        newNetwork.setOutputNeurons(srcNetwork.getOutputNeurons());
+        newNetwork.setTrainingDataList(srcNetwork.getTrainingDataList());
     }
 }
