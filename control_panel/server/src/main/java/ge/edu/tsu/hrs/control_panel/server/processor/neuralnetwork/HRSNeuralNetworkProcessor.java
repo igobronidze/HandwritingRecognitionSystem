@@ -107,15 +107,25 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			long trainingDuration = neuralNetwork.train(trainingProgress);
 			networkInfoDAO.updateTrainedState(trainingDuration, id);
 			networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
-			try {
-				NeuralNetwork.save(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet", neuralNetwork);
-			} catch (NNException ex) {
-				System.out.println(ex.getMessage());
-			}
-			if (saveInDatabase) {
-				NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork);
-			}
+			Thread saveThread1 = new Thread(null, () -> {
+				try {
+					NeuralNetwork.save(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet", neuralNetwork);
+				} catch (NNException ex) {
+					System.out.println(ex.getMessage());
+				}
+			}, "Save network in file system thread", 1 << 26);
+			Thread saveThread2 = new Thread(null, () -> {
+				if (saveInDatabase) {
+					NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork);
+				}
+			}, "Save network in database thread", 1 << 26);
 			networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
+			saveThread1.start();
+			saveThread2.start();
+			try {
+				saveThread1.join();
+				saveThread2.join();
+			} catch (InterruptedException ex) {}
 		} catch (NNException ex) {
 			System.out.println(ex.getMessage());
 		}

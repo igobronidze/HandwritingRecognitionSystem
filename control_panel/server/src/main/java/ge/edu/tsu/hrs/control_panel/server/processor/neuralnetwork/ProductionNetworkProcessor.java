@@ -34,11 +34,19 @@ public class ProductionNetworkProcessor {
     public void updateProductionNetwork(int networkId) {
         try {
             NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId);
-            NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(productionNetworkPath), neuralNetwork);
+            Thread saveThread = new Thread(null, () -> {
+                try {
+                    NeuralNetwork.save(systemParameterProcessor.getStringParameterValue(productionNetworkPath), neuralNetwork);
+                } catch (NNException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }, "Save network in file system thread", 1 << 26);
+            saveThread.start();
             TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
             serializeTrainingDataInfo(trainingDataInfo, systemParameterProcessor.getStringParameterValue(productionTrainingDataInfoPath));
             CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
             serializeCharSequence(charSequence, systemParameterProcessor.getStringParameterValue(productionCharSequencePath));
+            saveThread.join();
         } catch (Exception ex) {
             System.out.println(ex.getMessage());
             System.out.println("can't update production network");

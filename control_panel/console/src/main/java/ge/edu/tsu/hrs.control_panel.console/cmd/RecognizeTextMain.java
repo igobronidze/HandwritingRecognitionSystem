@@ -21,7 +21,7 @@ public class RecognizeTextMain {
 
 	private static final String originalImageRootDirectory = hrsPathProcessor.getPath(HRSPath.ORIGINAL_IMAGES_PATH);
 
-	private static final NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.hrs_NEURAL_NETWORK);
+	private static final NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HRS_NEURAL_NETWORK);
 
 	public static void main(String[] args) {
 		while(true) {
