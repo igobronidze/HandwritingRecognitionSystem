@@ -46,7 +46,7 @@ public class NormalizationController {
     @RequestMapping(value = "/fs", method = RequestMethod.POST, produces="application/json")
     @ResponseBody
     public String fs() {
-        String HRSDataPath = hrsPathService.getPath(HRSPath.CUT_CHARACTERS_PATH);
+        String HRSDataPath = hrsPathService.getPath(HRSPath.CUT_SYMBOLS_PATH);
         File root = new File(HRSDataPath);
         JsonNodeFactory jsonNodeFactory = JsonNodeFactory.instance;
         ObjectNode fsJson = jsonNodeFactory.objectNode();
@@ -70,7 +70,7 @@ public class NormalizationController {
         ObjectMapper mapper = new ObjectMapper();
         JsonNode filesJson = mapper.readTree(jsonString);
         JsonNode data = filesJson.findValue("data");
-        String rootPath = hrsPathService.getPath(HRSPath.CUT_CHARACTERS_PATH).substring(0, hrsPathService.getPath(HRSPath.CUT_CHARACTERS_PATH).length() - 1);
+        String rootPath = hrsPathService.getPath(HRSPath.CUT_SYMBOLS_PATH).substring(0, hrsPathService.getPath(HRSPath.CUT_SYMBOLS_PATH).length() - 1);
         rootPath = rootPath.substring(0, rootPath.lastIndexOf("/"));
         for(JsonNode jsonNode : data) {
             files.add(rootPath + jsonNode.toString().substring(1, jsonNode.toString().length() - 1));

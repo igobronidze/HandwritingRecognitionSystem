@@ -17,7 +17,7 @@ public class TextCutterMain {
 
     private static final String srcTextRootDirectory = hrsPathProcessor.getPath(HRSPath.TEXTS_PATH);
 
-    private static final String resultImagesRootDirectory = hrsPathProcessor.getPath(HRSPath.CUT_CHARACTERS_PATH);
+    private static final String resultImagesRootDirectory = hrsPathProcessor.getPath(HRSPath.CUT_SYMBOLS_PATH);
 
     public static void main(String[] args) {
         while (true) {
@@ -146,7 +146,7 @@ public class TextCutterMain {
             }
             boolean process = Boolean.parseBoolean(s);
             if (process) {
-                imageProcessingProcessor.cutAndSaveCharactersFromText(srcImagePath, srcTextPath, resultImagesDirectory, textCutterParams);
+                imageProcessingProcessor.cutAndSaveSymbolsFromText(srcImagePath, srcTextPath, resultImagesDirectory, textCutterParams);
             }
             System.out.println();
 

@@ -42,8 +42,8 @@ public class SimpleNeuralTest {
 
         neuralNetwork.train(new TrainingProgress(1000, 0, 0, 0));
 
-        NeuralNetwork.save("C:\\hcrs\\network.nnet", neuralNetwork);
-        NeuralNetwork myNetwork = NeuralNetwork.load("C:\\hcrs\\network.nnet");
+        NeuralNetwork.save("C:\\hrs\\network.nnet", neuralNetwork);
+        NeuralNetwork myNetwork = NeuralNetwork.load("C:\\hrs\\network.nnet");
         System.out.println(myNetwork.getOutputActivation(trainingData1));
 
         System.out.println(NeuralNetwork.class.getPackage().getImplementationVersion());

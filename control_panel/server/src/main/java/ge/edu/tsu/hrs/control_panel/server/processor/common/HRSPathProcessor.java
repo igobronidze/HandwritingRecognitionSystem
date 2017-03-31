@@ -9,20 +9,20 @@ public class HRSPathProcessor {
 
 	private final SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-	private final Parameter originalImagesPath = new Parameter("originalImagesPath", "hrs/images/original_images/");
+	private final Parameter originalImagesPath = new Parameter("originalImagesPath", "HRSImageData/original_images/");
 
-	private final Parameter cutCharactersPath = new Parameter("cutCharactersPath", "hrs/images/cut_characters/");
+	private final Parameter cutSymbolsPath = new Parameter("cutSymbolsPath", "HRSImageData/cut_symbols/");
 
-	private final Parameter textsPath = new Parameter("textsPath", "hrs/texts/");
+	private final Parameter textsPath = new Parameter("textsPath", "HRSImageData/real_text/");
 
-	private final Parameter neuralNetworksPath = new Parameter("neuralNetworksPath", "hrs/networks/");
+	private final Parameter neuralNetworksPath = new Parameter("neuralNetworksPath", "HRSNetworkData/");
 
 	public String getPath(HRSPath hrsPath) {
 		switch (hrsPath) {
 			case ORIGINAL_IMAGES_PATH:
 				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(originalImagesPath);
-			case CUT_CHARACTERS_PATH:
-				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(cutCharactersPath);
+			case CUT_SYMBOLS_PATH:
+				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(cutSymbolsPath);
 			case TEXTS_PATH:
 				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(textsPath);
 			case NEURAL_NETWORKS_PATH:

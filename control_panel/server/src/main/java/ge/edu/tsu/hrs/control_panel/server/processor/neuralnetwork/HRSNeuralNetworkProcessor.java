@@ -1,6 +1,5 @@
 package ge.edu.tsu.hrs.control_panel.server.processor.neuralnetwork;
 
-import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
 import ge.edu.tsu.hrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
@@ -20,7 +19,6 @@ import ge.edu.tsu.hrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
-import ge.edu.tsu.hrs.control_panel.server.processor.common.HRSPathProcessor;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hrs.control_panel.server.util.CharSequenceInitializer;
@@ -55,8 +53,6 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	private final TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
 	private final TrainingDataInfoDAO trainingDataInfoDAO = new TrainingDataInfoDAOImpl();
-
-	private final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
 
 	private final ProductionNetworkProcessor productionNetworkProcessor = new ProductionNetworkProcessor();
 

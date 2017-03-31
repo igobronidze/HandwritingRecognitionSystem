@@ -16,7 +16,7 @@ import java.io.IOException;
 
 public class TextCutter {
 
-    public static void saveCutCharacters(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams params) throws TextAdapterSizeException {
+    public static void saveCutSymbols(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams params) throws TextAdapterSizeException {
         try {
             BufferedImage image = ImageIO.read(new File(srcImagePath));
             BufferedReader br = new BufferedReader(new FileReader(srcTextPath));

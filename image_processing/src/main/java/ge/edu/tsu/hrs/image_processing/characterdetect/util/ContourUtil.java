@@ -20,7 +20,7 @@ public class ContourUtil {
         return image;
     }
 
-    public static int[][] getColoredMatrixFromContour(Contour contour) {
+    private static int[][] getColoredMatrixFromContour(Contour contour) {
         short topPoint = contour.getTopPoint();
         short rightPoint = contour.getRightPoint();
         short bottomPoint = contour.getBottomPoint();

@@ -19,7 +19,7 @@ public class NetworkResultMain {
 
     private static final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
 
-    private static final String cutCharactersRootDirectory = hrsPathProcessor.getPath(HRSPath.CUT_CHARACTERS_PATH);
+    private static final String cutSymbolsRootDirectory = hrsPathProcessor.getPath(HRSPath.CUT_SYMBOLS_PATH);
 
     private static final NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HRS_NEURAL_NETWORK);
 
@@ -31,12 +31,12 @@ public class NetworkResultMain {
             System.out.println("ნებისმიერ მომენტში შეიყვანეთ retry აპლიკაციის თავიდან გასაშვებად");
             System.out.println();
 
-            System.out.println("სიმბოლოს მისამართი: root მისამართიდან - " + cutCharactersRootDirectory);
+            System.out.println("სიმბოლოს მისამართი: root მისამართიდან - " + cutSymbolsRootDirectory);
             s = scanner.nextLine();
             if (isRetry(s)) {
                 continue;
             }
-            String symbolPath = cutCharactersRootDirectory + s;
+            String symbolPath = cutSymbolsRootDirectory + s;
             System.out.println("სიმბოლოს სრული მისამართია - " + symbolPath);
             System.out.println();
 

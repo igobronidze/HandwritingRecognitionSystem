@@ -12,9 +12,9 @@ import java.awt.image.BufferedImage;
 
 public class ImageProcessingProcessor {
 
-    public void cutAndSaveCharactersFromText(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams textCutterParams) {
+    public void cutAndSaveSymbolsFromText(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams textCutterParams) {
         try {
-            TextCutter.saveCutCharacters(srcImagePath, srcTextPath, resultImagesPath, textCutterParams);
+            TextCutter.saveCutSymbols(srcImagePath, srcTextPath, resultImagesPath, textCutterParams);
         } catch (TextAdapterSizeException ex) {
             System.out.println("Expected Size - " + ex.getExpectedSize() + ", Result Size - " + ex.getResultSize());
         }

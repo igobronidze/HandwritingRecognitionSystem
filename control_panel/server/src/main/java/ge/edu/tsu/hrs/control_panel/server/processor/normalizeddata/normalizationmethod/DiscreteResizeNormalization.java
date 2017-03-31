@@ -16,7 +16,9 @@ public class DiscreteResizeNormalization extends Normalization {
 
     private final SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private final float coeficient = systemParameterProcessor.getFloatParameterValue(new Parameter("discreteResizeNormalizationCoeficient", "0.5"));
+    private final Parameter discreteResizeNormalizationCoeficient = new Parameter("discreteResizeNormalizationCoeficient", "0.5");
+
+    private final float coeficient = systemParameterProcessor.getFloatParameterValue(discreteResizeNormalizationCoeficient);
 
     @Override
     public NormalizedData getNormalizedDataFromImage(BufferedImage image, TrainingDataInfo trainingDataInfo, Character letter) {

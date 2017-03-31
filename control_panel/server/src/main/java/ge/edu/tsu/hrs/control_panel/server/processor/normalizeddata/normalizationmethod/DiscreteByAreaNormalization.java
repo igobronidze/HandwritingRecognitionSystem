@@ -12,7 +12,9 @@ public class DiscreteByAreaNormalization extends Normalization {
 
     private final SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private final float coeficient = systemParameterProcessor.getFloatParameterValue(new Parameter("discreteByAreaNormalizationCoeficient", "0.5"));
+    private final Parameter discreteByAreaNormalizationCoeficient = new Parameter("discreteByAreaNormalizationCoeficient", "0.5");
+
+    private final float coeficient = systemParameterProcessor.getFloatParameterValue(discreteByAreaNormalizationCoeficient);
 
     @Override
     public NormalizedData getNormalizedDataFromImage(BufferedImage image, TrainingDataInfo trainingDataInfo, Character letter) {
