@@ -28,25 +28,27 @@ public class NeuralNetworkServiceTest {
 	public void testTrainNeural() throws ControlPanelException {
 		NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HRS_NEURAL_NETWORK);
 		NetworkInfo networkInfo = new NetworkInfo();
-		networkInfo.setDescription("პირველი რეალური ქსელი");
+		networkInfo.setDescription("MNIST ბაზის ქსელი");
 		networkInfo.setBiasMinValue(-0.5F);
 		networkInfo.setBiasMaxValue(-0.5F);
-		CharSequence charSequence = new CharSequence("[ა-ჰ],.!?");
+		CharSequence charSequence = new CharSequence("[0-9]");
 		CharSequenceInitializer.initializeCharSequence(charSequence);
 		networkInfo.setCharSequence(charSequence);
 		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
 		GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
-		groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(32));
+		for (int i = 54; i <= 63; i++) {
+			groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(i));
+		}
 		networkInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
 		networkInfo.setWeightMinValue(-0.5F);
 		networkInfo.setWeightMaxValue(0.5F);
-		networkInfo.setHiddenLayer(new ArrayList<>(Arrays.asList(105, 205, 255, 205, 105)));
-		networkInfo.setLearningRate(0.1F);
+		networkInfo.setHiddenLayer(new ArrayList<>(Arrays.asList(71, 153, 255, 325, 255, 153, 71)));
+		networkInfo.setLearningRate(0.08F);
 		networkInfo.setMinError(0.00005F);
-		networkInfo.setNetworkMetaInfo("ქსელი გაშებულია 11 განსხვავებულ ფონტზე, ერთი ტექსტით");
+		networkInfo.setNetworkMetaInfo("ქსელი გაშებულია MNIST ბაზაზე არსებულ 50_000 მონაცემზე");
 		networkInfo.setNetworkProcessorType(NetworkProcessorType.HRS_NEURAL_NETWORK);
-		networkInfo.setNumberOfTrainingDataInOneIteration(300);
-		networkInfo.setTrainingMaxIteration(500);
+		networkInfo.setNumberOfTrainingDataInOneIteration(200);
+		networkInfo.setTrainingMaxIteration(10000);
 		networkInfo.setTransferFunction(TransferFunction.SIGMOID);
 		neuralNetworkService.trainNeural(networkInfo, true);
 	}
@@ -73,5 +75,18 @@ public class NeuralNetworkServiceTest {
 		List<NormalizedData> normalizedDatum = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 //		NetworkResult networkResult = neuralNetworkService.getNetworkResult(normalizedDatum.get(0), 4);
 //		System.out.println(networkResult.getAnswer());
+	}
+
+	@Test
+	@Ignore
+	public void tmp() {
+		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
+		GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
+		NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
+		for (int i = 54; i <= 63; i++) {
+			groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(i));
+		}
+		List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
+		System.out.println(normalizedDataList.size());
 	}
 }

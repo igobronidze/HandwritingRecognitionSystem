@@ -34,3 +34,5 @@ BEGIN
 END' LANGUAGE 'plpgsql';
 DROP TRIGGER IF EXISTS decreaseOnInsertTrigger on normalized_data;
 CREATE TRIGGER decreaseOnInsertTrigger AFTER DELETE ON normalized_data FOR EACH ROW EXECUTE PROCEDURE decreaseCount();
+
+CREATE INDEX grouped_normalized_data_id_index ON normalized_data (grouped_normalized_data_id);

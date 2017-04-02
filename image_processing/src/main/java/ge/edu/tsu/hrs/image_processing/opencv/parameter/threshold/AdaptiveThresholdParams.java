@@ -14,7 +14,7 @@ public class AdaptiveThresholdParams implements ThresholdParams {
 	private int thresholdType = opencv_imgproc.THRESH_BINARY;
 
 	// blockSize – Size of a pixel neighborhood that is used to calculate a threshold value for the pixel: 3, 5, 7, and so on.
-	private int blockSize = 11;
+	private int blockSize = 15;
 
 	// C – Constant subtracted from the mean or weighted mean (see the details below). Normally, it is positive but may be zero or negative as well.
 	private int c = 2;

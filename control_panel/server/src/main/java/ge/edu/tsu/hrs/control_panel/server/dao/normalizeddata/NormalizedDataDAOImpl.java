@@ -2,7 +2,9 @@ package ge.edu.tsu.hrs.control_panel.server.dao.normalizeddata;
 
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.NormalizedData;
+import ge.edu.tsu.hrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hrs.control_panel.server.dao.DatabaseUtil;
+import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import org.apache.commons.lang3.text.StrBuilder;
 
 import java.sql.Array;
@@ -13,6 +15,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NormalizedDataDAOImpl implements NormalizedDataDAO {
+
+    private final SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
+
+    private final Parameter sleepPerSelectedNormalizedData = new Parameter("sleepPerSelectedNormalizedData", "1000");
+
+    private final Parameter sleepBetweenSelectedNormalizedDataInSeconds = new Parameter("sleepBetweenSelectedNormalizedDataInSeconds", "1");
 
     private PreparedStatement pstmt;
 
@@ -44,6 +52,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
         }
     }
 
+
     @Override
     public List<NormalizedData> getNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
         List<NormalizedData> normalizedDatum = new ArrayList<>();
@@ -59,14 +68,26 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
                     pstmt.setInt(i + 1, groupedNormalizedDatum.get(i).getId());
                 }
                 ResultSet rs = pstmt.executeQuery();
+                System.out.println("Select from normalized_data");
+                int countData = 0;
+                for (GroupedNormalizedData groupedNormalizedData : groupedNormalizedDatum) {
+                    countData += groupedNormalizedData.getCount();
+                }
+                int counter = 0;
                 while (rs.next()) {
                     NormalizedData normalizedData = new NormalizedData();
                     normalizedData.setId(rs.getInt("id"));
                     String letterString = rs.getString("letter");
                     normalizedData.setLetter(letterString == null || letterString.isEmpty() ? null : letterString.charAt(0));
-                    Array sqlArray = rs.getArray("data");
-                    normalizedData.setData((Float[]) sqlArray.getArray());
+                    normalizedData.setData((Float[]) rs.getArray("data").getArray());
                     normalizedDatum.add(normalizedData);
+                    counter++;
+                    if (counter % systemParameterProcessor.getIntegerParameterValue(sleepPerSelectedNormalizedData) == 0) {
+                        System.out.println("Processed normalized data - " + counter + " from " + countData);
+                        try {
+                            Thread.sleep(systemParameterProcessor.getLongParameterValue(sleepBetweenSelectedNormalizedDataInSeconds) * 1000);
+                        } catch (InterruptedException ex) {}
+                    }
                 }
             }
         } catch (SQLException ex) {
