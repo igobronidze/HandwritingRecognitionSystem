@@ -33,7 +33,7 @@ public class NeuralNetwork implements Serializable {
 
     private List<Neuron> outputNeurons = new ArrayList<>();
 
-    private List<TrainingData> trainingDataList = new ArrayList<>();
+    private transient List<TrainingData> trainingDataList = new ArrayList<>();
 
     public NeuralNetworkParameter getNeuralNetworkParameter() {
         return neuralNetworkParameter;
