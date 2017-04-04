@@ -28,8 +28,8 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException {
-        iNeuralNetworkProcessor.trainNeural(networkInfo, saveInDatabase);
+    public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
+        iNeuralNetworkProcessor.trainNeural(networkInfo, groupedNormalizedDatum, saveInDatabase);
     }
 
     @Override

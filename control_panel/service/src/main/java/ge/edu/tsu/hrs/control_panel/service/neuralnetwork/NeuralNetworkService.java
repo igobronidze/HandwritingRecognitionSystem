@@ -11,7 +11,7 @@ import java.util.List;
 
 public interface NeuralNetworkService {
 
-    void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException;
+    void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException;
 
     NetworkResult getNetworkResult(BufferedImage image, int networkId);
 

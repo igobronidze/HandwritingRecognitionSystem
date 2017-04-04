@@ -39,7 +39,6 @@ public class NeuralNetworkServiceTest {
 		for (int i = 54; i <= 63; i++) {
 			groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(i));
 		}
-		networkInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
 		networkInfo.setWeightMinValue(-0.5F);
 		networkInfo.setWeightMaxValue(0.5F);
 		networkInfo.setHiddenLayer(new ArrayList<>(Arrays.asList(71, 153, 255, 325, 255, 153, 71)));
@@ -50,7 +49,7 @@ public class NeuralNetworkServiceTest {
 		networkInfo.setNumberOfTrainingDataInOneIteration(200);
 		networkInfo.setTrainingMaxIteration(10000);
 		networkInfo.setTransferFunction(TransferFunction.SIGMOID);
-		neuralNetworkService.trainNeural(networkInfo, true);
+		neuralNetworkService.trainNeural(networkInfo, groupedNormalizedDatum, true);
 	}
 
 	@Test
@@ -59,8 +58,10 @@ public class NeuralNetworkServiceTest {
 		NeuralNetworkService neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.HRS_NEURAL_NETWORK);
 		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
 		GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
-		groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(34));
-		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 51));
+		for (int i = 44; i <= 53; i++) {
+			groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(i));
+		}
+		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 59));
 	}
 
 	@Test
@@ -75,18 +76,5 @@ public class NeuralNetworkServiceTest {
 		List<NormalizedData> normalizedDatum = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 //		NetworkResult networkResult = neuralNetworkService.getNetworkResult(normalizedDatum.get(0), 4);
 //		System.out.println(networkResult.getAnswer());
-	}
-
-	@Test
-	@Ignore
-	public void tmp() {
-		List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
-		GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
-		NormalizedDataDAO normalizedDataDAO = new NormalizedDataDAOImpl();
-		for (int i = 54; i <= 63; i++) {
-			groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(i));
-		}
-		List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
-		System.out.println(normalizedDataList.size());
 	}
 }

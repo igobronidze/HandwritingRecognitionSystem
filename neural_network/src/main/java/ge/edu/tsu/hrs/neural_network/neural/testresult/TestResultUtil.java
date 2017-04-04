@@ -18,7 +18,7 @@ public class TestResultUtil {
 
     public static float getDiffBetweenAnsAndBest(List<Float> outputList, List<Float> activatedList) {
         int ansIndex = getIndexOfMax(outputList, -1);
-        return outputList.get(getIndexOfMax(activatedList, ansIndex)) - outputList.get(ansIndex);
+        return activatedList.get(getIndexOfMax(activatedList, ansIndex)) - activatedList.get(ansIndex);
     }
 
     public static float getNormalizedGeneralError(TestResult testResult) {

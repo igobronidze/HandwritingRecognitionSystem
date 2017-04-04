@@ -1,6 +1,5 @@
 CREATE TABLE network_info (
     id SERIAL PRIMARY KEY NOT NULL,
-    grouped_normalized_datum TEXT NOT NULL,
     training_duration BIGINT DEFAULT 0,
     weight_min_value REAL NOT NULL,
     weight_max_value REAL NOT NULL,
@@ -18,6 +17,5 @@ CREATE TABLE network_info (
     description TEXT,
     training_status VARCHAR(50) NOT NULL,
     current_squared_error REAL NOT NULL DEFAULT 0.0,
-    current_iterations BIGINT NOT NULL DEFAULT 0,
-    current_duration BIGINT NOT NULL DEFAULT 0
+    current_iterations BIGINT NOT NULL DEFAULT 0
 );

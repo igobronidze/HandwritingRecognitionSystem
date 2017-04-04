@@ -1,15 +1,11 @@
 package ge.edu.tsu.hrs.control_panel.model.network;
 
-import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
-
 import java.io.Serializable;
 import java.util.List;
 
 public class NetworkInfo implements Serializable {
 
     private int id;
-
-    private List<GroupedNormalizedData> groupedNormalizedDatum;
 
     private long trainingDuration;
 
@@ -49,22 +45,12 @@ public class NetworkInfo implements Serializable {
 
     private long currentIterations;
 
-    private long currentDuration;
-
     public int getId() {
         return id;
     }
 
     public void setId(int id) {
         this.id = id;
-    }
-
-    public List<GroupedNormalizedData> getGroupedNormalizedDatum() {
-        return groupedNormalizedDatum;
-    }
-
-    public void setGroupedNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
-        this.groupedNormalizedDatum = groupedNormalizedDatum;
     }
 
     public long getTrainingDuration() {
@@ -217,13 +203,5 @@ public class NetworkInfo implements Serializable {
 
     public void setCurrentIterations(long currentIterations) {
         this.currentIterations = currentIterations;
-    }
-
-    public long getCurrentDuration() {
-        return currentDuration;
-    }
-
-    public void setCurrentDuration(long currentDuration) {
-        this.currentDuration = currentDuration;
     }
 }

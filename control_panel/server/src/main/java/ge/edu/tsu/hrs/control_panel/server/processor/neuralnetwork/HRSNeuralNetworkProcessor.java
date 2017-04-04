@@ -63,17 +63,17 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	private final Parameter deltaForNotSpaces = new Parameter("deltaForNotSpaces", "3");
 
 	@Override
-	public void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException {
+	public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
 		try {
 			System.out.println("Start network training!");
-			if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(networkInfo.getGroupedNormalizedDatum())) {
+			if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(groupedNormalizedDatum)) {
 				throw new ControlPanelException();
 			}
-			GroupedNormalizedData groupedNormalizedData = networkInfo.getGroupedNormalizedDatum().get(0);
+			GroupedNormalizedData groupedNormalizedData = groupedNormalizedDatum.get(0);
 			int width = groupedNormalizedData.getWidth();
 			int height = groupedNormalizedData.getHeight();
 			CharSequence charSequence = networkInfo.getCharSequence();
-			List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
+			List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 			List<Integer> layers = new ArrayList<>();
 			layers.add(width * height);
 			layers.addAll(networkInfo.getHiddenLayer());
@@ -88,7 +88,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINING);
 			System.out.println("Gathered data for network info and training progress!");
 			int id = networkInfoDAO.addNetworkInfo(networkInfo);
-			TrainingDataInfo trainingDataInfo = new TrainingDataInfo(id, getIdsFromFromGroupedNormalizedDatum(networkInfo.getGroupedNormalizedDatum()), height, width, groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue(),
+			TrainingDataInfo trainingDataInfo = new TrainingDataInfo(id, getIdsFromFromGroupedNormalizedDatum(groupedNormalizedDatum), height, width, groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue(),
 					groupedNormalizedData.getNormalizationType(), neuralNetwork.getTrainingDataList().size());
 			trainingDataInfoDAO.addTrainingDataInfo(trainingDataInfo);
 			Runnable run = () -> {
@@ -122,15 +122,15 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(groupedNormalizedDatum)) {
 			throw new ControlPanelException();
 		}
-		NetworkInfo networkInfo = networkInfoDAO.getNetworkInfoList(networkId).get(0);
-		if (!GroupedNormalizedDataUtil.compareGroupedNormalizedDatum(groupedNormalizedDatum.get(0), networkInfo.getGroupedNormalizedDatum().get(0))) {
+		TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
+		if (!GroupedNormalizedDataUtil.compareGroupedNormalizedDatum(groupedNormalizedDatum.get(0), trainingDataInfo)) {
 			throw new ControlPanelException();
 		}
 		List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 		try {
 			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
 			List<TrainingData> trainingDataList = new ArrayList<>();
-			CharSequence charSequence = networkInfo.getCharSequence();
+			CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
 			CharSequenceInitializer.initializeCharSequence(charSequence);
 			for (NormalizedData normalizedData : normalizedDataList) {
 				trainingDataList.add(NetworkDataCreator.getTrainingData(normalizedData, charSequence));

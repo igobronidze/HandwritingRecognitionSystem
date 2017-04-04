@@ -5,7 +5,6 @@ import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkTrainingStatus;
 import ge.edu.tsu.hrs.control_panel.model.network.TransferFunction;
-import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hrs.control_panel.server.dao.DatabaseUtil;
 import ge.edu.tsu.hrs.control_panel.server.dao.normalizeddata.GroupedNormalizedDataDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.normalizeddata.GroupedNormalizedDataDAOImpl;
@@ -26,35 +25,29 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public int addNetworkInfo(NetworkInfo networkInfo) {
         try {
-            String sql = "INSERT INTO network_info (grouped_normalized_datum, training_duration, weight_min_value," +
+            String sql = "INSERT INTO network_info (training_duration, weight_min_value," +
                     " weight_max_value, bias_min_value, bias_max_value, transfer_function_type, learning_rate, min_error, training_max_iteration," +
                     " number_of_training_data_in_one_iteration, char_sequence, hidden_layer, network_processor_type, network_meta_info, description," +
-                    " training_status, current_squared_error, current_iterations, current_duration) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
+                    " training_status, current_squared_error, current_iterations) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
-            List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
-            for (GroupedNormalizedData groupedNormalizedData : networkInfo.getGroupedNormalizedDatum()) {
-                groupedNormalizedDatumIds.add(groupedNormalizedData.getId());
-            }
-            pstmt.setString(1, StringUtil.getStringFromIntegerList(groupedNormalizedDatumIds));
-            pstmt.setLong(2, networkInfo.getTrainingDuration());
-            pstmt.setFloat(3, networkInfo.getWeightMinValue());
-            pstmt.setFloat(4, networkInfo.getWeightMaxValue());
-            pstmt.setFloat(5, networkInfo.getBiasMinValue());
-            pstmt.setFloat(6, networkInfo.getBiasMaxValue());
-            pstmt.setString(7, networkInfo.getTransferFunction().name());
-            pstmt.setFloat(8, networkInfo.getLearningRate());
-            pstmt.setFloat(9, networkInfo.getMinError());
-            pstmt.setLong(10, networkInfo.getTrainingMaxIteration());
-            pstmt.setLong(11, networkInfo.getNumberOfTrainingDataInOneIteration());
-            pstmt.setString(12, networkInfo.getCharSequence().getCharactersRegex());
-            pstmt.setString(13, StringUtil.getStringFromIntegerList(networkInfo.getHiddenLayer()));
-            pstmt.setString(14, networkInfo.getNetworkProcessorType().name());
-            pstmt.setString(15, networkInfo.getNetworkMetaInfo());
-            pstmt.setString(16, networkInfo.getDescription());
-            pstmt.setString(17, networkInfo.getTrainingStatus().name());
-            pstmt.setFloat(18, networkInfo.getCurrentSquaredError());
-            pstmt.setLong(19, networkInfo.getCurrentIterations());
-            pstmt.setLong(20, networkInfo.getCurrentDuration());
+            pstmt.setLong(1, networkInfo.getTrainingDuration());
+            pstmt.setFloat(2, networkInfo.getWeightMinValue());
+            pstmt.setFloat(3, networkInfo.getWeightMaxValue());
+            pstmt.setFloat(4, networkInfo.getBiasMinValue());
+            pstmt.setFloat(5, networkInfo.getBiasMaxValue());
+            pstmt.setString(6, networkInfo.getTransferFunction().name());
+            pstmt.setFloat(7, networkInfo.getLearningRate());
+            pstmt.setFloat(8, networkInfo.getMinError());
+            pstmt.setLong(9, networkInfo.getTrainingMaxIteration());
+            pstmt.setLong(10, networkInfo.getNumberOfTrainingDataInOneIteration());
+            pstmt.setString(11, networkInfo.getCharSequence().getCharactersRegex());
+            pstmt.setString(12, StringUtil.getStringFromIntegerList(networkInfo.getHiddenLayer()));
+            pstmt.setString(13, networkInfo.getNetworkProcessorType().name());
+            pstmt.setString(14, networkInfo.getNetworkMetaInfo());
+            pstmt.setString(15, networkInfo.getDescription());
+            pstmt.setString(16, networkInfo.getTrainingStatus().name());
+            pstmt.setFloat(17, networkInfo.getCurrentSquaredError());
+            pstmt.setLong(18, networkInfo.getCurrentIterations());
             pstmt.executeUpdate();
             String idSql = "SELECT MAX(id) AS max_id FROM network_info";
             pstmt = DatabaseUtil.getConnection().prepareStatement(idSql);
@@ -85,17 +78,6 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             while (rs.next()) {
                 NetworkInfo networkInfo = new NetworkInfo();
                 networkInfo.setId(rs.getInt("id"));
-                List<Integer> groupedNormalizedDatumIds = StringUtil.getIntegerListFromString(rs.getString("grouped_normalized_datum"));
-                List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
-                for (Integer groupedNormalizedDataId : groupedNormalizedDatumIds) {
-                    try {
-                        GroupedNormalizedData groupedNormalizedData = groupedNormalizedDataDAO.getGroupedNormalizedDatum(groupedNormalizedDataId, null, null, null, null, null, null).get(0);
-                        groupedNormalizedDatum.add(groupedNormalizedData);
-                    } catch (IndexOutOfBoundsException ex) {
-                        System.out.println(ex.getMessage());
-                    }
-                }
-                networkInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
                 networkInfo.setTrainingDuration(rs.getLong("training_duration"));
                 networkInfo.setWeightMinValue(rs.getFloat("weight_min_value"));
                 networkInfo.setWeightMaxValue(rs.getFloat("weight_max_value"));
@@ -114,7 +96,6 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfo.setTrainingStatus(NetworkTrainingStatus.valueOf(rs.getString("training_status")));
                 networkInfo.setCurrentSquaredError(rs.getFloat("current_squared_error"));
                 networkInfo.setCurrentIterations(rs.getLong("current_iterations"));
-                networkInfo.setCurrentDuration(rs.getLong("current_duration"));
                 networkInfoList.add(networkInfo);
             }
         } catch (SQLException ex) {
@@ -147,7 +128,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     public Object[] getTrainingCurrentState(int id) {
         Object[] result = new Object[4];
         try {
-            String sql = "SELECT training_status, current_squaredError, current_iterations, current_duration fROM network_info WHERE id = ?";
+            String sql = "SELECT training_status, current_squaredError, current_iterations, training_duration fROM network_info WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
@@ -155,7 +136,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 result[0] = NetworkTrainingStatus.valueOf(rs.getString("training_status"));
                 result[1] = rs.getFloat("current_squared_error");
                 result[2] = rs.getLong("current_iterations");
-                result[3] = rs.getLong("current_duration");
+                result[3] = rs.getLong("training_duration");
             }
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -168,7 +149,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     @Override
     public void updateTrainingCurrentState(float currentSquaredError, long currentIterations, long currentDuration, int id) {
         try {
-            String sql = "UPDATE network_info SET current_squared_error = ?, current_iterations = ?, current_duration = ? WHERE id = ?";
+            String sql = "UPDATE network_info SET current_squared_error = ?, current_iterations = ?, training_duration = ? WHERE id = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setFloat(1, currentSquaredError);
             pstmt.setLong(2, currentIterations);

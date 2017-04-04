@@ -39,11 +39,11 @@ public class NeurophNeuralNetworkProcessor {
     }
 
 //    @Override
-    public void trainNeural(NetworkInfo networkInfo, boolean saveInDataBase) {
+    public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDataBase) {
         int width = -1;
         int height = -1;
         CharSequence charSequence = networkInfo.getCharSequence();
-        List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(networkInfo.getGroupedNormalizedDatum());
+        List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
         List<Integer> layers = new ArrayList<>();
         layers.add(width * height);
         for (int x : networkInfo.getHiddenLayer()) {
