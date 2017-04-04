@@ -27,6 +27,7 @@ public class TrainingDataInfoDAOImpl implements TrainingDataInfoDAO {
 			pstmt.setString(7, trainingDataInfo.getNormalizationType().name());
 			pstmt.setInt(8, trainingDataInfo.getCount());
 			pstmt.executeUpdate();
+			System.out.println("Inserted training data info!");
 		} catch (SQLException ex) {
 			System.out.println(ex.getMessage());
 		} finally {

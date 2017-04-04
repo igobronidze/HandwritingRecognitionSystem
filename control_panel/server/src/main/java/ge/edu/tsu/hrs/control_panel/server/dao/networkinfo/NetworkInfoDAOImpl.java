@@ -60,7 +60,9 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt = DatabaseUtil.getConnection().prepareStatement(idSql);
             ResultSet rs = pstmt.executeQuery();
             rs.next();
-            return rs.getInt("max_id");
+            int id = rs.getInt("max_id");
+            System.out.println("Inserted network info with id - " + id);
+            return id;
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         } finally {

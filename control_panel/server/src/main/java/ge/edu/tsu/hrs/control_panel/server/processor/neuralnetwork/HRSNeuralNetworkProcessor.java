@@ -65,6 +65,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	@Override
 	public void trainNeural(NetworkInfo networkInfo, boolean saveInDatabase) throws ControlPanelException {
 		try {
+			System.out.println("Start network training!");
 			if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(networkInfo.getGroupedNormalizedDatum())) {
 				throw new ControlPanelException();
 			}
@@ -85,11 +86,13 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			TrainingProgress trainingProgress = new TrainingProgress();
 			trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
 			networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINING);
+			System.out.println("Gathered data for network info and training progress!");
 			int id = networkInfoDAO.addNetworkInfo(networkInfo);
 			TrainingDataInfo trainingDataInfo = new TrainingDataInfo(id, getIdsFromFromGroupedNormalizedDatum(networkInfo.getGroupedNormalizedDatum()), height, width, groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue(),
 					groupedNormalizedData.getNormalizationType(), neuralNetwork.getTrainingDataList().size());
 			trainingDataInfoDAO.addTrainingDataInfo(trainingDataInfo);
 			Runnable run = () -> {
+				System.out.println("Start new thread for training progress!");
 				while (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
 					try {
 						networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
@@ -100,11 +103,14 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 				}
 			};
 			new Thread(run).start();
+			System.out.println("Start train method for network with id - " + id);
 			long trainingDuration = neuralNetwork.train(trainingProgress);
+			System.out.println("Finished train method for network with id - " + id);
 			networkInfoDAO.updateTrainedState(trainingDuration, id);
 			networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
 			networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
 			NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork, true, null);
+			System.out.println("Finished network training!");
 		} catch (NNException ex) {
 			System.out.println(ex.getMessage());
 		}
@@ -112,6 +118,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
 	@Override
 	public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
+		System.out.println("Start network testing!");
 		if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(groupedNormalizedDatum)) {
 			throw new ControlPanelException();
 		}
@@ -128,7 +135,9 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			for (NormalizedData normalizedData : normalizedDataList) {
 				trainingDataList.add(NetworkDataCreator.getTrainingData(normalizedData, charSequence));
 			}
+			System.out.println("Start test method for network with id - " + networkId);
 			TestResult testResult = neuralNetwork.test(trainingDataList);
+			System.out.println("Finished test method for network with id - " + networkId);
 			TestingInfo testingInfo = new TestingInfo();
 			testingInfo.setNumberOfTest(testResult.getNumberOfData());
 			testingInfo.setNetworkId(networkId);
@@ -143,12 +152,14 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		} catch (Exception ex) {
 			System.out.println(ex.getMessage());
 		}
+		System.out.println("Finished network testing!");
 		return -1;
 	}
 
 	@Override
 	public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
 		try {
+			System.out.println("Started get network result!");
 			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
 			CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
 			TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
@@ -161,6 +172,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			networkResult.setOutputActivation(output);
 			networkResult.setAnswer(getAns(output, charSequence));
 			networkResult.setCharSequence(charSequence);
+			System.out.println("Finished get network result!");
 			return networkResult;
 		} catch (ControlPanelException ex) {
 			System.out.println(ex.getMessage());
@@ -170,6 +182,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
 	@Override
 	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId) {
+		System.out.println("Start text recognizing");
 		List<RecognitionInfo> recognitionInfos = new ArrayList<>();
 		for (BufferedImage image : images) {
 			Date date = new Date();
@@ -232,6 +245,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			recognitionInfo.setExtraDuration(extraDuration);
 			recognitionInfos.add(recognitionInfo);
 		}
+		System.out.println("Finished text recognizing");
 		return recognitionInfos;
 	}
 

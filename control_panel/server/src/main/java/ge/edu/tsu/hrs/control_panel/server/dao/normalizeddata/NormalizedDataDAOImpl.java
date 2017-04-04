@@ -55,6 +55,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
 
     @Override
     public List<NormalizedData> getNormalizedDatum(List<GroupedNormalizedData> groupedNormalizedDatum) {
+        System.out.println("Start normalized data selection for " + groupedNormalizedDatum.size() + " group!");
         List<NormalizedData> normalizedDatum = new ArrayList<>();
         try {
             if (!groupedNormalizedDatum.isEmpty()) {
@@ -68,7 +69,6 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
                     pstmt.setInt(i + 1, groupedNormalizedDatum.get(i).getId());
                 }
                 ResultSet rs = pstmt.executeQuery();
-                System.out.println("Select from normalized_data");
                 int countData = 0;
                 for (GroupedNormalizedData groupedNormalizedData : groupedNormalizedDatum) {
                     countData += groupedNormalizedData.getCount();
@@ -83,7 +83,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
                     normalizedDatum.add(normalizedData);
                     counter++;
                     if (counter % systemParameterProcessor.getIntegerParameterValue(sleepPerSelectedNormalizedData) == 0) {
-                        System.out.println("Processed normalized data - " + counter + " from " + countData);
+                        System.out.println("Select " + counter + " normalized data from " + countData);
                         try {
                             Thread.sleep(systemParameterProcessor.getLongParameterValue(sleepBetweenSelectedNormalizedDataInSeconds) * 1000);
                         } catch (InterruptedException ex) {}
@@ -95,6 +95,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
         } finally {
             DatabaseUtil.closeConnection();
         }
+        System.out.println("Finished normalized data selection!");
         return normalizedDatum;
     }
 }
