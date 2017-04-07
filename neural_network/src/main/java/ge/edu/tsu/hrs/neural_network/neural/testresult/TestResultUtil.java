@@ -22,7 +22,9 @@ public class TestResultUtil {
     }
 
     public static float getNormalizedGeneralError(TestResult testResult) {
-        return testResult.getSquaredError() * testResult.getPercentageOfIncorrect() * testResult.getDiffBetweenAnsAndBest() / testResult.getNumberOfData();
+        return testResult.getSquaredError() / testResult.getNumberOfData() *
+                testResult.getPercentageOfIncorrect() *
+                (testResult.getDiffBetweenAnsAndBest() + testResult.getNumberOfData()) / testResult.getNumberOfData();
     }
 
     private static int getIndexOfMax(List<Float> list, int except) {

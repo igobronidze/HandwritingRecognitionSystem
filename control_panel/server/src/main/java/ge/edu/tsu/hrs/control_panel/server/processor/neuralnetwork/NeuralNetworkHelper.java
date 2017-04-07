@@ -67,8 +67,10 @@ public class NeuralNetworkHelper {
         if (path != null && !path.isEmpty()) {
             Thread thread = new Thread(null, () -> {
                 NeuralNetwork.copyNetwork(loadNetworkFromPath(path), neuralNetwork);
-                System.out.println("Loaded network from path " + path);
-            }, "Save network in file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
+                if (neuralNetwork.getNeuralNetworkParameter() != null) {
+                    System.out.println("Loaded network from path " + path);
+                }
+            }, "Load network from file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
             thread.start();
             try {
                 thread.join();
@@ -77,8 +79,10 @@ public class NeuralNetworkHelper {
         } else {
             Thread thread = new Thread(null, () -> {
                 NeuralNetwork.copyNetwork(loadNetworkFromFileSystem(id), neuralNetwork);
-                System.out.println("Loaded network from file system with id - " + id);
-            }, "Save network in file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
+                if (neuralNetwork.getNeuralNetworkParameter() != null) {
+                    System.out.println("Loaded network from file system with id - " + id);
+                }
+            }, "Load network from file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
             thread.start();
             try {
                 thread.join();
@@ -90,9 +94,11 @@ public class NeuralNetworkHelper {
             thread = new Thread(null, () -> {
                 if (loadFromDatabase) {
                     NeuralNetwork.copyNetwork(loadNetworkFromDatabase(id), neuralNetwork);
-                    System.out.println("Loaded network from database with id - " + id);
+                    if (neuralNetwork.getNeuralNetworkParameter() != null) {
+                        System.out.println("Loaded network from database with id - " + id);
+                    }
                 }
-            }, "Save network in file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
+            }, "Load network from database thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
             thread.start();
             try {
                 thread.join();

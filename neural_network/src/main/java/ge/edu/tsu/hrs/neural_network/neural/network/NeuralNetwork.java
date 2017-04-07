@@ -213,6 +213,10 @@ public class NeuralNetwork implements Serializable {
     }
 
     public static void copyNetwork(NeuralNetwork srcNetwork, NeuralNetwork newNetwork) {
+        if (srcNetwork == null) {
+            newNetwork.setNeuralNetworkParameter(null);
+            return;
+        }
         newNetwork.setHiddenNeurons(srcNetwork.getHiddenNeurons());
         newNetwork.setInputNeurons(srcNetwork.getInputNeurons());
         newNetwork.setLayersSize(srcNetwork.getLayersSize());

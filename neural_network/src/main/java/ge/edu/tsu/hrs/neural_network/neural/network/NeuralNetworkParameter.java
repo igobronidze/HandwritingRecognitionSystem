@@ -112,18 +112,25 @@ public class NeuralNetworkParameter implements Serializable {
         switch (transferFunctionType) {
             case UNIT_STEP:
                 transferFunction = new UnitStepFunction();
+                break;
             case SIGN:
                 transferFunction = new SignFunction();
+                break;
             case LINEAR:
                 transferFunction = new LinearFunction();
+                break;
             case PIECE_WISE_LINEAR:
                 transferFunction = new PieceWiseLinearFunction();
+                break;
             case SIGMOID:
                 transferFunction = new SigmoidFunction();
+                break;
             case HYPERBOLIC_TANGENT:
                 transferFunction = new HyperbolicTangentFunction();
+                break;
             default:
                 transferFunction = new SigmoidFunction();
+                break;
         }
     }
 }
