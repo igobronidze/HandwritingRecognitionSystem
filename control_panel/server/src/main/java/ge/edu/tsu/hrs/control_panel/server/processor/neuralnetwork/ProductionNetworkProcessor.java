@@ -30,9 +30,9 @@ public class ProductionNetworkProcessor {
 
     private final Parameter productionCharSequencePath = new Parameter("productionCharSequencePath", "network_workspace/production.chs");
 
-    public void updateProductionNetwork(int networkId) {
+    public void updateProductionNetwork(int networkId, int networkExtraId) {
         try {
-            NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
+            NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
             NeuralNetworkHelper.saveNeuralNetwork(networkId, neuralNetwork, false, systemParameterProcessor.getStringParameterValue(productionNetworkPath));
             TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
             serializeTrainingDataInfo(trainingDataInfo, systemParameterProcessor.getStringParameterValue(productionTrainingDataInfoPath));
@@ -45,7 +45,7 @@ public class ProductionNetworkProcessor {
     }
 
     public NeuralNetwork getProductionNeuralNetwork() {
-        return NeuralNetworkHelper.loadNeuralNetwork(-1, false, systemParameterProcessor.getStringParameterValue(productionNetworkPath));
+        return NeuralNetworkHelper.loadNeuralNetwork(-1, 0, false, systemParameterProcessor.getStringParameterValue(productionNetworkPath));
     }
 
     public TrainingDataInfo getProductionTrainingDataInfo() {

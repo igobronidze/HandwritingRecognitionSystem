@@ -7,7 +7,7 @@ public class ProductionNetworkServiceImpl implements ProductionNetworkService {
     private final ProductionNetworkProcessor productionNetworkProcessor = new ProductionNetworkProcessor();
 
     @Override
-    public void updateProductionNetwork(int networkId) {
-        productionNetworkProcessor.updateProductionNetwork(networkId);
+    public void updateProductionNetwork(int networkId, int networkExtraId) {
+        productionNetworkProcessor.updateProductionNetwork(networkId, networkExtraId);
     }
 }

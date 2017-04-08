@@ -53,6 +53,19 @@ public class RecognizeTextMain {
 				continue;
 			}
 
+			System.out.println("ქსელის დამატებითი id:  (0 თუ იყენებთ მთავარ ქსელს)");
+			s = scanner.nextLine();
+			if (isRetry(s)) {
+				continue;
+			}
+			int networkExtraId = 0;
+			try {
+				networkExtraId = Integer.parseInt(s);
+			} catch (NumberFormatException ex) {
+				System.out.println(ex.getMessage());
+				continue;
+			}
+
 			System.out.println("პარამეტრების შევსება დასრულდა. გსურთ დაპროცესირება? (true/false)");
 			s = scanner.nextLine();
 			if (isRetry(s)) {
@@ -66,7 +79,7 @@ public class RecognizeTextMain {
 				BufferedImage image = ImageIO.read(new File(textPath));
 				List<BufferedImage> images = new ArrayList<>();
 				images.add(image);
-				List<RecognitionInfo> recognitionInfos = neuralNetworkService.recognizeText(images, networkId);
+				List<RecognitionInfo> recognitionInfos = neuralNetworkService.recognizeText(images, networkId, networkExtraId);
 				for (RecognitionInfo recognitionInfo : recognitionInfos) {
 					System.out.println(recognitionInfo.getText());
 				}

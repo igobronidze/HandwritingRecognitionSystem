@@ -19,7 +19,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
     public void addTestingInfo(TestingInfo testingInfo) {
         try {
             String sql = "INSERT INTO testing_info (grouped_normalized_datum, number_of_test, squared_error, percentage_of_incorrect, " +
-                    "diff_between_ans_and_best, normalized_general_error, duration, network_id) VALUES (?,?,?,?,?,?,?,?);";
+                    "diff_between_ans_and_best, normalized_general_error, duration, network_id, network_extra_id) VALUES (?,?,?,?,?,?,?,?,?);";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             List<Integer> groupedNormalizedDatumIds = new ArrayList<>();
             for (GroupedNormalizedData groupedNormalizedData : testingInfo.getGroupedNormalizedDatum()) {
@@ -33,6 +33,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
             pstmt.setFloat(6, testingInfo.getNormalizedGeneralError());
             pstmt.setLong(7, testingInfo.getDuration());
             pstmt.setInt(8, testingInfo.getNetworkId());
+            pstmt.setInt(9, testingInfo.getNetworkExtraId());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex.getMessage());
@@ -67,6 +68,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 testingInfo.setNormalizedGeneralError(rs.getFloat("normalized_general_error"));
                 testingInfo.setDuration(rs.getLong("duration"));
                 testingInfo.setId(rs.getInt("id"));
+                testingInfo.setNetworkExtraId(rs.getInt("network_extra_id"));
                 testingInfoList.add(testingInfo);
             }
         } catch (SQLException ex) {

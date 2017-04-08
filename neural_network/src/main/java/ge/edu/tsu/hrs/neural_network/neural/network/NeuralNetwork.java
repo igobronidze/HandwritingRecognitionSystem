@@ -9,6 +9,7 @@ import ge.edu.tsu.hrs.neural_network.neural.testresult.TestResult;
 import ge.edu.tsu.hrs.neural_network.neural.testresult.TestResultUtil;
 import ge.edu.tsu.hrs.neural_network.util.RandomUtil;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -138,6 +139,8 @@ public class NeuralNetwork implements Serializable {
         long counter = 0;
         float error;
         long startTime = new Date().getTime();
+        File file = new File(trainingProgress.getTmpNetworksPath());
+        file.mkdirs();
         do {
             error = 0.0f;
             List<Integer> randomList = RandomUtil.getRandomIntegerList(trainingDataList.size());
@@ -157,6 +160,13 @@ public class NeuralNetwork implements Serializable {
                 trainingProgress.setCurrentDuration(new Date().getTime() - startTime);
                 trainingProgress.setCurrentIterations(counter);
                 trainingProgress.setCurrentSquaredError(error);
+            }
+            if (counter % trainingProgress.getSavePerIteration() == 0) {
+                try {
+                    save(trainingProgress.getTmpNetworksPath() + "/" + counter / trainingProgress.getSavePerIteration() + ".nnet", this, true);
+                } catch (NNException ex) {
+                    System.out.println(ex.getMessage());
+                }
             }
         } while (counter < neuralNetworkParameter.getTrainingMaxIteration() && error > neuralNetworkParameter.getMinError());
         return new Date().getTime() - startTime;
@@ -196,11 +206,26 @@ public class NeuralNetwork implements Serializable {
         return output;
     }
 
-    public static void save(String path, NeuralNetwork neuralNetwork) throws NNException {
-        try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
-            out.writeObject(neuralNetwork);
-        } catch (IOException ex) {
-            throw new NNException(ex.getMessage());
+    public static void save(String path, NeuralNetwork neuralNetwork, boolean newThread) throws NNException {
+        if (newThread) {
+            Thread thread = new Thread(null, () -> {
+                try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
+                    out.writeObject(neuralNetwork);
+                } catch (IOException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }, "Load network from file system thread", 2000000);
+            thread.start();
+            try {
+                thread.join();
+            } catch (InterruptedException ex) {
+            }
+        } else {
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
+                out.writeObject(neuralNetwork);
+            } catch (IOException ex) {
+                throw new NNException(ex.getMessage());
+            }
         }
     }
 

@@ -44,9 +44,9 @@ public class SimpleNeuralTest {
         neuralNetwork.getNeuralNetworkParameter().setTransferFunctionType(TransferFunctionType.HYPERBOLIC_TANGENT);
         neuralNetwork.getNeuralNetworkParameter().setTrainingMaxIteration(100);
 
-        neuralNetwork.train(new TrainingProgress(1000, 0, 0, 0));
+        neuralNetwork.train(new TrainingProgress(1000, 0, 0, 0, 10000000, ""));
 
-        NeuralNetwork.save("C:\\hrs\\network.nnet", neuralNetwork);
+        NeuralNetwork.save("C:\\hrs\\network.nnet", neuralNetwork, false);
         NeuralNetwork myNetwork = NeuralNetwork.load("C:\\hrs\\network.nnet");
         System.out.println(myNetwork.getOutputActivation(trainingData1));
     }

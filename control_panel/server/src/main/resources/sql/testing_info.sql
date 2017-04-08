@@ -9,3 +9,4 @@ CREATE TABLE testing_info (
     duration BIGINT DEFAULT 0,
     network_id INT REFERENCES network_info(id)
 );
+ALTER TABLE testing_info ADD COLUMN network_extra_id INT DEFAULT 0;

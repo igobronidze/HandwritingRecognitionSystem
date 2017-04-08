@@ -62,7 +62,7 @@ public class NeuralNetworkHelper {
         }
     }
 
-    public static NeuralNetwork loadNeuralNetwork(int id, boolean loadFromDatabase, String path) {
+    public static NeuralNetwork loadNeuralNetwork(int id, int extraId, boolean loadFromDatabase, String path) {
         final NeuralNetwork neuralNetwork = new NeuralNetwork();
         if (path != null && !path.isEmpty()) {
             Thread thread = new Thread(null, () -> {
@@ -78,9 +78,9 @@ public class NeuralNetworkHelper {
             }
         } else {
             Thread thread = new Thread(null, () -> {
-                NeuralNetwork.copyNetwork(loadNetworkFromFileSystem(id), neuralNetwork);
+                NeuralNetwork.copyNetwork(loadNetworkFromFileSystem(id, extraId), neuralNetwork);
                 if (neuralNetwork.getNeuralNetworkParameter() != null) {
-                    System.out.println("Loaded network from file system with id - " + id);
+                    System.out.println("Loaded network from file system with id - " + id + ", extra id - " + extraId);
                 }
             }, "Load network from file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
             thread.start();
@@ -92,7 +92,7 @@ public class NeuralNetworkHelper {
                 return neuralNetwork;
             }
             thread = new Thread(null, () -> {
-                if (loadFromDatabase) {
+                if (loadFromDatabase && extraId != 0) {
                     NeuralNetwork.copyNetwork(loadNetworkFromDatabase(id), neuralNetwork);
                     if (neuralNetwork.getNeuralNetworkParameter() != null) {
                         System.out.println("Loaded network from database with id - " + id);
@@ -113,7 +113,7 @@ public class NeuralNetworkHelper {
 
     private static void saveNetworkInFileSystem(int id, NeuralNetwork neuralNetwork) {
         try {
-            NeuralNetwork.save(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet", neuralNetwork);
+            NeuralNetwork.save(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet", neuralNetwork, false);
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
         }
@@ -121,7 +121,7 @@ public class NeuralNetworkHelper {
 
     private static void saveNetworkWithPath(NeuralNetwork neuralNetwork, String path) {
         try {
-            NeuralNetwork.save(path, neuralNetwork);
+            NeuralNetwork.save(path, neuralNetwork, false);
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
         }
@@ -139,9 +139,13 @@ public class NeuralNetworkHelper {
         }
     }
 
-    private static NeuralNetwork loadNetworkFromFileSystem(int id) {
+    private static NeuralNetwork loadNetworkFromFileSystem(int id, int extraId) {
         try {
-            return NeuralNetwork.load(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet");
+            if (extraId == 0) {
+                return NeuralNetwork.load(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet");
+            } else {
+                return NeuralNetwork.load(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + "/" + extraId + ".nnet");
+            }
         } catch (NNException ex) {
             System.out.println(ex.getMessage());
         }

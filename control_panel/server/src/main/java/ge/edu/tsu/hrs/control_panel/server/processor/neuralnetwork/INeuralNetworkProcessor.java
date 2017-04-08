@@ -13,9 +13,9 @@ public interface INeuralNetworkProcessor {
 
     void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException;
 
-    NetworkResult getNetworkResult(BufferedImage image, int networkId);
+    NetworkResult getNetworkResult(BufferedImage image, int networkId, int networkExtraId);
 
-    float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException;
+    float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId, int networkExtraId) throws ControlPanelException;
 
-    List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId);
+    List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId, int networkExtraId);
 }

@@ -1,5 +1,6 @@
 package ge.edu.tsu.hrs.control_panel.server.processor.neuralnetwork;
 
+import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
 import ge.edu.tsu.hrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
@@ -19,6 +20,7 @@ import ge.edu.tsu.hrs.control_panel.server.dao.testinginfo.TestingInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
+import ge.edu.tsu.hrs.control_panel.server.processor.common.HRSPathProcessor;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hrs.control_panel.server.util.CharSequenceInitializer;
@@ -56,11 +58,15 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
 	private final ProductionNetworkProcessor productionNetworkProcessor = new ProductionNetworkProcessor();
 
+	private final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
+
 	private final Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
 	private final Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
 
 	private final Parameter deltaForNotSpaces = new Parameter("deltaForNotSpaces", "3");
+
+	private final Parameter savePerIteration = new Parameter("savePerIteration", "1000");
 
 	@Override
 	public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
@@ -85,9 +91,11 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			}
 			TrainingProgress trainingProgress = new TrainingProgress();
 			trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
+			trainingProgress.setSavePerIteration(systemParameterProcessor.getLongParameterValue(savePerIteration));
 			networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINING);
 			System.out.println("Gathered data for network info and training progress!");
 			int id = networkInfoDAO.addNetworkInfo(networkInfo);
+			trainingProgress.setTmpNetworksPath(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + "/");
 			TrainingDataInfo trainingDataInfo = new TrainingDataInfo(id, getIdsFromFromGroupedNormalizedDatum(groupedNormalizedDatum), height, width, groupedNormalizedData.getMinValue(), groupedNormalizedData.getMaxValue(),
 					groupedNormalizedData.getNormalizationType(), neuralNetwork.getTrainingDataList().size());
 			trainingDataInfoDAO.addTrainingDataInfo(trainingDataInfo);
@@ -117,7 +125,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	}
 
 	@Override
-	public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
+	public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId, int networkExtraId) throws ControlPanelException {
 		System.out.println("Start network testing!");
 		if (!GroupedNormalizedDataUtil.checkGroupedNormalizedDataList(groupedNormalizedDatum)) {
 			throw new ControlPanelException();
@@ -128,7 +136,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		}
 		List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 		try {
-			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
+			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
 			List<TrainingData> trainingDataList = new ArrayList<>();
 			CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
 			CharSequenceInitializer.initializeCharSequence(charSequence);
@@ -141,6 +149,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			TestingInfo testingInfo = new TestingInfo();
 			testingInfo.setNumberOfTest(testResult.getNumberOfData());
 			testingInfo.setNetworkId(networkId);
+			testingInfo.setNetworkExtraId(networkExtraId);
 			testingInfo.setGroupedNormalizedDatum(groupedNormalizedDatum);
 			testingInfo.setSquaredError(testResult.getSquaredError());
 			testingInfo.setDiffBetweenAnsAndBest(testResult.getDiffBetweenAnsAndBest());
@@ -157,10 +166,10 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	}
 
 	@Override
-	public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
+	public NetworkResult getNetworkResult(BufferedImage image, int networkId, int networkExtraId) {
 		try {
 			System.out.println("Started get network result!");
-			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
+			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
 			CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
 			TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
 			Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
@@ -181,7 +190,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	}
 
 	@Override
-	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId) {
+	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId, int networkExtraId) {
 		System.out.println("Start text recognizing");
 		List<RecognitionInfo> recognitionInfos = new ArrayList<>();
 		for (BufferedImage image : images) {
@@ -199,7 +208,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 					CharSequenceInitializer.initializeCharSequence(charSequence);
 				} catch (ControlPanelException ex) {}
 			} else {
-				neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, true, null);
+				neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
 				charSequence = networkInfoDAO.getCharSequenceById(networkId);
 				try {
 					CharSequenceInitializer.initializeCharSequence(charSequence);

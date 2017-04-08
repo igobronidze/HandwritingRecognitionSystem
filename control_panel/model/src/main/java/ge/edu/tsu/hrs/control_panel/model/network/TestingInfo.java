@@ -11,6 +11,8 @@ public class TestingInfo implements Serializable {
 
     private int networkId;
 
+    private int networkExtraId;
+
     private List<GroupedNormalizedData> groupedNormalizedDatum;
 
     private int numberOfTest;
@@ -39,6 +41,14 @@ public class TestingInfo implements Serializable {
 
     public void setNetworkId(int networkId) {
         this.networkId = networkId;
+    }
+
+    public int getNetworkExtraId() {
+        return networkExtraId;
+    }
+
+    public void setNetworkExtraId(int networkExtraId) {
+        this.networkExtraId = networkExtraId;
     }
 
     public List<GroupedNormalizedData> getGroupedNormalizedDatum() {

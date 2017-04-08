@@ -30,7 +30,7 @@ public class NeuralNetworkServiceTest {
 		NetworkInfo networkInfo = new NetworkInfo();
 		networkInfo.setDescription("MNIST ბაზის ქსელი");
 		networkInfo.setBiasMinValue(-0.5F);
-		networkInfo.setBiasMaxValue(-0.5F);
+		networkInfo.setBiasMaxValue(0.5F);
 		CharSequence charSequence = new CharSequence("[0-9]");
 		CharSequenceInitializer.initializeCharSequence(charSequence);
 		networkInfo.setCharSequence(charSequence);
@@ -61,7 +61,7 @@ public class NeuralNetworkServiceTest {
 		for (int i = 44; i <= 53; i++) {
 			groupedNormalizedDatum.add(groupedNormalizedDataService.getGroupedNormalizedData(i));
 		}
-		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 59));
+		System.out.println(neuralNetworkService.testNeural(groupedNormalizedDatum, 59, 0));
 	}
 
 	@Test

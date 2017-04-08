@@ -33,17 +33,17 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public NetworkResult getNetworkResult(BufferedImage image, int networkId) {
-        return iNeuralNetworkProcessor.getNetworkResult(image, networkId);
+    public NetworkResult getNetworkResult(BufferedImage image, int networkId, int networkExtraId) {
+        return iNeuralNetworkProcessor.getNetworkResult(image, networkId, networkExtraId);
     }
 
     @Override
-    public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId) throws ControlPanelException {
-        return iNeuralNetworkProcessor.testNeural(groupedNormalizedDatum, networkId);
+    public float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId, int netwrkExtraId) throws ControlPanelException {
+        return iNeuralNetworkProcessor.testNeural(groupedNormalizedDatum, networkId, netwrkExtraId);
     }
 
     @Override
-    public List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId) {
-        return iNeuralNetworkProcessor.recognizeText(images, networkId);
+    public List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId, int networkExtraId) {
+        return iNeuralNetworkProcessor.recognizeText(images, networkId, networkExtraId);
     }
 }

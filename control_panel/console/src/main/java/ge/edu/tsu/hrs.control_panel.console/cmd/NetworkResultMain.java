@@ -53,6 +53,19 @@ public class NetworkResultMain {
                 continue;
             }
 
+            System.out.println("ქსელის დამატებითი id:");
+            s = scanner.nextLine();
+            if (isRetry(s)) {
+                continue;
+            }
+            int networkExtraId = 0;
+            try {
+                networkExtraId = Integer.parseInt(s);
+            } catch (NumberFormatException ex) {
+                System.out.println(ex.getMessage());
+                continue;
+            }
+
             System.out.println("პარამეტრების შევსება დასრულდა. გსურთ დაპროცესირება? (true/false)");
             s = scanner.nextLine();
             if (isRetry(s)) {
@@ -63,7 +76,7 @@ public class NetworkResultMain {
             }
             try {
                 BufferedImage image = ImageIO.read(new File(symbolPath));
-                NetworkResult networkResult = neuralNetworkService.getNetworkResult(image, networkId);
+                NetworkResult networkResult = neuralNetworkService.getNetworkResult(image, networkId, networkExtraId);
                 System.out.println("ქსელის პასუხია - " + networkResult.getAnswer());
                 System.out.println();
 
