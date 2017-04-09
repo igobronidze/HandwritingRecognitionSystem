@@ -1,14 +1,14 @@
 package ge.edu.tsu.hrs.image_processing;
 
-import ge.edu.tsu.hrs.image_processing.opencv.BinaryConverter;
-import ge.edu.tsu.hrs.image_processing.opencv.MorphologicalOperations;
-import ge.edu.tsu.hrs.image_processing.opencv.NoiseRemover;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.blurring.GaussianBlurParams;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.morphological.DilationParams;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.morphological.ErosionParams;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.threshold.AdaptiveThresholdParams;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.threshold.OtsuBinarizationParams;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.threshold.SimpleThresholdParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.BinaryConverter;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.MorphologicalOperations;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.NoiseRemover;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.blurring.GaussianBlurParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.morphological.DilationParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.morphological.ErosionParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.AdaptiveThresholdParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.OtsuBinarizationParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.SimpleThresholdParams;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.junit.BeforeClass;

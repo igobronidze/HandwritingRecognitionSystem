@@ -1,6 +1,6 @@
 package ge.edu.tsu.hrs.image_processing;
 
-import ge.edu.tsu.hrs.image_processing.opencv.ContoursDetector;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.ContoursDetector;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.junit.Ignore;

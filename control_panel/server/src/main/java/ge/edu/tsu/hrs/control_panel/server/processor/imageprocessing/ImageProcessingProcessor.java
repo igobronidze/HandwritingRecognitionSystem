@@ -3,8 +3,10 @@ package ge.edu.tsu.hrs.control_panel.server.processor.imageprocessing;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutterParams;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutter;
 import ge.edu.tsu.hrs.image_processing.exception.TextAdapterSizeException;
-import ge.edu.tsu.hrs.image_processing.opencv.ImageResizer;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.ImageResizerParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.ImageResizer;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.ImageResizerParams;
+import ge.edu.tsu.hrs.image_processing.opencv.service.ImageCleaner;
+import ge.edu.tsu.hrs.image_processing.opencv.service.condition.ImageCondition;
 import ge.edu.tsu.hrs.image_processing.util.OpenCVUtil;
 import org.bytedeco.javacpp.opencv_core;
 
@@ -36,5 +38,9 @@ public class ImageProcessingProcessor {
         }
         opencv_core.Mat resultMat = ImageResizer.resize(srcMat, params);
         return OpenCVUtil.matToBufferedImage(resultMat);
+    }
+
+    public BufferedImage cleanImage(BufferedImage srcImage, ImageCondition imageCondition) {
+        return ImageCleaner.cleanImage(srcImage, imageCondition);
     }
 }

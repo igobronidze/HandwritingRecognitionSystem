@@ -1,6 +1,6 @@
 package ge.edu.tsu.hrs.image_processing;
 
-import ge.edu.tsu.hrs.image_processing.opencv.LinesRemover;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.LinesRemover;
 import ge.edu.tsu.hrs.image_processing.util.OpenCVUtil;
 import org.junit.Ignore;
 import org.junit.Test;

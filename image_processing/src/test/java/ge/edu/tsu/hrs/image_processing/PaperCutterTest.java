@@ -1,7 +1,7 @@
 package ge.edu.tsu.hrs.image_processing;
 
-import ge.edu.tsu.hrs.image_processing.opencv.PaperCutter;
-import ge.edu.tsu.hrs.image_processing.opencv.parameter.cutpapper.CutPaperParams;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.PaperCutter;
+import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.cutpapper.CutPaperParams;
 import org.junit.Ignore;
 import org.junit.Test;
 
