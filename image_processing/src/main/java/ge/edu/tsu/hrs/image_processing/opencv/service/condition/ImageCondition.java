@@ -8,6 +8,8 @@ public class ImageCondition {
 
     private Stridency stridency = Stridency.UNKNOWN;
 
+    private ReverseCondition reverseCondition = ReverseCondition.UNKNOWN;
+
     public BackgroundCondition getBackgroundCondition() {
         return backgroundCondition;
     }
@@ -30,5 +32,13 @@ public class ImageCondition {
 
     public void setStridency(Stridency stridency) {
         this.stridency = stridency;
+    }
+
+    public ReverseCondition getReverseCondition() {
+        return reverseCondition;
+    }
+
+    public void setReverseCondition(ReverseCondition reverseCondition) {
+        this.reverseCondition = reverseCondition;
     }
 }
