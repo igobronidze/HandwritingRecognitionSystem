@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.control_panel.console.fx.ui;
+package ge.edu.tsu.hrs.control_panel.console.fx.ui.main;
 
 import javafx.geometry.Insets;
 import javafx.scene.control.Label;

@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.control_panel.console.fx.ui;
+package ge.edu.tsu.hrs.control_panel.console.fx.ui.main;
 
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
@@ -42,7 +42,7 @@ public class ControlPanelHeader extends BorderPane {
         logoImageView.setOnMouseEntered(event -> ControlPanelHeader.this.setCursor(Cursor.HAND));
         logoImageView.setOnMouseExited(event -> ControlPanelHeader.this.setCursor(Cursor.DEFAULT));
         logoImageView.setOnMouseClicked(event -> {
-
+            ControlPanel.initComponents(SystemPageType.ADMIN_DASHBOARD);
         });
         logoImageView.setImage(logo);
         logoImageView.setFitWidth(logoWidth);
@@ -57,7 +57,7 @@ public class ControlPanelHeader extends BorderPane {
         geoImageView.setOnMouseExited(event -> ControlPanelHeader.this.setCursor(Cursor.DEFAULT));
         geoImageView.setOnMouseClicked(event -> {
             Messages.setLanguageCode("KA");
-            ControlPanel.initComponents();
+            ControlPanel.initComponents(null);
         });
         geoImageView.setImage(geoLogo);
         geoImageView.setFitWidth(35);
@@ -69,7 +69,7 @@ public class ControlPanelHeader extends BorderPane {
         engImageView.setOnMouseClicked(event -> {
             Messages.setLanguageCode("EN");
             ControlPanelHeader.this.requestLayout();
-            ControlPanel.initComponents();
+            ControlPanel.initComponents(null);
         });
         engImageView.setImage(engLogo);
         engImageView.setFitWidth(35);
