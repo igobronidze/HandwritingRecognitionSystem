@@ -1,6 +1,7 @@
 package ge.edu.tsu.hrs.control_panel.server;
 
 import ge.edu.tsu.hrs.control_panel.server.processor.imageprocessing.ImageProcessingProcessor;
+import ge.edu.tsu.hrs.image_processing.opencv.service.condition.BackgroundCondition;
 import ge.edu.tsu.hrs.image_processing.opencv.service.condition.ImageCondition;
 import ge.edu.tsu.hrs.image_processing.opencv.service.condition.NoiseCondition;
 import org.junit.Ignore;
@@ -23,10 +24,11 @@ public class CleanImageTest {
     @Ignore
     public void testCleanImage() {
         try {
-            for (int i = 10; i < 11; i++) {
+            for (int i = 11; i <= 11; i++) {
                 BufferedImage srcImage = ImageIO.read(new File(srcPath + i + ".png"));
                 ImageCondition imageCondition = new ImageCondition();
-                imageCondition.setNoiseCondition(NoiseCondition.NO_NOISE);
+                imageCondition.setNoiseCondition(NoiseCondition.FEW_NOISE);
+                imageCondition.setBackgroundCondition(BackgroundCondition.MONOTONOUS);
                 BufferedImage resultImage = imageProcessingProcessor.cleanImage(srcImage, imageCondition);
                 ImageIO.write(resultImage, "png", new File(resultPath + i + "_r_r.png"));
             }

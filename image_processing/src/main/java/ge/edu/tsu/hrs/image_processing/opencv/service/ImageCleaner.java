@@ -26,12 +26,12 @@ public class ImageCleaner {
 			opencv_imgproc.cvtColor(mat, mat, opencv_imgproc.CV_RGB2GRAY);
 		}
 		if (imageCondition.getBackgroundCondition() == BackgroundCondition.MONOTONOUS) {
-			removeNoise(mat, imageCondition.getNoiseCondition());
+			mat = removeNoise(mat, imageCondition.getNoiseCondition());
+			mat = BinaryConverter.applyThreshold(mat, new AdaptiveThresholdParams());
+		} else if (imageCondition.getBackgroundCondition() == BackgroundCondition.NOT_MONOTONOUS) {
+			mat = removeNoise(mat, imageCondition.getNoiseCondition());
 			mat = BinaryConverter.applyThreshold(mat, new SimpleThresholdParams());
 			return OpenCVUtil.matToBufferedImage(mat);
-		} else if (imageCondition.getBackgroundCondition() == BackgroundCondition.NOT_MONOTONOUS) {
-			removeNoise(mat, imageCondition.getNoiseCondition());
-			mat = BinaryConverter.applyThreshold(mat, new AdaptiveThresholdParams());
 		}
 		if (imageCondition.getStridency() == Stridency.DIM) {
 			mat = MorphologicalOperations.applyErosion(mat, new ErosionParams(), true, 1);
@@ -40,22 +40,19 @@ public class ImageCleaner {
 		return OpenCVUtil.matToBufferedImage(mat);
 	}
 
-	private static void removeNoise(opencv_core.Mat mat, NoiseCondition noiseCondition) {
+	private static opencv_core.Mat removeNoise(opencv_core.Mat mat, NoiseCondition noiseCondition) {
 		switch (noiseCondition) {
 			case NO_NOISE:
-				// do nothing
-				break;
+				return mat;
 			case FEW_NOISE:
-				mat = NoiseRemover.applyNoiseRemoval(mat, new GaussianBlurParams(), 1);
-				break;
+				return NoiseRemover.applyNoiseRemoval(mat, new GaussianBlurParams(), 1);
 			case SOME_NOISE:
-				mat = NoiseRemover.applyNoiseRemoval(mat, new GaussianBlurParams(), 3);
-				break;
+				return NoiseRemover.applyNoiseRemoval(mat, new GaussianBlurParams(), 3);
 			case LOT_NOISE:
-				mat = NoiseRemover.applyNoiseRemoval(mat, new GaussianBlurParams(), 5);
-				break;
+				return NoiseRemover.applyNoiseRemoval(mat, new GaussianBlurParams(), 5);
 			case UNKNOWN:
 			default:
+				return mat;
 		}
 	}
 }
