@@ -9,7 +9,7 @@ public class TCHLabel extends Label {
 	}
 
 	private void initComponent(String text) {
-		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 18px;");
+		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 14px;");
 		this.setText(text);
 	}
 }

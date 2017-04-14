@@ -9,6 +9,6 @@ public class TCHButton extends Button {
 	}
 
 	private void initComponent() {
-		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 18px;");
+		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 14px;");
 	}
 }

@@ -9,16 +9,16 @@ public class TCHTextField extends TextField {
 	}
 
 	private void initComponent(TCHComponentSize size) {
-		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 18px;");
+		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 14px;");
 		switch (size) {
 			case SMALL:
-				this.setWidth(100);
+				this.setPrefWidth(150);
 				break;
 			case MEDIUM:
-				this.setWidth(200);
+				this.setPrefWidth(300);
 				break;
 			case LARGE:
-				this.setWidth(300);
+				this.setPrefWidth(500);
 				break;
 		}
 	}
