@@ -5,8 +5,6 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHFieldLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHNumberTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
-import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanelFooter;
-import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanelHeader;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalType;
@@ -50,7 +48,7 @@ public class MorphologicalPane extends VBox {
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setSpacing(10);
         this.setStyle("-fx-border-color: green; -fx-background-radius: 2px; -fx-background-size: 1px;");
-        this.prefHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(1 - CleanImagePane.TOP_PANE_PART).subtract(45));
+        this.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(1 - CleanImagePane.TOP_PANE_PART));
     }
 
     private void reloadPane(MorphologicalType morphologicalType) {

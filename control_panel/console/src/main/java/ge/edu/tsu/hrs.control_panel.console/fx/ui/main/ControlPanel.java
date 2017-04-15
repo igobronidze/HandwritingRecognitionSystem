@@ -8,6 +8,7 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.normalization.NormalizationPan
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.sysparams.SystemParametersPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import javafx.application.Application;
+import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
@@ -19,6 +20,10 @@ public class ControlPanel extends Application {
     private static BorderPane root;
 
     private static SystemPageType currPage;
+
+    private static final int EXTRA_HEIGHT = 50;
+
+    private static final int EXTRA_WIDTH = 20;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
@@ -70,5 +75,13 @@ public class ControlPanel extends Application {
 
     public static Stage getStage() {
         return stage;
+    }
+
+    public static DoubleBinding getCenterHeightBinding() {
+        return stage.heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).subtract(EXTRA_HEIGHT);
+    }
+
+    public static DoubleBinding getCenterWidthBinding() {
+        return stage.widthProperty().subtract(EXTRA_WIDTH);
     }
 }

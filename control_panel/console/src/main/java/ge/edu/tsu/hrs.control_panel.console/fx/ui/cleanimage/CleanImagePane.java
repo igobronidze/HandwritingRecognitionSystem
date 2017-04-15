@@ -4,8 +4,6 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHButton;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComboBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHFieldLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
-import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanelFooter;
-import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanelHeader;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
@@ -40,9 +38,9 @@ import java.util.Arrays;
 
 public class CleanImagePane extends VBox {
 
-    private static final double MAIN_PARAMETERS_PANE_WIDTH = 300;
+    private static final double MAIN_PARAMETERS_PANE_WIDTH = 280;
 
-    public static final double TOP_PANE_PART = 0.65;
+    public static final double TOP_PANE_PART = 0.7;
 
     private final ImageProcessingService imageProcessingService = new ImageProcessingServiceImpl();
 
@@ -75,6 +73,7 @@ public class CleanImagePane extends VBox {
     }
 
     private void initMainPain() {
+        this.setSpacing(3);
         this.getChildren().addAll(getTopPane(), getBottomPane());
     }
 
@@ -83,8 +82,8 @@ public class CleanImagePane extends VBox {
         hBox.setPadding(new Insets(5, 5, 0, 5));
         srcImageView = new ImageView();
         srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
-        srcImageView.fitHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(TOP_PANE_PART).subtract(5));
-        srcImageView.fitWidthProperty().bind(ControlPanel.getStage().widthProperty().subtract(MAIN_PARAMETERS_PANE_WIDTH).divide(2));
+        srcImageView.fitHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(TOP_PANE_PART));
+        srcImageView.fitWidthProperty().bind(ControlPanel.getCenterWidthBinding().subtract(MAIN_PARAMETERS_PANE_WIDTH).divide(2));
         srcImageView.setOnMouseEntered(event -> this.setCursor(Cursor.HAND));
         srcImageView.setOnMouseExited(event -> this.setCursor(Cursor.DEFAULT));
         srcImageView.setOnMouseClicked(event -> {
@@ -99,13 +98,14 @@ public class CleanImagePane extends VBox {
             } catch (Exception ex) {
                 srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
                 imageName = "";
+                convertButton.setDisable(true);
                 System.out.println(ex.getMessage());
             }
         });
         resultImageView = new ImageView();
         resultImageView.setImage(ImageFactory.getImage("no_photo.png"));
-        resultImageView.fitHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(TOP_PANE_PART).subtract(5));
-        resultImageView.fitWidthProperty().bind(ControlPanel.getStage().widthProperty().subtract(MAIN_PARAMETERS_PANE_WIDTH).divide(2));
+        resultImageView.fitHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(TOP_PANE_PART));
+        resultImageView.fitWidthProperty().bind(ControlPanel.getCenterWidthBinding().subtract(MAIN_PARAMETERS_PANE_WIDTH).divide(2));
         hBox.getChildren().addAll(srcImageView, getMainParametersPane(), resultImageView);
         resultImageView.setOnMouseEntered(event -> this.setCursor(Cursor.HAND));
         resultImageView.setOnMouseExited(event -> this.setCursor(Cursor.DEFAULT));
@@ -113,6 +113,7 @@ public class CleanImagePane extends VBox {
             if (imageName != null && !imageName.isEmpty()) {
                 try {
                     DirectoryChooser directoryChooser = new DirectoryChooser();
+                    directoryChooser.setTitle(Messages.get("resultDirectory"));
                     directoryChooser.setInitialDirectory(new File(hrsPathService.getPath(HRSPath.CLEANED_IMAGES_PATH)));
                     File directory = directoryChooser.showDialog(ControlPanel.getStage());
                     BufferedImage resultImage = SwingFXUtils.fromFXImage(resultImageView.getImage(), null);
@@ -130,7 +131,7 @@ public class CleanImagePane extends VBox {
         mainParametersVBox.setSpacing(15);
         mainParametersVBox.setPrefWidth(MAIN_PARAMETERS_PANE_WIDTH);
         mainParametersVBox.setAlignment(Pos.TOP_CENTER);
-        mainParametersVBox.prefHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(TOP_PANE_PART).subtract(5));
+        mainParametersVBox.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(TOP_PANE_PART));
         CheckBox convertGrayCheckBox = new CheckBox();
         convertGrayCheckBox.setSelected(true);
         convertGrayCheckBox.setDisable(true);

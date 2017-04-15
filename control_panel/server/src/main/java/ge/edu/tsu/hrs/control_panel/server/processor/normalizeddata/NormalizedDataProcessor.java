@@ -12,6 +12,7 @@ import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizatio
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearByAreaNormalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearResizeNormalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
+import ge.edu.tsu.hrs.control_panel.server.util.CharUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -83,27 +84,6 @@ public class NormalizedDataProcessor {
         String fileName = file.getName();
         String fileNameWithoutExtension = fileName.replaceFirst("[.][^.]+$", "");
         String text = fileNameWithoutExtension.split("_")[1];
-        switch (text) {
-            case "questionMark" :
-                return '?';
-            case "lessThan" :
-                return '<';
-            case "greaterThan" :
-                return '>';
-            case "colon" :
-                return ':';
-            case "doubleQuote" :
-                return '"';
-            case "forwardSlash" :
-                return '/';
-            case "backslash" :
-                return '\\';
-            case "verticalBar" :
-                return  '|';
-            case "asterisk" :
-                return '*';
-            default:
-                return text.charAt(0);
-        }
+        return CharUtil.getCharFromFileName(text);
     }
 }

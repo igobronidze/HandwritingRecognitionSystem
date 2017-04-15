@@ -15,23 +15,6 @@ public class TextAdapterUtil {
         return count;
     }
 
-    public static int countCharactersFromText(String text, boolean doubleQuoteAsTwoChar) {
-        int count = 0;
-        for (char c : text.toCharArray()) {
-            if (!isUnnecessaryCharacter(c)) {
-                count++;
-            }
-            if (doubleQuoteAsTwoChar && isDoubleCharacter(c)) {
-                count++;
-            }
-        }
-        return count;
-    }
-
-    public static boolean isUnnecessaryCharacter(char c) {
-        return c == ' ' || c == '\n' || c == '\r';
-    }
-
     public static boolean isSpace(TextAdapter textAdapter, int distance, int delta) {
         if (textAdapter.getPossibleDistance() == -1) {
             textAdapter.setPossibleDistance(getMostFrequentDistance(textAdapter));
@@ -50,9 +33,5 @@ public class TextAdapterUtil {
             }
         }
         return ans;
-    }
-
-    private static boolean isDoubleCharacter(char c) {
-        return c == '"';
     }
 }

@@ -1,14 +1,20 @@
-package ge.edu.tsu.hrs.image_processing.characterdetect.detector;
+package ge.edu.tsu.hrs.control_panel.model.imageprocessing;
 
-public class TextCutterParams {
+public class TextCutterParameters {
 
-    private int checkedRGBMaxValue = -2;
+    private int checkedRGBMaxValue;
 
-    private int checkNeighborRGBMaxValue = -5777216;
+    private int checkNeighborRGBMaxValue;
 
-    private boolean useJoiningFunctional = true;
+    private int percentageOfSameForJoining;
 
-    private int percentageOfSameForJoining = 35;
+    private boolean doubleQuoteAsTwoChar;
+
+    private boolean useJoiningFunctional;
+
+    private int imageWidth;
+
+    private int imageHeight;
 
     public int getCheckedRGBMaxValue() {
         return checkedRGBMaxValue;
@@ -40,5 +46,29 @@ public class TextCutterParams {
 
     public void setPercentageOfSameForJoining(int percentageOfSameForJoining) {
         this.percentageOfSameForJoining = percentageOfSameForJoining;
+    }
+
+    public boolean isDoubleQuoteAsTwoChar() {
+        return doubleQuoteAsTwoChar;
+    }
+
+    public void setDoubleQuoteAsTwoChar(boolean doubleQuoteAsTwoChar) {
+        this.doubleQuoteAsTwoChar = doubleQuoteAsTwoChar;
+    }
+
+    public int getImageWidth() {
+        return imageWidth;
+    }
+
+    public void setImageWidth(int imageWidth) {
+        this.imageWidth = imageWidth;
+    }
+
+    public int getImageHeight() {
+        return imageHeight;
+    }
+
+    public void setImageHeight(int imageHeight) {
+        this.imageHeight = imageHeight;
     }
 }

@@ -2,10 +2,15 @@ package ge.edu.tsu.hrs.control_panel.server.processor.imageprocessing;
 
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdParameters;
+import ge.edu.tsu.hrs.control_panel.server.util.CharUtil;
+import ge.edu.tsu.hrs.image_processing.characterdetect.detector.ContoursDetector;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutterParams;
-import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutter;
-import ge.edu.tsu.hrs.image_processing.exception.TextAdapterSizeException;
+import ge.edu.tsu.hrs.image_processing.characterdetect.model.Contour;
+import ge.edu.tsu.hrs.image_processing.characterdetect.model.TextAdapter;
+import ge.edu.tsu.hrs.image_processing.characterdetect.model.TextRow;
+import ge.edu.tsu.hrs.image_processing.characterdetect.util.ContourUtil;
 import ge.edu.tsu.hrs.image_processing.opencv.operation.BinaryConverter;
 import ge.edu.tsu.hrs.image_processing.opencv.operation.ImageResizer;
 import ge.edu.tsu.hrs.image_processing.opencv.operation.MorphologicalOperations;
@@ -24,15 +29,64 @@ import ge.edu.tsu.hrs.image_processing.util.OpenCVUtil;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgproc;
 
+import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ImageProcessingProcessor {
 
-    public void cutAndSaveSymbolsFromText(String srcImagePath, String srcTextPath, String resultImagesPath, TextCutterParams textCutterParams) {
+    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters) {
+        TextCutterParams textCutterParams = new TextCutterParams();
+        textCutterParams.setCheckedRGBMaxValue(parameters.getCheckedRGBMaxValue());
+        textCutterParams.setCheckNeighborRGBMaxValue(parameters.getCheckNeighborRGBMaxValue());
+        textCutterParams.setPercentageOfSameForJoining(parameters.getPercentageOfSameForJoining());
+        textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
+        TextAdapter textAdapter = ContoursDetector.detectContours(srcImage, textCutterParams);
+        List<BufferedImage> images = new ArrayList<>();
+        for (TextRow textRow : textAdapter.getRows()) {
+            for (Contour contour : textRow.getContours()) {
+                BufferedImage image = ContourUtil.getBufferedImageFromContour(contour);
+                images.add(resizeImage(image, false, parameters.getImageWidth(), parameters.getImageHeight()));
+            }
+        }
+        return images;
+    }
+
+    public String processTextForImage(String text, boolean doubleQuoteAsTwoChar) {
+        StringBuilder result = new StringBuilder();
+        for (char c : text.toCharArray()) {
+            if (!isUnnecessaryCharacter(c)) {
+                if (doubleQuoteAsTwoChar && c == '"') {
+                    result.append("''");
+                } else {
+                    result.append(c);
+                }
+            }
+        }
+        return result.toString();
+    }
+
+    public void saveCutSymbols(List<BufferedImage> images, String text, String directoryPath) {
         try {
-            TextCutter.saveCutSymbols(srcImagePath, srcTextPath, resultImagesPath, textCutterParams);
-        } catch (TextAdapterSizeException ex) {
-            System.out.println("Expected Size - " + ex.getExpectedSize() + ", Result Size - " + ex.getResultSize());
+            File directory = new File(directoryPath);
+            int nextId = 1;
+            for (File f : directory.listFiles()) {
+                if (f.isFile()) {
+                    String fileNameWithoutExtension = f.getName().replaceFirst("[.][^.]+$", "");
+                    String id = fileNameWithoutExtension.split("_")[1];
+                    if (Integer.parseInt(id) >= nextId) {
+                        nextId = Integer.parseInt(id) + 1;
+                    }
+                }
+            }
+            for (int i = 0; i < images.size(); i++) {
+                ImageIO.write(images.get(i), "png", new File(directoryPath + "/" + (nextId) + "_" + CharUtil.getCharFromFileName("" + text.charAt(i)) + ".png"));
+                nextId++;
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
         }
     }
 
@@ -141,4 +195,7 @@ public class ImageProcessingProcessor {
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
+    private static boolean isUnnecessaryCharacter(char c) {
+        return c == ' ' || c == '\n' || c == '\r';
+    }
 }

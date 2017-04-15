@@ -59,7 +59,7 @@ public class BlurringPane extends VBox {
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setSpacing(10);
         this.setStyle("-fx-border-color: green; -fx-background-radius: 2px; -fx-background-size: 1px;");
-        this.prefHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(1 - CleanImagePane.TOP_PANE_PART).subtract(45));
+        this.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(1 - CleanImagePane.TOP_PANE_PART));
     }
 
     private void reloadPane(BlurringType type) {
