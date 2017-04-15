@@ -11,6 +11,8 @@ public class HRSPathProcessor {
 
 	private final Parameter originalImagesPath = new Parameter("originalImagesPath", "HRSImageData/original_images/");
 
+	private final Parameter cleanedImagesPath = new Parameter("cleanedImagesPath", "HRSImageData/cleaned_images/");
+
 	private final Parameter cutSymbolsPath = new Parameter("cutSymbolsPath", "HRSImageData/cut_symbols/");
 
 	private final Parameter textsPath = new Parameter("textsPath", "HRSImageData/real_text/");
@@ -21,6 +23,8 @@ public class HRSPathProcessor {
 		switch (hrsPath) {
 			case ORIGINAL_IMAGES_PATH:
 				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(originalImagesPath);
+			case CLEANED_IMAGES_PATH:
+				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(cleanedImagesPath);
 			case CUT_SYMBOLS_PATH:
 				return HRSPropertiesUtil.getProperty("fileSystemRootPath") + systemParameterProcessor.getStringParameterValue(cutSymbolsPath);
 			case TEXTS_PATH:

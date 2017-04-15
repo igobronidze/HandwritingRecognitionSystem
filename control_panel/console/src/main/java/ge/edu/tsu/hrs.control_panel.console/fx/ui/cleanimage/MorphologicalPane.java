@@ -37,6 +37,8 @@ public class MorphologicalPane extends VBox {
 
     private FlowPane flowPane;
 
+    private MorphologicalType morphologicalType;
+
     public MorphologicalPane(MorphologicalType morphologicalType) {
         flowPane = new FlowPane(Orientation.VERTICAL);
         flowPane.setHgap(2);
@@ -52,6 +54,7 @@ public class MorphologicalPane extends VBox {
     }
 
     private void reloadPane(MorphologicalType morphologicalType) {
+        this.morphologicalType = morphologicalType;
         flowPane.getChildren().clear();
         this.getChildren().clear();
         titleLabel.setText(Messages.get("morphologicalWith") + ": " + morphologicalType.name());
@@ -82,7 +85,7 @@ public class MorphologicalPane extends VBox {
         this.getChildren().addAll(titleLabel, flowPane);
     }
 
-    public MorphologicalParameters getMorphologicalParameters(MorphologicalType morphologicalType) {
+    public MorphologicalParameters getMorphologicalParameters() {
         MorphologicalParameters morphologicalParameters = null;
         try {
             morphologicalParameters = new MorphologicalParameters();

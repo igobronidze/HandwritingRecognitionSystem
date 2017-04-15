@@ -46,6 +46,8 @@ public class BlurringPane extends VBox {
 
     private FlowPane flowPane;
 
+    private BlurringType type;
+
     public BlurringPane(BlurringType blurringType) {
         flowPane = new FlowPane(Orientation.VERTICAL);
         flowPane.setHgap(2);
@@ -61,6 +63,7 @@ public class BlurringPane extends VBox {
     }
 
     private void reloadPane(BlurringType type) {
+        this.type = type;
         flowPane.getChildren().clear();
         this.getChildren().clear();
         titleLabel.setText(Messages.get("blurringWith") + ": " + type.name());
@@ -137,7 +140,7 @@ public class BlurringPane extends VBox {
         this.getChildren().addAll(titleLabel, flowPane);
     }
 
-    public BlurringParameters getBlurringParameters(BlurringType type) {
+    public BlurringParameters getBlurringParameters() {
         BlurringParameters parameters = null;
         try {
             parameters = new BlurringParameters();

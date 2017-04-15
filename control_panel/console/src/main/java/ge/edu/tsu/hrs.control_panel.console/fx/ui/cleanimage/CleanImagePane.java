@@ -8,22 +8,34 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanelFooter;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanelHeader;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
+import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdType;
+import ge.edu.tsu.hrs.control_panel.service.common.HRSPathService;
+import ge.edu.tsu.hrs.control_panel.service.common.HRSPathServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingService;
+import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingServiceImpl;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
 import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.Tooltip;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.DirectoryChooser;
 import javafx.stage.FileChooser;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 import java.util.Arrays;
 
 public class CleanImagePane extends VBox {
@@ -32,13 +44,31 @@ public class CleanImagePane extends VBox {
 
     public static final double TOP_PANE_PART = 0.65;
 
+    private final ImageProcessingService imageProcessingService = new ImageProcessingServiceImpl();
+
+    private final HRSPathService hrsPathService = new HRSPathServiceImpl();
+
     private TCHComboBox blurringComboBox;
 
     private TCHComboBox thresholdComboBox;
 
     private TCHComboBox morphologicalComboBox;
 
+    private TCHButton convertButton;
+
     private HBox bottomHBox;
+
+    private BlurringPane blurringPane;
+
+    private ThresholdPane thresholdPane;
+
+    private MorphologicalPane morphologicalPane;
+
+    private ImageView srcImageView;
+
+    private ImageView resultImageView;
+
+    private String imageName;
 
     public CleanImagePane() {
         initMainPain();
@@ -51,26 +81,47 @@ public class CleanImagePane extends VBox {
     private HBox getTopPane() {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(5, 5, 0, 5));
-        ImageView srcImageView = new ImageView();
-        srcImageView.setImage(ImageFactory.getImage("no_image.png"));
+        srcImageView = new ImageView();
+        srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
         srcImageView.fitHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(TOP_PANE_PART).subtract(5));
         srcImageView.fitWidthProperty().bind(ControlPanel.getStage().widthProperty().subtract(MAIN_PARAMETERS_PANE_WIDTH).divide(2));
         srcImageView.setOnMouseEntered(event -> this.setCursor(Cursor.HAND));
         srcImageView.setOnMouseExited(event -> this.setCursor(Cursor.DEFAULT));
         srcImageView.setOnMouseClicked(event -> {
-            FileChooser fileChooser = new FileChooser();
-            fileChooser.setTitle(Messages.get("openSrcImage"));
-            File file = fileChooser.showOpenDialog(ControlPanel.getStage());
-            System.out.println(file.getAbsolutePath());
-            srcImageView.setImage(new Image(file.getAbsolutePath()));
+            try {
+                FileChooser fileChooser = new FileChooser();
+                fileChooser.setInitialDirectory(new File(hrsPathService.getPath(HRSPath.ORIGINAL_IMAGES_PATH)));
+                fileChooser.setTitle(Messages.get("openSrcImage"));
+                File file = fileChooser.showOpenDialog(ControlPanel.getStage());
+                srcImageView.setImage(new Image(file.toURI().toURL().toExternalForm()));
+                convertButton.setDisable(false);
+                imageName = file.getName();
+            } catch (Exception ex) {
+                srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
+                imageName = "";
+                System.out.println(ex.getMessage());
+            }
         });
-        ImageView resultImageView = new ImageView();
-        resultImageView.setImage(ImageFactory.getImage("no_image.png"));
+        resultImageView = new ImageView();
+        resultImageView.setImage(ImageFactory.getImage("no_photo.png"));
         resultImageView.fitHeightProperty().bind(ControlPanel.getStage().heightProperty().subtract(ControlPanelHeader.LOGO_HEIGHT).subtract(ControlPanelFooter.HEIGHT).multiply(TOP_PANE_PART).subtract(5));
         resultImageView.fitWidthProperty().bind(ControlPanel.getStage().widthProperty().subtract(MAIN_PARAMETERS_PANE_WIDTH).divide(2));
         hBox.getChildren().addAll(srcImageView, getMainParametersPane(), resultImageView);
-        srcImageView.setOnMouseEntered(event -> this.setCursor(Cursor.HAND));
-        srcImageView.setOnMouseExited(event -> this.setCursor(Cursor.DEFAULT));
+        resultImageView.setOnMouseEntered(event -> this.setCursor(Cursor.HAND));
+        resultImageView.setOnMouseExited(event -> this.setCursor(Cursor.DEFAULT));
+        resultImageView.setOnMouseClicked(event -> {
+            if (imageName != null && !imageName.isEmpty()) {
+                try {
+                    DirectoryChooser directoryChooser = new DirectoryChooser();
+                    directoryChooser.setInitialDirectory(new File(hrsPathService.getPath(HRSPath.CLEANED_IMAGES_PATH)));
+                    File directory = directoryChooser.showDialog(ControlPanel.getStage());
+                    BufferedImage resultImage = SwingFXUtils.fromFXImage(resultImageView.getImage(), null);
+                    ImageIO.write(resultImage, "png", new File(directory.getPath() + "/" + imageName));
+                } catch (IOException ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+        });
         return hBox;
     }
 
@@ -90,7 +141,17 @@ public class CleanImagePane extends VBox {
         TCHFieldLabel thresholdFieldLabel = new TCHFieldLabel(Messages.get("thresholdType"), thresholdComboBox);
         morphologicalComboBox = new TCHComboBox(Arrays.asList(MorphologicalType.values()));
         TCHFieldLabel morphologicalFieldLabel = new TCHFieldLabel(Messages.get("morphologicalType"), morphologicalComboBox);
-        TCHButton convertButton = new TCHButton(Messages.get("convert"));
+        convertButton = new TCHButton(Messages.get("convert"));
+        convertButton.setDisable(true);
+        convertButton.setOnAction(event -> {
+            BlurringParameters blurringParameters = blurringPane.getBlurringParameters();
+            ThresholdParameters thresholdParameters = thresholdPane.getThresholdParameters();
+            MorphologicalParameters morphologicalParameters = morphologicalPane.getMorphologicalParameters();
+            BufferedImage srcImage = SwingFXUtils.fromFXImage(srcImageView.getImage(), null);
+            BufferedImage bufferedImage = imageProcessingService.cleanImage(srcImage, blurringParameters, thresholdParameters, morphologicalParameters);
+            Image resultImage = SwingFXUtils.toFXImage(bufferedImage, null);
+            resultImageView.setImage(resultImage);
+        });
         mainParametersVBox.getChildren().addAll(convertGrayFieldLabel, blurringFieldLabel, thresholdFieldLabel, morphologicalFieldLabel, convertButton);
         return mainParametersVBox;
     }
@@ -103,26 +164,32 @@ public class CleanImagePane extends VBox {
         bottomHBox.setPadding(new Insets(5, 5, 0, 5));
         bottomHBox.setSpacing(20);
         scrollPane.setContent(bottomHBox);
+        blurringPane = new BlurringPane(BlurringType.valueOf(blurringComboBox.getValue().toString()));
+        thresholdPane = new ThresholdPane(ThresholdType.valueOf(thresholdComboBox.getValue().toString()));
+        morphologicalPane = new MorphologicalPane(MorphologicalType.valueOf(morphologicalComboBox.getValue().toString()));
         updatePanes();
         return scrollPane;
     }
 
     private void initListeners() {
         blurringComboBox.valueProperty().addListener((ov, t, t1) -> {
+            blurringPane = new BlurringPane(BlurringType.valueOf(blurringComboBox.getValue().toString()));
             updatePanes();
         });
         thresholdComboBox.valueProperty().addListener((ov, t, t1) -> {
+            thresholdPane = new ThresholdPane(ThresholdType.valueOf(thresholdComboBox.getValue().toString()));
             updatePanes();
         });
         morphologicalComboBox.valueProperty().addListener((ov, t, t1) -> {
+            morphologicalPane = new MorphologicalPane(MorphologicalType.valueOf(morphologicalComboBox.getValue().toString()));
             updatePanes();
         });
     }
 
     private void updatePanes() {
         bottomHBox.getChildren().clear();
-        bottomHBox.getChildren().add(new BlurringPane(BlurringType.valueOf(blurringComboBox.getValue().toString())));
-        bottomHBox.getChildren().add(new ThresholdPane(ThresholdType.valueOf(thresholdComboBox.getValue().toString())));
-        bottomHBox.getChildren().addAll(new MorphologicalPane(MorphologicalType.valueOf(morphologicalComboBox.getValue().toString())));
+        bottomHBox.getChildren().add(blurringPane);
+        bottomHBox.getChildren().add(thresholdPane);
+        bottomHBox.getChildren().addAll(morphologicalPane);
     }
 }

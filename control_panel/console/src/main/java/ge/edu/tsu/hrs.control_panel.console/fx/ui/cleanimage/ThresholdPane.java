@@ -39,6 +39,8 @@ public class ThresholdPane extends VBox {
 
     private FlowPane flowPane;
 
+    private ThresholdType thresholdType;
+
     public ThresholdPane(ThresholdType thresholdType) {
         flowPane = new FlowPane(Orientation.VERTICAL);
         flowPane.setHgap(2);
@@ -54,6 +56,7 @@ public class ThresholdPane extends VBox {
     }
 
     private void reloadPane(ThresholdType thresholdType) {
+        this.thresholdType = thresholdType;
         flowPane.getChildren().clear();
         this.getChildren().clear();
         titleLabel.setText(Messages.get("thresholdWith") + ": " + thresholdType.name());
@@ -113,7 +116,7 @@ public class ThresholdPane extends VBox {
         this.getChildren().addAll(titleLabel, flowPane);
     }
 
-    public ThresholdParameters getThresholdParameters(ThresholdType thresholdType) {
+    public ThresholdParameters getThresholdParameters() {
         ThresholdParameters parameters = null;
         try {
             parameters = new ThresholdParameters();
