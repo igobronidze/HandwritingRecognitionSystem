@@ -2,8 +2,8 @@ package ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.blurring;
 
 public class BlurParams implements BlurringParams {
 
-    //ksize - Gaussian kernel size. ksize.width and ksize.height can differ but they
-    // both must be positive and odd. Or, they can be zeroÃ¢Â€Â™s and then they are computed from sigma*.
+    // ksize - Gaussian kernel size. ksize.width and ksize.height can differ but they
+    // both must be positive and odd. Or, they can be zeros and then they are computed from sigma.
     private int kSizeWidth = 5;
 
     private int kSizeHeight = 5;

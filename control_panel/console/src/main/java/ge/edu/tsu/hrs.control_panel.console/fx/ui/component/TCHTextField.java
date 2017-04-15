@@ -8,6 +8,11 @@ public class TCHTextField extends TextField {
 		initComponent(size);
 	}
 
+	public TCHTextField(String text, TCHComponentSize size) {
+		initComponent(size);
+		this.setText(text);
+	}
+
 	private void initComponent(TCHComponentSize size) {
 		this.setStyle("-fx-font-family: sylfaen; -fx-font-size: 14px;");
 		switch (size) {

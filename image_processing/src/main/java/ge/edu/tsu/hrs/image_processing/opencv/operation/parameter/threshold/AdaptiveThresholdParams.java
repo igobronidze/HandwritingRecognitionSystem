@@ -7,10 +7,10 @@ public class AdaptiveThresholdParams implements ThresholdParams {
 	// maxValue – Non-zero value assigned to the pixels for which the condition is satisfied. See the details below.
 	private double maxValue = 255;
 
-	// adaptiveMethod – Adaptive thresholding algorithm to use, ADAPTIVE_THRESH_MEAN_C or ADAPTIVE_THRESH_GAUSSIAN_C .
+	// adaptiveMethod – Adaptive thresholding algorithm to use, ADAPTIVE_THRESH_MEAN_C=0 or ADAPTIVE_THRESH_GAUSSIAN_C=1.
 	private int adaptiveMethod = opencv_imgproc.ADAPTIVE_THRESH_GAUSSIAN_C;
 
-	// thresholdType – Thresholding type that must be either THRESH_BINARY or THRESH_BINARY_INV .
+	// thresholdType – Thresholding type that must be either THRESH_BINARY=0 or THRESH_BINARY_INV=1.
 	private int thresholdType = opencv_imgproc.THRESH_BINARY;
 
 	// blockSize – Size of a pixel neighborhood that is used to calculate a threshold value for the pixel: 3, 5, 7, and so on.

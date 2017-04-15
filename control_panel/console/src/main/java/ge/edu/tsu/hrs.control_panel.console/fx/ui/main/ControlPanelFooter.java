@@ -6,7 +6,7 @@ import javafx.scene.layout.BorderPane;
 
 public class ControlPanelFooter extends BorderPane {
 
-    private final int height = 25;
+    public static final int HEIGHT = 25;
 
     private Label leftLabel;
 
@@ -27,7 +27,7 @@ public class ControlPanelFooter extends BorderPane {
     }
 
     private void initUI() {
-        this.setHeight(height);
+        this.setHeight(HEIGHT);
         this.setStyle("-fx-background-color: #EBE6E5");
         this.setLeft(leftLabel);
         this.setRight(rightLabel);

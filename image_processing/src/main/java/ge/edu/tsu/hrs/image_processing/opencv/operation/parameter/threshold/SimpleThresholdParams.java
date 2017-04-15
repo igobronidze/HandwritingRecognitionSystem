@@ -4,15 +4,13 @@ import org.bytedeco.javacpp.opencv_imgproc;
 
 public class SimpleThresholdParams implements ThresholdParams {
 
-	// thresh – threshold value.
-	// თუ არ ვცდები მასზე ნაკლები იქცევა თეთრად, მეტი შავად(თეთრი და შავი მაგალითისთვის)
+	// thresh – threshold value. თუ არ ვცდები მასზე ნაკლები იქცევა თეთრად, მეტი შავად(თეთრი და შავი მაგალითისთვის)
 	private double thresh = 127;
 
 	// maxval – maximum value to use with the THRESH_BINARY and THRESH_BINARY_INV thresholding types.
 	private double maxValue = 255;
 
-	// type – thresholding type (see the details below).
-	// [THRESH_BINARY, THRESH_BINARY_INV, THRESH_TRUNC, THRESH_TOZERO, THRESH_TOZERO_INV]
+	// type – thresholding type (see the details below). [THRESH_BINARY=0, THRESH_BINARY_INV=1, THRESH_TRUNC=2, THRESH_TOZERO=3, THRESH_TOZERO_INV=4]
 	private int type = opencv_imgproc.THRESH_BINARY;
 
 	public double getThresh() {

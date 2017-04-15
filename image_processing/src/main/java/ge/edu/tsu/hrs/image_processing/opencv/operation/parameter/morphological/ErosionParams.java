@@ -23,6 +23,7 @@ public class ErosionParams {
                 break;
             case 2 :
                 erosion_type = opencv_imgproc.MORPH_ELLIPSE;
+                break;
         }
         element = opencv_imgproc.getStructuringElement(erosion_type, new opencv_core.Size(2 * erosion_size + 1, 2 * erosion_size + 1), new opencv_core.Point(erosion_size, erosion_size));
     }
@@ -45,9 +46,5 @@ public class ErosionParams {
 
     public opencv_core.Mat getElement() {
         return element;
-    }
-
-    public void setElement(opencv_core.Mat element) {
-        this.element = element;
     }
 }

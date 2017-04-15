@@ -14,12 +14,15 @@ import javafx.stage.Stage;
 
 public class ControlPanel extends Application {
 
+    private static Stage stage;
+
     private static BorderPane root;
 
     private static SystemPageType currPage;
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        stage = primaryStage;
         primaryStage.setTitle(Messages.get("controlPanel"));
         root = new BorderPane();
 
@@ -63,5 +66,9 @@ public class ControlPanel extends Application {
         root.setTop(new ControlPanelHeader(text));
         root.setBottom(new ControlPanelFooter());
         currPage = systemPageType;
+    }
+
+    public static Stage getStage() {
+        return stage;
     }
 }

@@ -13,9 +13,9 @@ import javafx.scene.layout.HBox;
 
 public class ControlPanelHeader extends BorderPane {
 
-    private final int logoHeight = 120;
+    public static final int LOGO_HEIGHT = 120;
 
-    private final int logoWidth = 200;
+    private static final int LOGO_WIDTH = 200;
 
     private ImageView logoImageView;
 
@@ -29,7 +29,7 @@ public class ControlPanelHeader extends BorderPane {
     }
 
     private void initUI() {
-        this.setHeight(logoHeight);
+        this.setHeight(LOGO_HEIGHT);
         this.setStyle("-fx-background-color: #EBE6E5");
         this.setLeft(logoImageView);
         this.setCenter(mainLabel);
@@ -45,8 +45,8 @@ public class ControlPanelHeader extends BorderPane {
             ControlPanel.initComponents(SystemPageType.ADMIN_DASHBOARD);
         });
         logoImageView.setImage(logo);
-        logoImageView.setFitWidth(logoWidth);
-        logoImageView.setFitHeight(logoHeight);
+        logoImageView.setFitWidth(LOGO_WIDTH);
+        logoImageView.setFitHeight(LOGO_HEIGHT);
 
         mainLabel = new Label(text);
         mainLabel.setStyle("-fx-font-family: sylfaen; -fx-font-size: 28px;");
@@ -78,7 +78,7 @@ public class ControlPanelHeader extends BorderPane {
         localLogos.setAlignment(Pos.TOP_RIGHT);
         localLogos.setSpacing(5);
         localLogos.setPadding(new Insets(5, 5, 5, 5));
-        localLogos.setPrefWidth(logoWidth);
+        localLogos.setPrefWidth(LOGO_WIDTH);
         localLogos.getChildren().addAll(geoImageView, engImageView);
     }
 }

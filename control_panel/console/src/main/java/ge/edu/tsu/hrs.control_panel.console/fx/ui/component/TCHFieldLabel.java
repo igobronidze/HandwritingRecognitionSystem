@@ -12,7 +12,7 @@ public class TCHFieldLabel extends VBox {
 	}
 
 	private void initComponent(String text, Control control) {
-		this.setSpacing(5);
+		this.setSpacing(3);
 		this.setAlignment(Pos.CENTER);
 		TCHLabel label = new TCHLabel(text + ":");
 		this.getChildren().addAll(label, control);

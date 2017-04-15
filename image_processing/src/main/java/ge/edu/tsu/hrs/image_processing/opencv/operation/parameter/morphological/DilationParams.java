@@ -23,6 +23,7 @@ public class DilationParams {
                 break;
             case 2 :
                 dilation_type = opencv_imgproc.MORPH_ELLIPSE;
+                break;
         }
         element = opencv_imgproc.getStructuringElement(dilation_type, new opencv_core.Size(2 * dilation_size + 1, 2 * dilation_size + 1), new opencv_core.Point(dilation_size, dilation_size));
     }
@@ -45,9 +46,5 @@ public class DilationParams {
 
     public opencv_core.Mat getElement() {
         return element;
-    }
-
-    public void setElement(opencv_core.Mat element) {
-        this.element = element;
     }
 }

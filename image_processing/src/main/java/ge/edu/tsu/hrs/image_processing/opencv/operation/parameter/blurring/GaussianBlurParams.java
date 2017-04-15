@@ -5,7 +5,7 @@ import org.bytedeco.javacpp.opencv_core;
 public class GaussianBlurParams implements BlurringParams {
 
     // ksize - Gaussian kernel size. ksize.width and ksize.height can differ but they
-    // both must be positive and odd. Or, they can be zeroÃ¢Â€Â™s and then they are computed from sigma*.
+    // both must be positive and odd. Or, they can be zeros and then they are computed from sigma.
     private int kSizeWidth = 5;
 
     private int kSizeHeight = 5;
