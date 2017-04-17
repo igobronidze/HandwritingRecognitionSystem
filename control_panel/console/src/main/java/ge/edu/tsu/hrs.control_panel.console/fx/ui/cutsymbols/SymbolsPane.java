@@ -58,7 +58,9 @@ public class SymbolsPane extends FlowPane {
             directoryChooser.setTitle(Messages.get("resultDirectory"));
             directoryChooser.setInitialDirectory(new File(hrsPathService.getPath(HRSPath.CUT_SYMBOLS_PATH)));
             File directory = directoryChooser.showDialog(ControlPanel.getStage());
-            imageProcessingService.saveCutSymbols(images, symbols, directory.getAbsolutePath());
+            if (directory != null) {
+                imageProcessingService.saveCutSymbols(images, symbols, directory.getAbsolutePath());
+            }
         });
         this.getChildren().add(saveButton);
     }

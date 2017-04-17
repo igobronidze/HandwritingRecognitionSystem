@@ -11,10 +11,7 @@ import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingServi
 import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingServiceImpl;
 import ge.edu.tsu.hrs.control_panel.service.systemparameter.SystemParameterService;
 import ge.edu.tsu.hrs.control_panel.service.systemparameter.SystemParameterServiceImpl;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.embed.swing.SwingFXUtils;
-import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -25,13 +22,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.control.ToggleGroup;
 import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;

@@ -12,7 +12,6 @@ public class NoiseRemover {
 
 	public static opencv_core.Mat applyNoiseRemoval(opencv_core.Mat srcMat, BlurringParams blurringParams, int iteration) {
 		opencv_core.Mat resultMat = new opencv_core.Mat();
-//		opencv_imgproc.cvtColor(srcMat, srcMat, opencv_imgproc.CV_BGR2GRAY);
 		if (blurringParams instanceof BlurParams) {
 			BlurParams blurParams = (BlurParams) blurringParams;
 			if (iteration > 0) {
@@ -45,7 +44,9 @@ public class NoiseRemover {
 				opencv_imgproc.bilateralFilter(srcMat, resultMat, bilateralFilterParams.getDiameter(), bilateralFilterParams.getSigmaColor(), bilateralFilterParams.getSigmaSpace());
 			}
 			for (int i = 1; i < iteration; i++) {
-				opencv_imgproc.bilateralFilter(resultMat, resultMat, bilateralFilterParams.getDiameter(), bilateralFilterParams.getSigmaColor(), bilateralFilterParams.getSigmaSpace());
+				opencv_core.Mat mat = new opencv_core.Mat();
+				opencv_imgproc.bilateralFilter(resultMat, mat, bilateralFilterParams.getDiameter(), bilateralFilterParams.getSigmaColor(), bilateralFilterParams.getSigmaSpace());
+				resultMat = mat;
 			}
 		}
 		return resultMat;

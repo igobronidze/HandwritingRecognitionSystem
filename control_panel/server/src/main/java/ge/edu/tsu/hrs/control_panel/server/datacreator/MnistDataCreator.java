@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.image_processing.datacreator;
+package ge.edu.tsu.hrs.control_panel.server.datacreator;
 
 import ge.edu.tsu.hrs.image_processing.opencv.operation.BinaryConverter;
 import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.SimpleThresholdParams;

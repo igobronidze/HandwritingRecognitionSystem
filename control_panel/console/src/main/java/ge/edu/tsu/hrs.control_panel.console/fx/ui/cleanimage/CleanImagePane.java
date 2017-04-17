@@ -116,8 +116,10 @@ public class CleanImagePane extends VBox {
                     directoryChooser.setTitle(Messages.get("resultDirectory"));
                     directoryChooser.setInitialDirectory(new File(hrsPathService.getPath(HRSPath.CLEANED_IMAGES_PATH)));
                     File directory = directoryChooser.showDialog(ControlPanel.getStage());
-                    BufferedImage resultImage = SwingFXUtils.fromFXImage(resultImageView.getImage(), null);
-                    ImageIO.write(resultImage, "png", new File(directory.getPath() + "/" + imageName));
+                    if (directory != null) {
+                        BufferedImage resultImage = SwingFXUtils.fromFXImage(resultImageView.getImage(), null);
+                        ImageIO.write(resultImage, "png", new File(directory.getPath() + "/" + imageName));
+                    }
                 } catch (IOException ex) {
                     System.out.println(ex.getMessage());
                 }

@@ -75,10 +75,14 @@ public class ImageProcessingProcessor {
             int nextId = 1;
             for (File f : directory.listFiles()) {
                 if (f.isFile()) {
-                    String fileNameWithoutExtension = f.getName().replaceFirst("[.][^.]+$", "");
-                    String id = fileNameWithoutExtension.split("_")[1];
-                    if (Integer.parseInt(id) >= nextId) {
-                        nextId = Integer.parseInt(id) + 1;
+                    try {
+                        String fileNameWithoutExtension = f.getName().replaceFirst("[.][^.]+$", "");
+                        String id = fileNameWithoutExtension.split("_")[0];
+                        if (Integer.parseInt(id) >= nextId) {
+                            nextId = Integer.parseInt(id) + 1;
+                        }
+                    } catch (NumberFormatException ex) {
+                        System.out.println(ex.getMessage());
                     }
                 }
             }

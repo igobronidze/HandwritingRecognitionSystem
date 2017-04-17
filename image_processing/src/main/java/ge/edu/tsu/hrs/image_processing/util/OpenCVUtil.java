@@ -24,13 +24,13 @@ public class OpenCVUtil {
         return opencv_imgcodecs.cvLoadImage(absPath);
     }
 
-    public static opencv_core.IplImage bufferedImageToIplImage(BufferedImage bufImage) {
+    private static opencv_core.IplImage bufferedImageToIplImage(BufferedImage bufImage) {
         OpenCVFrameConverter.ToIplImage iplConverter = new OpenCVFrameConverter.ToIplImage();
         Java2DFrameConverter java2dConverter = new Java2DFrameConverter();
         return iplConverter.convert(java2dConverter.convert(bufImage));
     }
 
-    public static BufferedImage iplImageToBufferedImage(opencv_core.IplImage src) {
+    private static BufferedImage iplImageToBufferedImage(opencv_core.IplImage src) {
         OpenCVFrameConverter.ToIplImage grabberConverter = new OpenCVFrameConverter.ToIplImage();
         Java2DFrameConverter paintConverter = new Java2DFrameConverter();
         Frame frame = grabberConverter.convert(src);
