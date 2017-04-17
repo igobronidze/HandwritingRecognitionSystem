@@ -49,7 +49,7 @@ public class ThresholdPane extends VBox {
         reloadPane(thresholdType);
         this.setPadding(new Insets(5, 5, 5, 5));
         this.setSpacing(10);
-        this.setStyle("-fx-border-color: green; -fx-background-radius: 2px; -fx-background-size: 1px;");
+        this.setStyle("-fx-border-color: green; -fx-border-radius: 10px; -fx-border-size: 1px;");
         this.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(1 - CleanImagePane.TOP_PANE_PART));
     }
 

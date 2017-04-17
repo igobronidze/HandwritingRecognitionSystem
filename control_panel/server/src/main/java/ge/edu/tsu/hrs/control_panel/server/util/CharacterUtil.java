@@ -1,6 +1,6 @@
 package ge.edu.tsu.hrs.control_panel.server.util;
 
-public class CharUtil {
+public class CharacterUtil {
 
     public static String getCharValueForFileName(char c) {
         String s;

@@ -21,11 +21,11 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
         return imageProcessingProcessor.getCutSymbols(srcImage, parameters);
     }
 
-    public String processTextForImage(String text, boolean doubleQuoteAsTwoChar) {
+    public List<String> processTextForImage(String text, boolean doubleQuoteAsTwoChar) {
         return imageProcessingProcessor.processTextForImage(text, doubleQuoteAsTwoChar);
     }
 
-    public void saveCutSymbols(List<BufferedImage> images, String text, String directoryPath) {
+    public void saveCutSymbols(List<BufferedImage> images, List<String> text, String directoryPath) {
         imageProcessingProcessor.saveCutSymbols(images, text, directoryPath);
     }
 }

@@ -11,8 +11,15 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
+import ge.edu.tsu.hrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathService;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingService;
+import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.systemparameter.SystemParameterService;
+import ge.edu.tsu.hrs.control_panel.service.systemparameter.SystemParameterServiceImpl;
+import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
@@ -26,15 +33,19 @@ import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.math.BigDecimal;
 import java.util.Arrays;
+import java.util.List;
 
 public class CutSymbolsPane extends VBox {
 
     private final HRSPathService hrsPathService = new HRSPathServiceImpl();
 
-    private static final double TOP_PANE_PART = 0.80;
+    private final ImageProcessingService imageProcessingService = new ImageProcessingServiceImpl();
+
+    private static final double TOP_PANE_PART = 0.75;
 
     private static final double IMAGE_WIDTH_PART = 0.30;
 
@@ -43,6 +54,8 @@ public class CutSymbolsPane extends VBox {
     private TCHButton cutButton;
 
     private TCHTextArea textArea;
+
+    private SymbolsPane symbolsPane;
 
     public CutSymbolsPane() {
         this.setSpacing(8);
@@ -81,7 +94,13 @@ public class CutSymbolsPane extends VBox {
         textArea.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(TOP_PANE_PART).divide(2).subtract(5));
         textArea.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding().multiply(IMAGE_WIDTH_PART).subtract(5));
         leftVBox.getChildren().addAll(srcImageView, textArea);
-        hBox.getChildren().addAll(leftVBox);
+        symbolsPane = new SymbolsPane();
+        symbolsPane.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(TOP_PANE_PART).subtract(7));
+        symbolsPane.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding().multiply(1 - IMAGE_WIDTH_PART).subtract(15));
+        ScrollPane scrollPane = new ScrollPane();
+        scrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+        scrollPane.setContent(symbolsPane);
+        hBox.getChildren().addAll(leftVBox, scrollPane);
         return hBox;
     }
 
@@ -89,7 +108,7 @@ public class CutSymbolsPane extends VBox {
         ScrollPane scrollPane = new ScrollPane();
         VBox vBox = new VBox();
         vBox.setSpacing(5);
-        vBox.setStyle("-fx-border-color: green; -fx-background-radius: 2px; -fx-background-size: 1px;");
+        vBox.setStyle("-fx-border-color: green; -fx-border-radius: 10px; -fx-border-size: 1px;");
         vBox.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().multiply(1 - TOP_PANE_PART));
         TCHLabel titleLabel = new TCHLabel(Messages.get("cutSymbolsParams"));
         titleLabel.setStyle("-fx-font-family: sylfaen; -fx-font-size: 16px;");
@@ -109,8 +128,18 @@ public class CutSymbolsPane extends VBox {
         TCHFieldLabel useJoiningFunctionalFieldLabel = new TCHFieldLabel(Messages.get("useJoiningFunctional"), useJoiningFunctionalComboBox);
         TCHNumberTextField percentageOfSameForJoiningField = new TCHNumberTextField(new BigDecimal(35), TCHComponentSize.SMALL);
         TCHFieldLabel percentageOfSameForJoiningFieldLabel = new TCHFieldLabel(Messages.get("percentageOfSameForJoining"), percentageOfSameForJoiningField);
-        cutButton = new TCHButton("cut");
+        cutButton = new TCHButton(Messages.get("cut"));
         cutButton.setDisable(true);
+        cutButton.setOnAction(event -> {
+            TextCutterParameters parameters = new TextCutterParameters();
+            parameters.setUseJoiningFunctional(Boolean.valueOf(useJoiningFunctionalComboBox.getValue().toString()));
+            parameters.setDoubleQuoteAsTwoChar(Boolean.valueOf(doubleQuoteAsTwoCharComboBox.getValue().toString()));
+            parameters.setPercentageOfSameForJoining(percentageOfSameForJoiningField.getNumber().intValue());
+            parameters.setCheckedRGBMaxValue(checkedRGBMaxValueField.getNumber().intValue());
+            parameters.setCheckNeighborRGBMaxValue(checkNeighborRGBMaxValueField.getNumber().intValue());
+            List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters);
+            symbolsPane.initSymbols(images, imageProcessingService.processTextForImage(textArea.getText(), parameters.isDoubleQuoteAsTwoChar()), parameters);
+        });
         flowPane.getChildren().addAll(checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
                 percentageOfSameForJoiningFieldLabel, cutButton);
         vBox.getChildren().addAll(titleLabel, flowPane);

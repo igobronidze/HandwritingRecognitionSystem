@@ -12,7 +12,7 @@ import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizatio
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearByAreaNormalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.LinearResizeNormalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
-import ge.edu.tsu.hrs.control_panel.server.util.CharUtil;
+import ge.edu.tsu.hrs.control_panel.server.util.CharacterUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
@@ -66,7 +66,7 @@ public class NormalizedDataProcessor {
                         normalization = new LinearResizeNormalization();
                         break;
                 }
-                NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, getLetterFromFile(file));
+                NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, getSymbolFromFile(file));
                 normalizedDatum.add(normalizedData);
             } catch (IOException ex) {
                 System.out.println(ex.getMessage());
@@ -80,10 +80,10 @@ public class NormalizedDataProcessor {
         }
     }
 
-    private Character getLetterFromFile(File file) {
+    private Character getSymbolFromFile(File file) {
         String fileName = file.getName();
         String fileNameWithoutExtension = fileName.replaceFirst("[.][^.]+$", "");
         String text = fileNameWithoutExtension.split("_")[1];
-        return CharUtil.getCharFromFileName(text);
+        return CharacterUtil.getCharFromFileName(text);
     }
 }

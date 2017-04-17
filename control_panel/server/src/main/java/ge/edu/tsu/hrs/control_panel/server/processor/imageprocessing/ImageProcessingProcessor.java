@@ -4,7 +4,7 @@ import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdParameters;
-import ge.edu.tsu.hrs.control_panel.server.util.CharUtil;
+import ge.edu.tsu.hrs.control_panel.server.util.CharacterUtil;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.ContoursDetector;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutterParams;
 import ge.edu.tsu.hrs.image_processing.characterdetect.model.Contour;
@@ -48,27 +48,28 @@ public class ImageProcessingProcessor {
         for (TextRow textRow : textAdapter.getRows()) {
             for (Contour contour : textRow.getContours()) {
                 BufferedImage image = ContourUtil.getBufferedImageFromContour(contour);
-                images.add(resizeImage(image, false, parameters.getImageWidth(), parameters.getImageHeight()));
+                images.add(image);
             }
         }
         return images;
     }
 
-    public String processTextForImage(String text, boolean doubleQuoteAsTwoChar) {
-        StringBuilder result = new StringBuilder();
+    public List<String> processTextForImage(String text, boolean doubleQuoteAsTwoChar) {
+        List<String> symbols = new ArrayList<>();
         for (char c : text.toCharArray()) {
             if (!isUnnecessaryCharacter(c)) {
                 if (doubleQuoteAsTwoChar && c == '"') {
-                    result.append("''");
+                    symbols.add("'");
+                    symbols.add("'");
                 } else {
-                    result.append(c);
+                    symbols.add("" + c);
                 }
             }
         }
-        return result.toString();
+        return symbols;
     }
 
-    public void saveCutSymbols(List<BufferedImage> images, String text, String directoryPath) {
+    public void saveCutSymbols(List<BufferedImage> images, List<String> text, String directoryPath) {
         try {
             File directory = new File(directoryPath);
             int nextId = 1;
@@ -82,7 +83,8 @@ public class ImageProcessingProcessor {
                 }
             }
             for (int i = 0; i < images.size(); i++) {
-                ImageIO.write(images.get(i), "png", new File(directoryPath + "/" + (nextId) + "_" + CharUtil.getCharFromFileName("" + text.charAt(i)) + ".png"));
+                char c = text.get(i).length() > 0 ? text.get(i).charAt(0) : ' ';
+                ImageIO.write(images.get(i), "png", new File(directoryPath + "/" + (nextId) + "_" + CharacterUtil.getCharValueForFileName(c) + ".png"));
                 nextId++;
             }
         } catch (Exception ex) {
@@ -90,7 +92,7 @@ public class ImageProcessingProcessor {
         }
     }
 
-    public BufferedImage resizeImage(BufferedImage srcImage, boolean scaleResizing, double x, double y) {
+    public static BufferedImage resizeImage(BufferedImage srcImage, boolean scaleResizing, double x, double y) {
         opencv_core.Mat srcMat = OpenCVUtil.bufferedImageToMat(srcImage);
         ImageResizerParams params = new ImageResizerParams();
         if (scaleResizing) {

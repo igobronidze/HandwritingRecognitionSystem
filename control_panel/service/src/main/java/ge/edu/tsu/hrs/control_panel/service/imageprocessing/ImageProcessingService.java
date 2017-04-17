@@ -14,7 +14,7 @@ public interface ImageProcessingService {
 
     List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters);
 
-    String processTextForImage(String text, boolean doubleQuoteAsTwoChar);
+    List<String> processTextForImage(String text, boolean doubleQuoteAsTwoChar);
 
-    void saveCutSymbols(List<BufferedImage> images, String text, String directoryPath);
+    void saveCutSymbols(List<BufferedImage> images, List<String> text, String directoryPath);
 }
