@@ -10,6 +10,8 @@ public class TextCutterParams {
 
     private int percentageOfSameForJoining = 35;
 
+    private int percentageOfSamesForOneRow = 15;
+
     public int getCheckedRGBMaxValue() {
         return checkedRGBMaxValue;
     }
@@ -40,5 +42,13 @@ public class TextCutterParams {
 
     public void setPercentageOfSameForJoining(int percentageOfSameForJoining) {
         this.percentageOfSameForJoining = percentageOfSameForJoining;
+    }
+
+    public int getPercentageOfSamesForOneRow() {
+        return percentageOfSamesForOneRow;
+    }
+
+    public void setPercentageOfSamesForOneRow(int percentageOfSamesForOneRow) {
+        this.percentageOfSamesForOneRow = percentageOfSamesForOneRow;
     }
 }

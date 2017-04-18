@@ -125,6 +125,8 @@ public class CutSymbolsPane extends VBox {
         TCHFieldLabel useJoiningFunctionalFieldLabel = new TCHFieldLabel(Messages.get("useJoiningFunctional"), useJoiningFunctionalComboBox);
         TCHNumberTextField percentageOfSameForJoiningField = new TCHNumberTextField(new BigDecimal(75), TCHComponentSize.SMALL);
         TCHFieldLabel percentageOfSameForJoiningFieldLabel = new TCHFieldLabel(Messages.get("percentageOfSameForJoining"), percentageOfSameForJoiningField);
+        TCHNumberTextField percentageOfSamesForOneRowField = new TCHNumberTextField(new BigDecimal(25), TCHComponentSize.SMALL);
+        TCHFieldLabel percentageOfSamesForOneRowFieldLabel = new TCHFieldLabel(Messages.get("percentageOfSamesForOneRow"), percentageOfSamesForOneRowField);
         cutButton = new TCHButton(Messages.get("cut"));
         cutButton.setDisable(true);
         cutButton.setOnAction(event -> {
@@ -134,11 +136,12 @@ public class CutSymbolsPane extends VBox {
             parameters.setPercentageOfSameForJoining(percentageOfSameForJoiningField.getNumber().intValue());
             parameters.setCheckedRGBMaxValue(checkedRGBMaxValueField.getNumber().intValue());
             parameters.setCheckNeighborRGBMaxValue(checkNeighborRGBMaxValueField.getNumber().intValue());
+            parameters.setPercentageOfSamesForOneRow(percentageOfSamesForOneRowField.getNumber().intValue());
             List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters);
             symbolsPane.initSymbols(images, imageProcessingService.processTextForImage(textArea.getText(), parameters.isDoubleQuoteAsTwoChar()), parameters);
         });
         flowPane.getChildren().addAll(checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
-                percentageOfSameForJoiningFieldLabel, cutButton);
+                percentageOfSameForJoiningFieldLabel, percentageOfSamesForOneRowFieldLabel, cutButton);
         vBox.getChildren().addAll(titleLabel, flowPane);
         scrollPane.setContent(vBox);
         return scrollPane;

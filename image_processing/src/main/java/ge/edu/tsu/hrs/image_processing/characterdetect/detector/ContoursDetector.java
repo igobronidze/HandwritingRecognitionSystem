@@ -65,7 +65,7 @@ public class ContoursDetector {
                 queue.addAll(getConnectedPoints(curr.getX(), curr.getY(), params));
             }
         }
-        if (isInSameTextRow(lastTextRow, contour)) {
+        if (isInSameTextRow(lastTextRow, contour, params.getPercentageOfSamesForOneRow())) {
             ElementsAddUtil.addContourAndUpdate(lastTextRow, contour);
         } else {
             if (params.isUseJoiningFunctional()) {
@@ -103,13 +103,13 @@ public class ContoursDetector {
     }
 
     private static boolean isUnitedContours(Contour contour1, Contour contour2, int numberOfSameForJoining) {
-        int samePixels = contour1.getRightPoint() - contour2.getLeftPoint() + 1;
+        int samePixels = Math.min(contour1.getRightPoint(), contour2.getRightPoint()) - Math.max(contour1.getLeftPoint(), contour2.getLeftPoint()) + 1;
         return samePixels > 0 && ((float) samePixels / (contour1.getRightPoint() - contour1.getLeftPoint() + 1) * 100 >= numberOfSameForJoining ||
                 (float) samePixels / (contour2.getRightPoint() - contour2.getLeftPoint() + 1) * 100 >= numberOfSameForJoining);
     }
 
-    private static boolean isInSameTextRow(TextRow textRow, Contour contour) {
-        return textRow.getContours().size() == 0 || textRow.getBottomPoint() >= contour.getTopPoint();
+    private static boolean isInSameTextRow(TextRow textRow, Contour contour, int percentage) {
+        return textRow.getContours().size() == 0 || (float)(contour.getBottomPoint() - contour.getTopPoint() + 1) * percentage / 100 <= (textRow.getBottomPoint() - contour.getTopPoint() + 1);
     }
 
     private static List<Point> getConnectedPoints(short i, short j, TextCutterParams params) {

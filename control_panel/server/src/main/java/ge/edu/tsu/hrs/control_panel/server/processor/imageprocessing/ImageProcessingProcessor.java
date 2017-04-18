@@ -42,6 +42,7 @@ public class ImageProcessingProcessor {
         textCutterParams.setCheckedRGBMaxValue(parameters.getCheckedRGBMaxValue());
         textCutterParams.setCheckNeighborRGBMaxValue(parameters.getCheckNeighborRGBMaxValue());
         textCutterParams.setPercentageOfSameForJoining(parameters.getPercentageOfSameForJoining());
+        textCutterParams.setPercentageOfSamesForOneRow(parameters.getPercentageOfSamesForOneRow());
         textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
         TextAdapter textAdapter = ContoursDetector.detectContours(srcImage, textCutterParams);
         List<BufferedImage> images = new ArrayList<>();

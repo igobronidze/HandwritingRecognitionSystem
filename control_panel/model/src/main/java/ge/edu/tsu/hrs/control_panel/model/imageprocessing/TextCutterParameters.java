@@ -12,6 +12,8 @@ public class TextCutterParameters {
 
     private boolean useJoiningFunctional;
 
+    private int percentageOfSamesForOneRow;
+
     public int getCheckedRGBMaxValue() {
         return checkedRGBMaxValue;
     }
@@ -50,5 +52,13 @@ public class TextCutterParameters {
 
     public void setDoubleQuoteAsTwoChar(boolean doubleQuoteAsTwoChar) {
         this.doubleQuoteAsTwoChar = doubleQuoteAsTwoChar;
+    }
+
+    public int getPercentageOfSamesForOneRow() {
+        return percentageOfSamesForOneRow;
+    }
+
+    public void setPercentageOfSamesForOneRow(int percentageOfSamesForOneRow) {
+        this.percentageOfSamesForOneRow = percentageOfSamesForOneRow;
     }
 }
