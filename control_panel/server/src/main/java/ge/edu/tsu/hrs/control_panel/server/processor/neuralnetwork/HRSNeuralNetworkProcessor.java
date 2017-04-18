@@ -79,6 +79,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			int width = groupedNormalizedData.getWidth();
 			int height = groupedNormalizedData.getHeight();
 			CharSequence charSequence = networkInfo.getCharSequence();
+			CharSequenceInitializer.initializeCharSequence(charSequence);
 			List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 			List<Integer> layers = new ArrayList<>();
 			layers.add(width * height);
