@@ -104,6 +104,7 @@ public class SymbolPane extends VBox {
         Button editButton = new Button("", editImage);
         editButton.setOnAction(event -> {
             Stage stage = new Stage();
+            stage.setTitle(Messages.get("edit"));
             stage.setWidth(480);
             stage.setHeight(430);
             Canvas canvas = new Canvas(300, 300);

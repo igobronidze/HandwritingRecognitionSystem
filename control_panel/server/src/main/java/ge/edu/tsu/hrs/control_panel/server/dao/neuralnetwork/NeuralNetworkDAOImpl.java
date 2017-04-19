@@ -42,4 +42,18 @@ public class NeuralNetworkDAOImpl implements NeuralNetworkDAO {
         }
         return null;
     }
+
+    @Override
+    public void deleteNeuralNetwork(int id) {
+        try {
+            String sql = "DELETE FROM neural_network WHERE id = ?";
+            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+            pstmt.setInt(1, id);
+            pstmt.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        } finally {
+            DatabaseUtil.closeConnection();
+        }
+    }
 }

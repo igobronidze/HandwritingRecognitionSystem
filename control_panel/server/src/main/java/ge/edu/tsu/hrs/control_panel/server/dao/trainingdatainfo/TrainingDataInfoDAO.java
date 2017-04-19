@@ -7,4 +7,6 @@ public interface TrainingDataInfoDAO {
 	void addTrainingDataInfo(TrainingDataInfo trainingDataInfo);
 
 	TrainingDataInfo getTrainingDataInfo(Integer id);
+
+	void deleteTrainingDataInfo(int id);
 }

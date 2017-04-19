@@ -1,33 +1,51 @@
 package ge.edu.tsu.hrs.control_panel.console.fx.ui.networkcontrol;
 
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHButton;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHCheckBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComboBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComponentSize;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHFieldLabel;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
+import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hrs.control_panel.model.network.TransferFunction;
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
+import ge.edu.tsu.hrs.control_panel.service.network.NetworkInfoService;
+import ge.edu.tsu.hrs.control_panel.service.network.NetworkInfoServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.network.NeuralNetworkUtilService;
+import ge.edu.tsu.hrs.control_panel.service.network.NeuralNetworkUtilServiceImpl;
 import ge.edu.tsu.hrs.control_panel.service.neuralnetwork.NeuralNetworkService;
 import ge.edu.tsu.hrs.control_panel.service.neuralnetwork.NeuralNetworkServiceImpl;
 import ge.edu.tsu.hrs.control_panel.service.normalizeddata.GroupedNormalizedDataService;
 import ge.edu.tsu.hrs.control_panel.service.normalizeddata.GroupedNormalizedDataServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.trainingdatainfo.TrainingDataInfoService;
+import ge.edu.tsu.hrs.control_panel.service.trainingdatainfo.TrainingDataInfoServiceImpl;
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.CheckBoxTableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
+import javafx.stage.Stage;
+import javafx.util.Callback;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -39,11 +57,17 @@ public class NetworkControlPane extends VBox {
 
     private final GroupedNormalizedDataService groupedNormalizedDataService = new GroupedNormalizedDataServiceImpl();
 
+    private final NetworkInfoService networkInfoService = new NetworkInfoServiceImpl();
+
+    private final TrainingDataInfoService trainingDataInfoService = new TrainingDataInfoServiceImpl();
+
     private NeuralNetworkService neuralNetworkService;
+
+    private NeuralNetworkUtilService neuralNetworkUtilService = new NeuralNetworkUtilServiceImpl();
 
     private final int BUTTONS_PANE_WIDTH = 120;
 
-    private final int NORMALIZATION_TABLE_HEIGHT = 180;
+    private final int NORMALIZATION_TABLE_HEIGHT = 280;
 
     private HBox parametersHBox;
 
@@ -79,6 +103,8 @@ public class NetworkControlPane extends VBox {
 
     private TableView<GroupedNormalizedDataProperty> normalizationTable;
 
+    private TableView<NetworkInfoProperty> networkInfoTable;
+
     public NetworkControlPane() {
         initUI();
         initMainParametersPane();
@@ -97,11 +123,86 @@ public class NetworkControlPane extends VBox {
         normalizationHBox.setSpacing(5);
         normalizationHBox.setPadding(new Insets(10));
         normalizationHBox.setStyle("-fx-border-color: green; -fx-border-radius: 25px; -fx-border-size: 1px;");
-        this.getChildren().addAll(parametersHBox, normalizationHBox);
+        networkInfoTable = new TableView<>();
+        this.getChildren().addAll(networkInfoTable, parametersHBox, normalizationHBox);
     }
 
     private void initNetworkGridPane() {
-
+        DoubleBinding doubleBinding = ControlPanel.getCenterWidthBinding().subtract(125).divide(6);
+        TableColumn<NetworkInfoProperty, Integer> idColumn = new TableColumn<>(Messages.get("id"));
+        idColumn.prefWidthProperty().bind(doubleBinding);
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        TableColumn<NetworkInfoProperty, Integer> trainingDurationColumn = new TableColumn<>(Messages.get("trainingDuration"));
+        trainingDurationColumn.prefWidthProperty().bind(doubleBinding);
+        trainingDurationColumn.setCellValueFactory(new PropertyValueFactory<>("trainingDuration"));
+        trainingDurationColumn.setStyle("-fx-text-alignment: center;");
+        TableColumn<NetworkInfoProperty, Integer> bestSquaredErrorColumn = new TableColumn<>(Messages.get("bestSquaredError"));
+        bestSquaredErrorColumn.prefWidthProperty().bind(doubleBinding);
+        bestSquaredErrorColumn.setCellValueFactory(new PropertyValueFactory<>("bestSquaredError"));
+        TableColumn<NetworkInfoProperty, Integer> bestPercentageOfIncorrectColumn = new TableColumn<>(Messages.get("bestPercentageOfIncorrect"));
+        bestPercentageOfIncorrectColumn.prefWidthProperty().bind(doubleBinding);
+        bestPercentageOfIncorrectColumn.setCellValueFactory(new PropertyValueFactory<>("bestPercentageOfIncorrect"));
+        TableColumn<NetworkInfoProperty, Integer> bestDiffBetweenAnsAndBestColumn = new TableColumn<>(Messages.get("bestDiffBetweenAnsAndBest"));
+        bestDiffBetweenAnsAndBestColumn.prefWidthProperty().bind(doubleBinding);
+        bestDiffBetweenAnsAndBestColumn.setCellValueFactory(new PropertyValueFactory<>("bestDiffBetweenAnsAndBest"));
+        TableColumn<NetworkInfoProperty, Integer> bestNormalizedGeneralErrorColumn = new TableColumn<>(Messages.get("bestNormalizedGeneralError"));
+        bestNormalizedGeneralErrorColumn.prefWidthProperty().bind(doubleBinding);
+        bestNormalizedGeneralErrorColumn.setCellValueFactory(new PropertyValueFactory<>("bestNormalizedGeneralError"));
+        TableColumn deleteColumn = new TableColumn<>("");
+        deleteColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<NetworkInfoProperty, Boolean>, ObservableValue<Boolean>>() {
+                    @Override
+                    public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<NetworkInfoProperty, Boolean> p) {
+                        return new SimpleBooleanProperty(p.getValue() != null);
+                    }
+                });
+        deleteColumn.setCellFactory(new Callback<TableColumn<NetworkInfoProperty, Boolean>, TableCell<NetworkInfoProperty, Boolean>>() {
+                    @Override
+                    public TableCell<NetworkInfoProperty, Boolean> call(TableColumn<NetworkInfoProperty, Boolean> p) {
+                        return new DeleteButtonCell();
+                    }
+                });
+        deleteColumn.setPrefWidth(48);
+        TableColumn testResultColumn = new TableColumn<>("");
+        testResultColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<NetworkInfoProperty, Boolean>, ObservableValue<Boolean>>() {
+            @Override
+            public ObservableValue<Boolean> call(TableColumn.CellDataFeatures<NetworkInfoProperty, Boolean> p) {
+                return new SimpleBooleanProperty(p.getValue() != null);
+            }
+        });
+        testResultColumn.setCellFactory(new Callback<TableColumn<NetworkInfoProperty, Boolean>, TableCell<NetworkInfoProperty, Boolean>>() {
+                    @Override
+                    public TableCell<NetworkInfoProperty, Boolean> call(TableColumn<NetworkInfoProperty, Boolean> p) {
+                        return new TestResultButtonCell();
+                    }
+                });
+        testResultColumn.setPrefWidth(48);
+        networkInfoTable.setStyle("-fx-font-family: sylfaen; -fx-text-alignment: center; -fx-font-size: 16px; -fx-font-weight: bold;");
+        networkInfoTable.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding());
+        networkInfoTable.getColumns().addAll(idColumn, trainingDurationColumn, bestSquaredErrorColumn, bestPercentageOfIncorrectColumn, bestDiffBetweenAnsAndBestColumn, bestNormalizedGeneralErrorColumn, deleteColumn, testResultColumn);
+        networkInfoTable.setRowFactory( tv -> {
+            TableRow<NetworkInfoProperty> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (!row.isEmpty()) {
+                    NetworkInfo networkInfo = row.getItem().getNetworkInfo();
+                    networkProcessorComboBox.setValue(networkInfo.getNetworkProcessorType().name());
+                    layersTextField.setText(getStringFromIntegerList(networkInfo.getHiddenLayer()));
+                    learningRateTextField.setText("" + networkInfo.getLearningRate());
+                    transferFunctionComboBox.setValue(networkInfo.getTransferFunction().name());
+                    charSequenceTextField.setText("" + networkInfo.getCharSequence().getCharactersRegex());
+                    maxIterationTextField.setText("" + networkInfo.getTrainingMaxIteration());
+                    dataPerIterationTextField.setText("" + networkInfo.getNumberOfTrainingDataInOneIteration());
+                    minErrorTextField.setText("" + networkInfo.getMinError());
+                    minBiasTextField.setText("" + networkInfo.getBiasMinValue());
+                    maxBiasTextField.setText("" + networkInfo.getBiasMaxValue());
+                    minWeightTextField.setText("" + networkInfo.getWeightMinValue());
+                    maxWeightTextField.setText("" + networkInfo.getWeightMaxValue());
+                    networkMetaInfoTextField.setText(networkInfo.getNetworkMetaInfo());
+                    descriptionTextField.setText(networkInfo.getDescription());
+                }
+            });
+            return row ;
+        });
+        loadNetworkInfo();
     }
 
     private void initNormalizationPane() {
@@ -134,7 +235,7 @@ public class NetworkControlPane extends VBox {
         nameColumn.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding().subtract(30 + 40 + 100 * 5 + 140 + 35 + BUTTONS_PANE_WIDTH));
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         normalizationTable = new TableView<>();
-        normalizationTable.setStyle("-fx-font-family: sylfaen; -fx-text-alignment: center; -fx-font-size: 15px;");
+        normalizationTable.setStyle("-fx-font-family: sylfaen; -fx-text-alignment: center; -fx-font-size: 14px;");
         normalizationTable.setPrefHeight(NORMALIZATION_TABLE_HEIGHT);
         normalizationTable.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding().subtract(BUTTONS_PANE_WIDTH));
         normalizationTable.getColumns().addAll(checkColumn, idColumn, widthColumn, heightColumn, minValueColumn, maxValueColumn, countColumn, normalizationTypeColumn, nameColumn);
@@ -205,7 +306,7 @@ public class NetworkControlPane extends VBox {
         networkProcessorComboBox = new TCHComboBox(Arrays.asList(NetworkProcessorType.values()));
         TCHFieldLabel networkProcessorFieldLabel = new TCHFieldLabel(Messages.get("networkProcessorType"), networkProcessorComboBox);
         flowPane.getChildren().add(networkProcessorFieldLabel);
-        layersTextField = new TCHTextField(TCHComponentSize.SMALL);
+        layersTextField = new TCHTextField(TCHComponentSize.MEDIUM);
         TCHFieldLabel layersFieldLabel = new TCHFieldLabel(Messages.get("hiddenLayers"), layersTextField);
         flowPane.getChildren().add(layersFieldLabel);
         learningRateTextField = new TCHTextField(TCHComponentSize.SMALL);
@@ -237,6 +338,16 @@ public class NetworkControlPane extends VBox {
         }
         ObservableList<GroupedNormalizedDataProperty> data = FXCollections.observableArrayList(groupedNormalizedDataPropertyList);
         normalizationTable.setItems(data);
+    }
+
+    private void loadNetworkInfo() {
+        List<NetworkInfo> networkInfoList = networkInfoService.getNetworkInfoList(null);
+        List<NetworkInfoProperty> networkInfoProperties = new ArrayList<>();
+        for (NetworkInfo networkInfo : networkInfoList) {
+            networkInfoProperties.add(new NetworkInfoProperty(networkInfo));
+        }
+        ObservableList<NetworkInfoProperty> data = FXCollections.observableArrayList(networkInfoProperties);
+        networkInfoTable.setItems(data);
     }
 
     private void trainAction() {
@@ -294,5 +405,100 @@ public class NetworkControlPane extends VBox {
             result.add(Integer.parseInt(part.trim()));
         }
         return result;
+    }
+
+    private class DeleteButtonCell extends TableCell<NetworkInfoProperty, Boolean> {
+        final ImageView imageView;
+        final Button cellButton;
+        DeleteButtonCell(){
+            imageView = new ImageView(ImageFactory.getImage("delete_blue.png"));
+            imageView.setFitHeight(20);
+            imageView.setFitWidth(20);
+            cellButton = new Button("", imageView);
+            cellButton.setPrefHeight(25);
+            cellButton.setPrefWidth(25);
+            cellButton.setOnAction(t -> {
+                NetworkInfoProperty networkInfoProperty = DeleteButtonCell.this.getTableView().getItems().get(DeleteButtonCell.this.getIndex());
+                TCHLabel titleLabel = new TCHLabel(Messages.get("deleteNetworksWithId") + ":" + networkInfoProperty.getId());
+                titleLabel.setPadding(new Insets(0, 0, 10, 55));
+                TCHCheckBox deleteNetworkInfoCheckBox = new TCHCheckBox(Messages.get("deleteNetworkInfo"));
+                deleteNetworkInfoCheckBox.setSelected(true);
+                TCHCheckBox deleteTrainingInfoCheckBox = new TCHCheckBox(Messages.get("deleteTrainingInfo"));
+                deleteTrainingInfoCheckBox.setSelected(true);
+                TCHCheckBox deleteFromDatabaseCheckBox = new TCHCheckBox(Messages.get("deleteNetworkFromDatabase"));
+                deleteFromDatabaseCheckBox.setSelected(true);
+                TCHCheckBox deleteFromFileSystemCheckBox = new TCHCheckBox(Messages.get("deleteNetworkFromFileSystem"));
+                deleteFromFileSystemCheckBox.setSelected(true);
+                TCHCheckBox deleteChildNetworkCheckBox = new TCHCheckBox(Messages.get("deleteChildNetworks"));
+                deleteChildNetworkCheckBox.setSelected(true);
+                VBox vBox = new VBox(10);
+                vBox.setPadding(new Insets(20, 30, 20, 35));
+                vBox.getChildren().addAll(titleLabel, deleteNetworkInfoCheckBox, deleteTrainingInfoCheckBox, deleteFromDatabaseCheckBox, deleteFromFileSystemCheckBox, deleteChildNetworkCheckBox);
+                HBox hBox = new HBox(15);
+                TCHButton closeButton = new TCHButton(Messages.get("close"));
+                TCHButton deleteButton = new TCHButton(Messages.get("delete"));
+                hBox.getChildren().addAll(closeButton, deleteButton);
+                hBox.setPadding(new Insets(15, 0, 0, 0));
+                hBox.setAlignment(Pos.CENTER);
+                vBox.getChildren().add(hBox);
+                Stage stage = new Stage();
+                stage.setScene(new Scene(vBox, 320, 270));
+                stage.setResizable(false);
+                stage.setTitle(Messages.get("delete"));
+                closeButton.setOnAction(event -> {
+                    stage.close();
+                });
+                deleteButton.setOnAction(event -> {
+                    int id = networkInfoProperty.getId();
+                    if (deleteNetworkInfoCheckBox.isSelected()) {
+                        networkInfoService.deleteNetworkInfo(id);
+                    }
+                    if (deleteTrainingInfoCheckBox.isSelected()) {
+                        trainingDataInfoService.deleteTrainingDataInfo(id);
+                    }
+                    if (deleteFromDatabaseCheckBox.isSelected()) {
+                        neuralNetworkUtilService.deleteNeuralNetwork(id);
+                    }
+                    if (deleteFromFileSystemCheckBox.isSelected()) {
+                        neuralNetworkUtilService.deleteNetworkFromFile(id);
+                    }
+                    if (deleteChildNetworkCheckBox.isSelected()) {
+                        neuralNetworkUtilService.deleteChildNetworks(id);
+                    }
+                    stage.close();
+                });
+                stage.showAndWait();
+			});
+        }
+        @Override
+        protected void updateItem(Boolean t, boolean empty) {
+            super.updateItem(t, empty);
+            if(!empty){
+                setGraphic(cellButton);
+            }
+        }
+    }
+
+    private class TestResultButtonCell extends TableCell<NetworkInfoProperty, Boolean> {
+        final ImageView imageView;
+        final Button cellButton;
+        TestResultButtonCell(){
+            imageView = new ImageView(ImageFactory.getImage("test_result.png"));
+            imageView.setFitHeight(20);
+            imageView.setFitWidth(20);
+            cellButton = new Button("", imageView);
+            cellButton.setPrefHeight(25);
+            cellButton.setPrefWidth(25);
+            cellButton.setOnAction(t -> {
+                NetworkInfoProperty networkInfoProperty = TestResultButtonCell.this.getTableView().getItems().get(TestResultButtonCell.this.getIndex());
+            });
+        }
+        @Override
+        protected void updateItem(Boolean t, boolean empty) {
+            super.updateItem(t, empty);
+            if(!empty){
+                setGraphic(cellButton);
+            }
+        }
     }
 }

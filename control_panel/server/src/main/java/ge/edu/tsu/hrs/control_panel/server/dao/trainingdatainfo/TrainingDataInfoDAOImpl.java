@@ -61,4 +61,18 @@ public class TrainingDataInfoDAOImpl implements TrainingDataInfoDAO {
 		}
 		return null;
 	}
+
+	@Override
+	public void deleteTrainingDataInfo(int id) {
+		try {
+			String sql = "DELETE FROM training_data_info WHERE id=?";
+			pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+			pstmt.setInt(1, id);
+			pstmt.executeUpdate();
+		} catch (SQLException ex) {
+			System.out.println(ex.getMessage());
+		} finally {
+			DatabaseUtil.closeConnection();
+		}
+	}
 }

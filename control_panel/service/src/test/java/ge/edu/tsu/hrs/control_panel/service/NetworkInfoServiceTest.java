@@ -1,8 +1,8 @@
 package ge.edu.tsu.hrs.control_panel.service;
 
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
-import ge.edu.tsu.hrs.control_panel.service.networkinfo.NetworkInfoService;
-import ge.edu.tsu.hrs.control_panel.service.networkinfo.NetworkInfoServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.network.NetworkInfoService;
+import ge.edu.tsu.hrs.control_panel.service.network.NetworkInfoServiceImpl;
 import org.junit.Ignore;
 import org.junit.Test;
 

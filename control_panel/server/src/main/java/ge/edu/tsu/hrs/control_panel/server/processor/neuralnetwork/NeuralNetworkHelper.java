@@ -11,6 +11,7 @@ import ge.edu.tsu.hrs.neural_network.neural.network.NeuralNetwork;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.ObjectInput;
 import java.io.ObjectInputStream;
@@ -109,6 +110,16 @@ public class NeuralNetworkHelper {
             return neuralNetwork;
         }
         return null;
+    }
+
+    public static boolean deleteNetworkFromFile(int id) {
+        File file = new File(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet");
+        return file.isFile() && file.delete();
+    }
+
+    public static boolean deleteChildNetworks(int id) {
+        File file = new File(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + "/");
+        return file.isDirectory() && file.delete();
     }
 
     private static void saveNetworkInFileSystem(int id, NeuralNetwork neuralNetwork) {

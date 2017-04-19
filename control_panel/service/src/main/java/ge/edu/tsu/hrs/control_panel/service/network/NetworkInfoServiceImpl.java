@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.control_panel.service.networkinfo;
+package ge.edu.tsu.hrs.control_panel.service.network;
 
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;

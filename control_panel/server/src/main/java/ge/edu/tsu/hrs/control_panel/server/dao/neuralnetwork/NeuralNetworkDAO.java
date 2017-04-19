@@ -5,4 +5,6 @@ public interface NeuralNetworkDAO {
     void addNeuralNetwork(int id, byte[] data);
 
     byte[] getNeuralNetworkData(int id);
+
+    void deleteNeuralNetwork(int id);
 }
