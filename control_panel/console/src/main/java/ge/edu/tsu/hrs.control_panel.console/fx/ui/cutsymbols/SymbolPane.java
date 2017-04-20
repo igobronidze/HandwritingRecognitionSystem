@@ -96,6 +96,11 @@ public class SymbolPane extends VBox {
         textField.setStyle("-fx-font-family: sylfaen; -fx-font-size: 12px;");
         textField.setPrefWidth(30);
         textField.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (symbolsPane.getSymbols().size() <= index) {
+                for (int i = symbolsPane.getSymbols().size(); i <= index; i++) {
+                    symbolsPane.getSymbols().add("");
+                }
+            }
             symbolsPane.getSymbols().set(index, newValue);
         });
         ImageView editImage = new ImageView(ImageFactory.getImage("edit.png"));

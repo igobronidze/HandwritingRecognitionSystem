@@ -409,7 +409,7 @@ public class NetworkControlPane extends VBox {
                 vBox.getChildren().addAll(titleLabel, extraIdFieldLabel, trainButton);
                 Stage stage = new Stage();
                 stage.setResizable(false);
-                stage.setTitle(Messages.get("train"));
+                stage.setTitle(Messages.get("test"));
                 stage.setScene(new Scene(vBox, 250, 160));
                 trainButton.setOnAction(event -> {
                     Thread thread = new Thread(null, () -> {
@@ -420,7 +420,9 @@ public class NetworkControlPane extends VBox {
                             extraId = 0;
                         }
                         try {
+                            neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.valueOf(networkProcessorComboBox.getValue().toString()));
                             neuralNetworkService.testNeural(getGroupedNormalizedDatum(), networkInfoProperty.getId(), extraId);
+                            loadNetworkInfo();
                         } catch (ControlPanelException ex) {
                             System.out.println(ex.getMessage());
                         }
@@ -548,6 +550,7 @@ public class NetworkControlPane extends VBox {
             cellButton.setPrefWidth(25);
             cellButton.setOnAction(t -> {
                 TableView<TestingInfoProperty> testingInfoTable = new TableView<>();
+                testingInfoTable.setStyle("-fx-font-family: sylfaen; -fx-text-alignment: center; -fx-font-size: 14; -fx-font-weight: bold;");
                 TableColumn<TestingInfoProperty, Integer> idColumn = new TableColumn<>(Messages.get("id"));
                 idColumn.setPrefWidth(40);
                 idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));

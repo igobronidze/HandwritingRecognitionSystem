@@ -118,8 +118,16 @@ public class NeuralNetworkHelper {
     }
 
     public static boolean deleteChildNetworks(int id) {
-        File file = new File(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + "/");
-        return file.isDirectory() && file.delete();
+        File file = new File(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id);
+        if (file.exists()) {
+            File[] files = file.listFiles();
+            if (null != files) {
+                for (int i = 0; i < files.length; i++) {
+                    files[i].delete();
+                }
+            }
+        }
+        return file.exists() && file.delete();
     }
 
     private static void saveNetworkInFileSystem(int id, NeuralNetwork neuralNetwork) {

@@ -59,7 +59,7 @@ public class ImageProcessingProcessor {
         List<String> symbols = new ArrayList<>();
         for (char c : text.toCharArray()) {
             if (!isUnnecessaryCharacter(c)) {
-                if (doubleQuoteAsTwoChar && c == '"') {
+                if (doubleQuoteAsTwoChar && (c == '"' || c == '“' || c == '”')) {
                     symbols.add("'");
                     symbols.add("'");
                 } else {
