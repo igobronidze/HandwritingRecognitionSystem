@@ -13,6 +13,8 @@ import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkProcessorType;
+import ge.edu.tsu.hrs.control_panel.model.network.NetworkTrainingStatus;
+import ge.edu.tsu.hrs.control_panel.model.network.TestingInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.TransferFunction;
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hrs.control_panel.service.network.NetworkInfoService;
@@ -179,6 +181,7 @@ public class NetworkControlPane extends VBox {
         networkInfoTable.setStyle("-fx-font-family: sylfaen; -fx-text-alignment: center; -fx-font-size: 16px; -fx-font-weight: bold;");
         networkInfoTable.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding());
         networkInfoTable.getColumns().addAll(idColumn, trainingDurationColumn, bestSquaredErrorColumn, bestPercentageOfIncorrectColumn, bestDiffBetweenAnsAndBestColumn, bestNormalizedGeneralErrorColumn, deleteColumn, testResultColumn);
+        loadNetworkInfo();
         networkInfoTable.setRowFactory( tv -> {
             TableRow<NetworkInfoProperty> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
@@ -200,9 +203,17 @@ public class NetworkControlPane extends VBox {
                     descriptionTextField.setText(networkInfo.getDescription());
                 }
             });
+            if (row.getItem() != null) {
+                if (row.getItem().getNetworkInfo().getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+                    row.setStyle("-fx-background-color:green");
+                } else if (row.getItem().getNetworkInfo().getTrainingStatus() == NetworkTrainingStatus.FAILED) {
+                    row.setStyle("-fx-background-color:red");
+                } else {
+                    row.setStyle("-fx-background-color:yellow");
+                }
+            }
             return row ;
         });
-        loadNetworkInfo();
     }
 
     private void initNormalizationPane() {
@@ -422,15 +433,10 @@ public class NetworkControlPane extends VBox {
                 TCHLabel titleLabel = new TCHLabel(Messages.get("deleteNetworksWithId") + ":" + networkInfoProperty.getId());
                 titleLabel.setPadding(new Insets(0, 0, 10, 55));
                 TCHCheckBox deleteNetworkInfoCheckBox = new TCHCheckBox(Messages.get("deleteNetworkInfo"));
-                deleteNetworkInfoCheckBox.setSelected(true);
                 TCHCheckBox deleteTrainingInfoCheckBox = new TCHCheckBox(Messages.get("deleteTrainingInfo"));
-                deleteTrainingInfoCheckBox.setSelected(true);
                 TCHCheckBox deleteFromDatabaseCheckBox = new TCHCheckBox(Messages.get("deleteNetworkFromDatabase"));
-                deleteFromDatabaseCheckBox.setSelected(true);
                 TCHCheckBox deleteFromFileSystemCheckBox = new TCHCheckBox(Messages.get("deleteNetworkFromFileSystem"));
-                deleteFromFileSystemCheckBox.setSelected(true);
                 TCHCheckBox deleteChildNetworkCheckBox = new TCHCheckBox(Messages.get("deleteChildNetworks"));
-                deleteChildNetworkCheckBox.setSelected(true);
                 VBox vBox = new VBox(10);
                 vBox.setPadding(new Insets(20, 30, 20, 35));
                 vBox.getChildren().addAll(titleLabel, deleteNetworkInfoCheckBox, deleteTrainingInfoCheckBox, deleteFromDatabaseCheckBox, deleteFromFileSystemCheckBox, deleteChildNetworkCheckBox);
@@ -490,7 +496,53 @@ public class NetworkControlPane extends VBox {
             cellButton.setPrefHeight(25);
             cellButton.setPrefWidth(25);
             cellButton.setOnAction(t -> {
+                TableView<TestingInfoProperty> testingInfoTable = new TableView<>();
+                TableColumn<TestingInfoProperty, Integer> idColumn = new TableColumn<>(Messages.get("id"));
+                idColumn.setPrefWidth(40);
+                idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+                TableColumn<TestingInfoProperty, Integer> networkIdColumn = new TableColumn<>(Messages.get("networkId"));
+                networkIdColumn.setPrefWidth(60);
+                networkIdColumn.setCellValueFactory(new PropertyValueFactory<>("networkId"));
+                TableColumn<TestingInfoProperty, Integer> networkExtraIdColumn = new TableColumn<>(Messages.get("networkExtraId"));
+                networkExtraIdColumn.setPrefWidth(60);
+                networkExtraIdColumn.setCellValueFactory(new PropertyValueFactory<>("networkExtraId"));
+                TableColumn<TestingInfoProperty, Integer> groupedNormalizedDatumColumn = new TableColumn<>(Messages.get("groupedNormalizedDatum"));
+                groupedNormalizedDatumColumn.setPrefWidth(170);
+                groupedNormalizedDatumColumn.setCellValueFactory(new PropertyValueFactory<>("groupedNormalizedDatum"));
+                TableColumn<TestingInfoProperty, Integer> numberOfTestColumn = new TableColumn<>(Messages.get("numberOfTest"));
+                numberOfTestColumn.setPrefWidth(110);
+                numberOfTestColumn.setCellValueFactory(new PropertyValueFactory<>("numberOfTest"));
+                TableColumn<TestingInfoProperty, Integer> squaredErrorColumn = new TableColumn<>(Messages.get("squaredError"));
+                squaredErrorColumn.setPrefWidth(110);
+                squaredErrorColumn.setCellValueFactory(new PropertyValueFactory<>("squaredError"));
+                TableColumn<TestingInfoProperty, Integer> percentageOfIncorrectColumn = new TableColumn<>(Messages.get("percentageOfIncorrect"));
+                percentageOfIncorrectColumn.setPrefWidth(110);
+                percentageOfIncorrectColumn.setCellValueFactory(new PropertyValueFactory<>("percentageOfIncorrect"));
+                TableColumn<TestingInfoProperty, Integer> diffBetweenAnsAndBestColumn = new TableColumn<>(Messages.get("diffBetweenAnsAndBest"));
+                diffBetweenAnsAndBestColumn.setPrefWidth(110);
+                diffBetweenAnsAndBestColumn.setCellValueFactory(new PropertyValueFactory<>("diffBetweenAnsAndBest"));
+                TableColumn<TestingInfoProperty, Integer> normalizedGeneralErrorColumn = new TableColumn<>(Messages.get("normalizedGeneralError"));
+                normalizedGeneralErrorColumn.setPrefWidth(110);
+                normalizedGeneralErrorColumn.setCellValueFactory(new PropertyValueFactory<>("normalizedGeneralError"));
+                TableColumn<TestingInfoProperty, Integer> durationColumn = new TableColumn<>(Messages.get("duration"));
+                durationColumn.setPrefWidth(110);
+                durationColumn.setCellValueFactory(new PropertyValueFactory<>("duration"));
+                testingInfoTable.getColumns().addAll(idColumn, networkIdColumn, networkExtraIdColumn, groupedNormalizedDatumColumn, numberOfTestColumn, squaredErrorColumn, percentageOfIncorrectColumn,
+                        diffBetweenAnsAndBestColumn, normalizedGeneralErrorColumn, durationColumn);
+                testingInfoTable.setPadding(new Insets(15, 15, 15, 15));
                 NetworkInfoProperty networkInfoProperty = TestResultButtonCell.this.getTableView().getItems().get(TestResultButtonCell.this.getIndex());
+                List<TestingInfo> testingInfoList = networkInfoProperty.getNetworkInfo().getTestingInfoList();
+                List<TestingInfoProperty> testingInfoPropertyList = new ArrayList<>();
+                for (TestingInfo testingInfo : testingInfoList) {
+                    testingInfoPropertyList.add(new TestingInfoProperty(testingInfo));
+                }
+                ObservableList<TestingInfoProperty> data = FXCollections.observableArrayList(testingInfoPropertyList);
+                testingInfoTable.setItems(data);
+                Stage stage = new Stage();
+                stage.setTitle(Messages.get("testingInfo"));
+                stage.setScene(new Scene(testingInfoTable, 1010, 400));
+                stage.setResizable(false);
+                stage.showAndWait();
             });
         }
         @Override

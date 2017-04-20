@@ -1,6 +1,7 @@
 package ge.edu.tsu.hrs.control_panel.console.fx.ui.networkcontrol;
 
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
+import ge.edu.tsu.hrs.control_panel.model.network.NetworkTrainingStatus;
 import ge.edu.tsu.hrs.control_panel.model.network.TestingInfo;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
@@ -63,7 +64,11 @@ public class NetworkInfoProperty {
 	}
 
 	public long getTrainingDuration() {
-		return trainingDuration.get();
+		if (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+			return networkInfo.getCurrentIterations();
+		} else {
+			return trainingDuration.get();
+		}
 	}
 
 	public void setTrainingDuration(long trainingDuration) {
@@ -71,7 +76,11 @@ public class NetworkInfoProperty {
 	}
 
 	public float getBestSquaredError() {
-		return bestSquaredError.get();
+		if (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+			return networkInfo.getCurrentSquaredError();
+		} else {
+			return bestSquaredError.get();
+		}
 	}
 
 	public void setBestSquaredError(float bestSquaredError) {
