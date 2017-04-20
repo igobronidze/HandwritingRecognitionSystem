@@ -6,10 +6,12 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComboBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComponentSize;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHFieldLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHLabel;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHNumberTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
+import ge.edu.tsu.hrs.control_panel.model.exception.ControlPanelException;
 import ge.edu.tsu.hrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkProcessorType;
@@ -65,7 +67,7 @@ public class NetworkControlPane extends VBox {
 
     private NeuralNetworkService neuralNetworkService;
 
-    private NeuralNetworkUtilService neuralNetworkUtilService = new NeuralNetworkUtilServiceImpl();
+    private final NeuralNetworkUtilService neuralNetworkUtilService = new NeuralNetworkUtilServiceImpl();
 
     private final int BUTTONS_PANE_WIDTH = 120;
 
@@ -183,7 +185,19 @@ public class NetworkControlPane extends VBox {
         networkInfoTable.getColumns().addAll(idColumn, trainingDurationColumn, bestSquaredErrorColumn, bestPercentageOfIncorrectColumn, bestDiffBetweenAnsAndBestColumn, bestNormalizedGeneralErrorColumn, deleteColumn, testResultColumn);
         loadNetworkInfo();
         networkInfoTable.setRowFactory( tv -> {
-            TableRow<NetworkInfoProperty> row = new TableRow<>();
+            TableRow<NetworkInfoProperty> row = new TableRow<NetworkInfoProperty>(){
+                @Override
+                protected void updateItem(NetworkInfoProperty networkInfoProperty, boolean empty){
+                    super.updateItem(networkInfoProperty, empty);
+                    if (networkInfoProperty != null) {
+                        if (networkInfoProperty.getNetworkInfo().getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+                            this.setStyle("-fx-background-color:green");
+                        } else if (networkInfoProperty.getNetworkInfo().getTrainingStatus() == NetworkTrainingStatus.FAILED) {
+                            this.setStyle("-fx-background-color:red");
+                        }
+                    }
+                }
+            };
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
                     NetworkInfo networkInfo = row.getItem().getNetworkInfo();
@@ -203,15 +217,6 @@ public class NetworkControlPane extends VBox {
                     descriptionTextField.setText(networkInfo.getDescription());
                 }
             });
-            if (row.getItem() != null) {
-                if (row.getItem().getNetworkInfo().getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
-                    row.setStyle("-fx-background-color:green");
-                } else if (row.getItem().getNetworkInfo().getTrainingStatus() == NetworkTrainingStatus.FAILED) {
-                    row.setStyle("-fx-background-color:red");
-                } else {
-                    row.setStyle("-fx-background-color:yellow");
-                }
-            }
             return row ;
         });
     }
@@ -272,9 +277,15 @@ public class NetworkControlPane extends VBox {
         vBox.setAlignment(Pos.CENTER);
         TCHButton trainButton = new TCHButton(Messages.get("train"));
         trainButton.setOnAction(event -> {
-            trainAction();
+            Thread thread = new Thread(null, () -> {
+                trainAction();
+            });
+            thread.start();
         });
         TCHButton testButton = new TCHButton(Messages.get("test"));
+        testButton.setOnAction(event -> {
+            testAction();
+        });
         vBox.getChildren().addAll(trainButton, testButton);
         normalizationHBox.getChildren().add(vBox);
     }
@@ -385,6 +396,45 @@ public class NetworkControlPane extends VBox {
         }
     }
 
+    private void testAction() {
+        try {
+            NetworkInfoProperty networkInfoProperty = networkInfoTable.getSelectionModel().getSelectedItem();
+            if (networkInfoProperty != null) {
+                TCHNumberTextField extraIdTextField = new TCHNumberTextField(TCHComponentSize.SMALL);
+                TCHFieldLabel extraIdFieldLabel = new TCHFieldLabel(Messages.get("networkExtraId"), extraIdTextField);
+                TCHButton trainButton = new TCHButton(Messages.get("train"));
+                VBox vBox = new VBox(15);
+                vBox.setAlignment(Pos.CENTER);
+                TCHLabel titleLabel = new TCHLabel(Messages.get("testWithNetworkId") + ": " + networkInfoProperty.getId());
+                vBox.getChildren().addAll(titleLabel, extraIdFieldLabel, trainButton);
+                Stage stage = new Stage();
+                stage.setResizable(false);
+                stage.setTitle(Messages.get("train"));
+                stage.setScene(new Scene(vBox, 250, 160));
+                trainButton.setOnAction(event -> {
+                    Thread thread = new Thread(null, () -> {
+                        int extraId;
+                        try {
+                            extraId = extraIdTextField.getNumber().intValue();
+                        } catch (Exception ex) {
+                            extraId = 0;
+                        }
+                        try {
+                            neuralNetworkService.testNeural(getGroupedNormalizedDatum(), networkInfoProperty.getId(), extraId);
+                        } catch (ControlPanelException ex) {
+                            System.out.println(ex.getMessage());
+                        }
+                    });
+                    thread.start();
+                    stage.close();
+                });
+                stage.showAndWait();
+            }
+        } catch (Exception ex) {
+            System.out.println(ex.getMessage());
+        }
+    }
+
     private List<GroupedNormalizedData> getGroupedNormalizedDatum() {
         List<GroupedNormalizedData> groupedNormalizedDatum = new ArrayList<>();
         for (GroupedNormalizedDataProperty groupedNormalizedDataProperty : normalizationTable.getItems()) {
@@ -471,6 +521,7 @@ public class NetworkControlPane extends VBox {
                     if (deleteChildNetworkCheckBox.isSelected()) {
                         neuralNetworkUtilService.deleteChildNetworks(id);
                     }
+                    loadNetworkInfo();
                     stage.close();
                 });
                 stage.showAndWait();

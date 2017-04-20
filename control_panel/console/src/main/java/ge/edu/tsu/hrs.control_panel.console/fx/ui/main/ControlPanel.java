@@ -7,6 +7,8 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.networkcontrol.NetworkControlP
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.normalization.NormalizationPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.sysparams.SystemParametersPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
+import ge.edu.tsu.hrs.control_panel.service.startup.StartUpService;
+import ge.edu.tsu.hrs.control_panel.service.startup.StartUpServiceImpl;
 import javafx.application.Application;
 import javafx.beans.binding.DoubleBinding;
 import javafx.scene.Scene;
@@ -14,6 +16,8 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
 public class ControlPanel extends Application {
+
+    private StartUpService startUpService = new StartUpServiceImpl();
 
     private static Stage stage;
 
@@ -27,6 +31,7 @@ public class ControlPanel extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        startUpService.process();
         stage = primaryStage;
         primaryStage.setTitle(Messages.get("controlPanel"));
         root = new BorderPane();

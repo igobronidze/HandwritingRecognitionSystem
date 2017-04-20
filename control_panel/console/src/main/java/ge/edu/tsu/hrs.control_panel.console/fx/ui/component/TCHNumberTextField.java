@@ -45,8 +45,6 @@ public class TCHNumberTextField extends TCHTextField {
     }
 
     private void initHandlers() {
-
-        // try to parse when focus is lost or RETURN is hit
         setOnAction(new EventHandler<ActionEvent>() {
 
             @Override
@@ -54,7 +52,6 @@ public class TCHNumberTextField extends TCHTextField {
                 parseAndFormatInput();
             }
         });
-
         focusedProperty().addListener(new ChangeListener<Boolean>() {
 
             @Override
@@ -64,7 +61,6 @@ public class TCHNumberTextField extends TCHTextField {
                 }
             }
         });
-
         numberProperty().addListener(new ChangeListener<BigDecimal>() {
 
             @Override
