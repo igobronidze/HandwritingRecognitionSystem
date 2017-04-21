@@ -495,7 +495,7 @@ public class NetworkControlPane extends VBox {
                 HBox hBox = new HBox(15);
                 TCHButton closeButton = new TCHButton(Messages.get("close"));
                 TCHButton deleteButton = new TCHButton(Messages.get("delete"));
-                hBox.getChildren().addAll(closeButton, deleteButton);
+                hBox.getChildren().addAll(deleteButton, closeButton);
                 hBox.setPadding(new Insets(15, 0, 0, 0));
                 hBox.setAlignment(Pos.CENTER);
                 vBox.getChildren().add(hBox);

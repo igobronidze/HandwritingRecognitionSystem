@@ -45,10 +45,11 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
     @Override
     public void editSystemParameter(SystemParameter systemParameter) throws ControlPanelException {
         try {
-            String sql = "UPDATE system_parameter SET value = ? WHERE key = ?";
+            String sql = "UPDATE system_parameter SET value = ?, type = ? WHERE key = ?";
             pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
             pstmt.setString(1, systemParameter.getValue());
-            pstmt.setString(2, systemParameter.getKey());
+            pstmt.setString(2, systemParameter.getType().name());
+            pstmt.setString(3, systemParameter.getKey());
             int count = pstmt.executeUpdate();
             if (count < 1) {
                 throw new ControlPanelException("keyNotExist");
