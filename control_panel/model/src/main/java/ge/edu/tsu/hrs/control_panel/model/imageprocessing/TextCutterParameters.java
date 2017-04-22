@@ -14,6 +14,8 @@ public class TextCutterParameters {
 
     private int percentageOfSamesForOneRow;
 
+    private int noiseArea;
+
     public int getCheckedRGBMaxValue() {
         return checkedRGBMaxValue;
     }
@@ -60,5 +62,13 @@ public class TextCutterParameters {
 
     public void setPercentageOfSamesForOneRow(int percentageOfSamesForOneRow) {
         this.percentageOfSamesForOneRow = percentageOfSamesForOneRow;
+    }
+
+    public int getNoiseArea() {
+        return noiseArea;
+    }
+
+    public void setNoiseArea(int noiseArea) {
+        this.noiseArea = noiseArea;
     }
 }

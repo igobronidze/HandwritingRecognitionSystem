@@ -43,7 +43,7 @@ public class CutSymbolsSplitter {
             Collections.shuffle(files);
         }
         for (List<File> files : charToFilesMap.values()) {
-            int k = files.size() / 10;
+            int k = files.size() / 6;
             for (int i = 0; i < k; i++) {
                 try {
                     Files.copy(files.get(i).toPath(), new File(testFile.getPath() + "/" + files.get(i).getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);

@@ -65,6 +65,10 @@ public class ContoursDetector {
                 queue.addAll(getConnectedPoints(curr.getX(), curr.getY(), params));
             }
         }
+        int area = (contour.getBottomPoint() - contour.getTopPoint() + 1) * (contour.getRightPoint() - contour.getLeftPoint() + 1);
+        if (area < params.getNoiseArea()) {
+            return lastTextRow;
+        }
         if (isInSameTextRow(lastTextRow, contour, params.getPercentageOfSamesForOneRow())) {
             ElementsAddUtil.addContourAndUpdate(lastTextRow, contour);
         } else {
@@ -93,10 +97,11 @@ public class ContoursDetector {
                 Contour contour = contours.poll();
                 if (isUnitedContours(lContour, contour, params.getPercentageOfSameForJoining())) {
                     lContour.setUnitedContour(contour);
+                    // may update contour's edges, but it's occur some problems
                 } else {
                     newContours.add(contour);
-                    lContour = contour;
                 }
+                lContour = contour;
             }
         }
         textRow.setContours(newContours);

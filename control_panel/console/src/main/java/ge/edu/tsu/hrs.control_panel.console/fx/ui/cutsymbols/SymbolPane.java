@@ -1,6 +1,7 @@
 package ge.edu.tsu.hrs.control_panel.console.fx.ui.cutsymbols;
 
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHButton;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHCheckBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHRadioButton;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
@@ -111,7 +112,7 @@ public class SymbolPane extends VBox {
             Stage stage = new Stage();
             stage.setTitle(Messages.get("edit"));
             stage.setWidth(480);
-            stage.setHeight(430);
+            stage.setHeight(480);
             Canvas canvas = new Canvas(300, 300);
             AnchorPane pane = new AnchorPane();
             pane.setPrefWidth(300 + 10);
@@ -195,6 +196,9 @@ public class SymbolPane extends VBox {
             parametersVBox.getChildren().addAll(colorsVBox, sizeVBox);
             mainHBox.getChildren().addAll(pane, parametersVBox);
 
+            TCHCheckBox userJoiningFunctionalCheckBox = new TCHCheckBox(Messages.get("useJoiningFunctional"));
+            userJoiningFunctionalCheckBox.setSelected(parameters.isUseJoiningFunctional());
+
             TCHButton closeButton = new TCHButton(Messages.get("close"));
             closeButton.setOnAction(event1 -> {
                 stage.close();
@@ -203,6 +207,7 @@ public class SymbolPane extends VBox {
             saveButton.setOnAction(event1 -> {
                 WritableImage writableImage = new WritableImage(300, 300);
                 canvas.snapshot(null, writableImage);
+                parameters.setUseJoiningFunctional(userJoiningFunctionalCheckBox.isSelected());
                 List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(writableImage, null), parameters);
                 List<String> symbols = new ArrayList<>();
                 for (int i = 0; i < images.size(); i++) {
@@ -222,12 +227,12 @@ public class SymbolPane extends VBox {
             HBox buttonsHBox = new HBox();
             buttonsHBox.setSpacing(15);
             buttonsHBox.setAlignment(Pos.CENTER);
-            buttonsHBox.getChildren().addAll(closeButton, saveButton);
+            buttonsHBox.getChildren().addAll(saveButton, closeButton);
             VBox vBox = new VBox();
             vBox.setAlignment(Pos.TOP_CENTER);
             vBox.setPadding(new Insets(15, 15, 15, 15));
             vBox.setSpacing(20);
-            vBox.getChildren().addAll(mainHBox, buttonsHBox);
+            vBox.getChildren().addAll(mainHBox, userJoiningFunctionalCheckBox, buttonsHBox);
             stage.setScene(new Scene(vBox));
             stage.showAndWait();
         });

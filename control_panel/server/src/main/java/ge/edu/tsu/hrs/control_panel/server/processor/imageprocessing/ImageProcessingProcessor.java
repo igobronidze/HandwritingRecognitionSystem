@@ -44,6 +44,7 @@ public class ImageProcessingProcessor {
         textCutterParams.setPercentageOfSameForJoining(parameters.getPercentageOfSameForJoining());
         textCutterParams.setPercentageOfSamesForOneRow(parameters.getPercentageOfSamesForOneRow());
         textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
+        textCutterParams.setNoiseArea(parameters.getNoiseArea());
         TextAdapter textAdapter = ContoursDetector.detectContours(srcImage, textCutterParams);
         List<BufferedImage> images = new ArrayList<>();
         for (TextRow textRow : textAdapter.getRows()) {

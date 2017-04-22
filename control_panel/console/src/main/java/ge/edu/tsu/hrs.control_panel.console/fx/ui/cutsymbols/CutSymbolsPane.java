@@ -127,6 +127,8 @@ public class CutSymbolsPane extends VBox {
         TCHFieldLabel percentageOfSameForJoiningFieldLabel = new TCHFieldLabel(Messages.get("percentageOfSameForJoining"), percentageOfSameForJoiningField);
         TCHNumberTextField percentageOfSamesForOneRowField = new TCHNumberTextField(new BigDecimal(25), TCHComponentSize.SMALL);
         TCHFieldLabel percentageOfSamesForOneRowFieldLabel = new TCHFieldLabel(Messages.get("percentageOfSamesForOneRow"), percentageOfSamesForOneRowField);
+        TCHNumberTextField noiseAreaField = new TCHNumberTextField(new BigDecimal(15), TCHComponentSize.SMALL);
+        TCHFieldLabel noiseAreaFieldLabel = new TCHFieldLabel(Messages.get("noiseArea"), noiseAreaField);
         cutButton = new TCHButton(Messages.get("cut"));
         cutButton.setDisable(true);
         cutButton.setOnAction(event -> {
@@ -137,11 +139,12 @@ public class CutSymbolsPane extends VBox {
             parameters.setCheckedRGBMaxValue(checkedRGBMaxValueField.getNumber().intValue());
             parameters.setCheckNeighborRGBMaxValue(checkNeighborRGBMaxValueField.getNumber().intValue());
             parameters.setPercentageOfSamesForOneRow(percentageOfSamesForOneRowField.getNumber().intValue());
+            parameters.setNoiseArea(noiseAreaField.getNumber().intValue());
             List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters);
             symbolsPane.initSymbols(images, imageProcessingService.processTextForImage(textArea.getText(), parameters.isDoubleQuoteAsTwoChar()), parameters);
         });
         flowPane.getChildren().addAll(checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
-                percentageOfSameForJoiningFieldLabel, percentageOfSamesForOneRowFieldLabel, cutButton);
+                percentageOfSameForJoiningFieldLabel, percentageOfSamesForOneRowFieldLabel, noiseAreaFieldLabel, cutButton);
         vBox.getChildren().addAll(titleLabel, flowPane);
         scrollPane.setContent(vBox);
         return scrollPane;
