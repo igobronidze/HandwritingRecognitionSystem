@@ -402,7 +402,7 @@ public class NetworkControlPane extends VBox {
             if (networkInfoProperty != null) {
                 TCHNumberTextField extraIdTextField = new TCHNumberTextField(TCHComponentSize.SMALL);
                 TCHFieldLabel extraIdFieldLabel = new TCHFieldLabel(Messages.get("networkExtraId"), extraIdTextField);
-                TCHButton trainButton = new TCHButton(Messages.get("train"));
+                TCHButton trainButton = new TCHButton(Messages.get("test"));
                 VBox vBox = new VBox(15);
                 vBox.setAlignment(Pos.CENTER);
                 TCHLabel titleLabel = new TCHLabel(Messages.get("testWithNetworkId") + ": " + networkInfoProperty.getId());

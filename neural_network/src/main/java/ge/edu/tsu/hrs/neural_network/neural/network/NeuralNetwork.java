@@ -149,9 +149,6 @@ public class NeuralNetwork implements Serializable {
                 TrainingData trainingData = trainingDataList.get(randomList.get(i));
                 Activation.activate(this, trainingData);
                 List<Float> outputActivation = getOutputActivation(trainingData);
-                for (Neuron neuron : outputNeurons) {
-                    outputActivation.add(neuron.getActivationValue());
-                }
                 error += TestResultUtil.getSquaredError(trainingData.getOutput(), outputActivation);
                 Backpropagation.backpropagation(this, trainingData);
             }
