@@ -99,7 +99,7 @@ public class CleanImagePane extends VBox {
                 srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
                 imageName = "";
                 convertButton.setDisable(true);
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
             }
         });
         resultImageView = new ImageView();
@@ -121,7 +121,7 @@ public class CleanImagePane extends VBox {
                         ImageIO.write(resultImage, "png", new File(directory.getPath() + "/" + imageName));
                     }
                 } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });

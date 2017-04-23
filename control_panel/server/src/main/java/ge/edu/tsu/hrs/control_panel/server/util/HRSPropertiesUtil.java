@@ -22,7 +22,7 @@ public class HRSPropertiesUtil {
 		try (FileInputStream in = new FileInputStream(hrsPropertyPath)) {
 			properties.load(in);
 		} catch (IOException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 }

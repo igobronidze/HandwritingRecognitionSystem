@@ -36,7 +36,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
             pstmt.setInt(9, testingInfo.getNetworkExtraId());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -72,7 +72,7 @@ public class TestingInfoDAOImpl implements TestingInfoDAO {
                 testingInfoList.add(testingInfo);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }

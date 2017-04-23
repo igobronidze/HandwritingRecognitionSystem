@@ -134,7 +134,7 @@ public class NeuralNetworkHelper {
         try {
             NeuralNetwork.save(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + ".nnet", neuralNetwork, false);
         } catch (NNException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -142,7 +142,7 @@ public class NeuralNetworkHelper {
         try {
             NeuralNetwork.save(path, neuralNetwork, false);
         } catch (NNException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -154,7 +154,7 @@ public class NeuralNetworkHelper {
             byte[] bytes = bos.toByteArray();
             neuralNetworkDAO.addNeuralNetwork(id, bytes);
         } catch (IOException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -166,7 +166,7 @@ public class NeuralNetworkHelper {
                 return NeuralNetwork.load(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + "/" + extraId + ".nnet");
             }
         } catch (NNException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }
@@ -175,7 +175,7 @@ public class NeuralNetworkHelper {
         try {
             return NeuralNetwork.load(path);
         } catch (NNException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }
@@ -190,7 +190,7 @@ public class NeuralNetworkHelper {
         try (ObjectInput in = new ObjectInputStream(bis)) {
             neuralNetwork = (NeuralNetwork) in.readObject();
         } catch (IOException | ClassCastException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return neuralNetwork;
     }

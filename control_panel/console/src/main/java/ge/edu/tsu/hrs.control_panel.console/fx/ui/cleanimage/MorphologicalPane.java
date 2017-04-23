@@ -103,7 +103,7 @@ public class MorphologicalPane extends VBox {
                         break;
             }
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return morphologicalParameters;
     }

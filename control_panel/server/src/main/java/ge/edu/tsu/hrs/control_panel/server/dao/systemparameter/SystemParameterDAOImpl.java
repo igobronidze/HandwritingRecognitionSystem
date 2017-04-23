@@ -36,7 +36,7 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
             pstmt.executeUpdate();
             CachedSystemParameter.editOrAddParameter(systemParameter);
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -56,7 +56,7 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
             }
             CachedSystemParameter.editOrAddParameter(systemParameter);
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -74,7 +74,7 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
             }
             CachedSystemParameter.deleteParameter(key);
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -102,7 +102,7 @@ public class SystemParameterDAOImpl implements SystemParameterDAO {
                 systemParameterList.add(systemParameter);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }

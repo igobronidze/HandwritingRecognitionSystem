@@ -57,7 +57,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             System.out.println("Inserted network info with id - " + id);
             return id;
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -99,7 +99,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 networkInfoList.add(networkInfo);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -118,7 +118,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -139,7 +139,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
                 result[3] = rs.getLong("training_duration");
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -157,7 +157,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setInt(4, id);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -173,7 +173,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setInt(3, id);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -189,7 +189,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             rs.next();
             return new CharSequence(rs.getString(1));
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -205,7 +205,7 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
             pstmt.setString(2, NetworkTrainingStatus.TRAINING.name());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }

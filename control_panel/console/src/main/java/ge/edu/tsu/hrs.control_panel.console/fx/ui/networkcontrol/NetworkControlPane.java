@@ -392,7 +392,7 @@ public class NetworkControlPane extends VBox {
             neuralNetworkService = new NeuralNetworkServiceImpl(networkInfo.getNetworkProcessorType());
             neuralNetworkService.trainNeural(networkInfo, getGroupedNormalizedDatum(), true);
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 
@@ -424,7 +424,7 @@ public class NetworkControlPane extends VBox {
                             neuralNetworkService.testNeural(getGroupedNormalizedDatum(), networkInfoProperty.getId(), extraId);
                             loadNetworkInfo();
                         } catch (ControlPanelException ex) {
-                            System.out.println(ex.getMessage());
+                            ex.printStackTrace();
                         }
                     });
                     thread.start();
@@ -433,7 +433,7 @@ public class NetworkControlPane extends VBox {
                 stage.showAndWait();
             }
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 

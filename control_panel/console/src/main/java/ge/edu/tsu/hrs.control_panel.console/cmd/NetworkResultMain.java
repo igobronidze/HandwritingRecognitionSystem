@@ -49,7 +49,7 @@ public class NetworkResultMain {
             try {
                 networkId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 continue;
             }
 
@@ -62,7 +62,7 @@ public class NetworkResultMain {
             try {
                 networkExtraId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 continue;
             }
 
@@ -96,7 +96,7 @@ public class NetworkResultMain {
                     System.out.println();
                 }
             } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 continue;
             }
 

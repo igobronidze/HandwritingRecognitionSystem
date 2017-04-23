@@ -37,7 +37,7 @@ public class NormalizedDataMain {
             try {
                 groupedNormalizedDataId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 continue;
             }
 

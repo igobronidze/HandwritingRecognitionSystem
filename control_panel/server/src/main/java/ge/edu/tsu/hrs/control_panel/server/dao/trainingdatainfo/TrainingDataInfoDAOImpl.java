@@ -29,7 +29,7 @@ public class TrainingDataInfoDAOImpl implements TrainingDataInfoDAO {
 			pstmt.executeUpdate();
 			System.out.println("Inserted training data info!");
 		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} finally {
 			DatabaseUtil.closeConnection();
 		}
@@ -55,7 +55,7 @@ public class TrainingDataInfoDAOImpl implements TrainingDataInfoDAO {
 				return trainingDataInfo;
 			}
 		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} finally {
 			DatabaseUtil.closeConnection();
 		}
@@ -70,7 +70,7 @@ public class TrainingDataInfoDAOImpl implements TrainingDataInfoDAO {
 			pstmt.setInt(1, id);
 			pstmt.executeUpdate();
 		} catch (SQLException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		} finally {
 			DatabaseUtil.closeConnection();
 		}

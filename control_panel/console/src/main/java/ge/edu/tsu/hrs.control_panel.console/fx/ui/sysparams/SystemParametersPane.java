@@ -139,7 +139,7 @@ public class SystemParametersPane extends HBox {
                     clearFields();
                     loadSystemParameters();
                 } catch (ControlPanelException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         });
@@ -172,7 +172,7 @@ public class SystemParametersPane extends HBox {
                     systemParameterService.deleteSystemParameter(systemParameterProperty.getKey());
                     loadSystemParameters();
                 } catch (ControlPanelException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             });
         }

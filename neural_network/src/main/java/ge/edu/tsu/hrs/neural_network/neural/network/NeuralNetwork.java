@@ -162,7 +162,7 @@ public class NeuralNetwork implements Serializable {
                 try {
                     save(trainingProgress.getTmpNetworksPath() + "/" + counter / trainingProgress.getSavePerIteration() + ".nnet", this, true);
                 } catch (NNException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         } while (counter < neuralNetworkParameter.getTrainingMaxIteration() && error > neuralNetworkParameter.getMinError());
@@ -209,7 +209,7 @@ public class NeuralNetwork implements Serializable {
                 try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
                     out.writeObject(neuralNetwork);
                 } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }, "Load network from file system thread", 2000000);
             thread.start();

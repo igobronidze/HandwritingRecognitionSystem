@@ -48,7 +48,7 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
                 return rs.getInt("max_id");
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -97,7 +97,7 @@ public class GroupedNormalizedDataDAOImpl implements GroupedNormalizedDataDAO {
                 groupedNormalizedDatum.add(groupedNormalizedData);
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }

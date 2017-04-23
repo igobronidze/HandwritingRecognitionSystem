@@ -84,7 +84,7 @@ public class ImageProcessingProcessor {
                             nextId = Integer.parseInt(id) + 1;
                         }
                     } catch (NumberFormatException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 }
             }
@@ -94,7 +94,7 @@ public class ImageProcessingProcessor {
                 nextId++;
             }
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
     }
 

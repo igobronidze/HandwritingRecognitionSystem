@@ -83,7 +83,7 @@ public class CutSymbolsPane extends VBox {
             } catch (Exception ex) {
                 srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
                 cutButton.setDisable(true);
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
             }
         });
         textArea = new TCHTextArea();

@@ -95,7 +95,7 @@ public class NeurophNeuralNetworkProcessor {
             networkResult.setCharSequence(charSequence);
             return networkResult;
         } catch (ControlPanelException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }

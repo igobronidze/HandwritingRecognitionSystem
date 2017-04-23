@@ -69,7 +69,7 @@ public class NormalizedDataProcessor {
                 NormalizedData normalizedData = normalization.getNormalizedDataFromImage(image, trainingDataInfo, getSymbolFromFile(file));
                 normalizedDatum.add(normalizedData);
             } catch (IOException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
             }
         } else {
             if (file.listFiles() != null) {

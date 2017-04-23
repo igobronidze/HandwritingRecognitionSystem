@@ -19,7 +19,7 @@ public class NeuralNetworkDAOImpl implements NeuralNetworkDAO {
             pstmt.setBytes(2, data);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -36,7 +36,7 @@ public class NeuralNetworkDAOImpl implements NeuralNetworkDAO {
                 return rs.getBytes("data");
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -51,7 +51,7 @@ public class NeuralNetworkDAOImpl implements NeuralNetworkDAO {
             pstmt.setInt(1, id);
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }

@@ -46,7 +46,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
             pstmt.setInt(2, groupedNormalizedData.getId());
             pstmt.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }
@@ -91,7 +91,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
                 }
             }
         } catch (SQLException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         } finally {
             DatabaseUtil.closeConnection();
         }

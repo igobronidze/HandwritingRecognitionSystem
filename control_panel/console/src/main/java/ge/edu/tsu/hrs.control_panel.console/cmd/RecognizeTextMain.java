@@ -49,7 +49,7 @@ public class RecognizeTextMain {
 			try {
 				networkId = Integer.parseInt(s);
 			} catch (NumberFormatException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 				continue;
 			}
 
@@ -62,7 +62,7 @@ public class RecognizeTextMain {
 			try {
 				networkExtraId = Integer.parseInt(s);
 			} catch (NumberFormatException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 				continue;
 			}
 
@@ -84,7 +84,7 @@ public class RecognizeTextMain {
 					System.out.println(recognitionInfo.getText());
 				}
 			} catch (IOException ex) {
-				System.out.println(ex.getMessage());
+				ex.printStackTrace();
 				continue;
 			}
 		}

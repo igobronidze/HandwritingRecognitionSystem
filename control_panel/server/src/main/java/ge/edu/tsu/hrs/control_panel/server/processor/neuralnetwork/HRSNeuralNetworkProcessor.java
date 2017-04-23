@@ -107,7 +107,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 						networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
 						Thread.sleep(systemParameterProcessor.getIntegerParameterValue(updatePerSeconds) * 1000);
 					} catch (InterruptedException ex) {
-						System.out.println(ex.getMessage());
+						ex.printStackTrace();
 					}
 				}
 			};
@@ -121,7 +121,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork, true, null);
 			System.out.println("Finished network training!");
 		} catch (NNException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 	}
 
@@ -160,7 +160,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			testingInfoDAO.addTestingInfo(testingInfo);
 			return testingInfo.getNormalizedGeneralError();
 		} catch (Exception ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 		System.out.println("Finished network testing!");
 		return -1;
@@ -185,7 +185,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			System.out.println("Finished get network result!");
 			return networkResult;
 		} catch (ControlPanelException ex) {
-			System.out.println(ex.getMessage());
+			ex.printStackTrace();
 		}
 		return null;
 	}

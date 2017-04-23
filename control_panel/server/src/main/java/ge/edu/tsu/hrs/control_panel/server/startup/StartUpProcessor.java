@@ -19,7 +19,7 @@ public class StartUpProcessor {
                     try {
                         method.invoke(new StartUpProcessor());
                     } catch (IllegalAccessException | InvocationTargetException ex) {
-                        System.out.println(ex.getMessage());
+                        ex.printStackTrace();
                     }
                 }
             }

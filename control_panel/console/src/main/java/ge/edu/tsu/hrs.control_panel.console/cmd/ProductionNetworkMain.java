@@ -26,7 +26,7 @@ public class ProductionNetworkMain {
             try {
                 networkId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 continue;
             }
 
@@ -39,7 +39,7 @@ public class ProductionNetworkMain {
             try {
                 networkExtraId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
                 continue;
             }
             System.out.println("პარამეტრების შევსება დასრულდა. გსურთ დაპროცესირება? (true/false)");

@@ -39,7 +39,7 @@ public class ProductionNetworkProcessor {
             CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
             serializeCharSequence(charSequence, systemParameterProcessor.getStringParameterValue(productionCharSequencePath));
         } catch (Exception ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
             System.out.println("can't update production network");
         }
     }
@@ -52,7 +52,7 @@ public class ProductionNetworkProcessor {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(systemParameterProcessor.getStringParameterValue(productionTrainingDataInfoPath)))) {
             return (TrainingDataInfo) in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }
@@ -61,7 +61,7 @@ public class ProductionNetworkProcessor {
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(systemParameterProcessor.getStringParameterValue(productionCharSequencePath)))){
             return (CharSequence) in.readObject();
         } catch (IOException | ClassNotFoundException ex) {
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
         }
         return null;
     }

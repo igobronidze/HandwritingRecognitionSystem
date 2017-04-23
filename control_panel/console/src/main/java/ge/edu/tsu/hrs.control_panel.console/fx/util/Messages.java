@@ -33,7 +33,7 @@ public class Messages {
                     properties.load(bufferedReader);
                     messages.put(langCode, properties);
                 } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
             return properties.getProperty(key, key);

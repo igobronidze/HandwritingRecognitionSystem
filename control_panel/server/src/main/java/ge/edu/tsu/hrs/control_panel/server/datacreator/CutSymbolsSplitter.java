@@ -36,7 +36,7 @@ public class CutSymbolsSplitter {
                 charToFilesMap.putIfAbsent(symbol, new ArrayList<>());
                 charToFilesMap.get(symbol).add(file);
             } catch (Exception ex) {
-                System.out.println(ex.getMessage());
+                ex.printStackTrace();
             }
         }
         for (List<File> files : charToFilesMap.values()) {
@@ -48,14 +48,14 @@ public class CutSymbolsSplitter {
                 try {
                     Files.copy(files.get(i).toPath(), new File(testFile.getPath() + "/" + files.get(i).getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
             for (int i = k; i < files.size(); i++) {
                 try {
                     Files.copy(files.get(i).toPath(), new File(trainFile.getPath() + "/" + files.get(i).getName()).toPath(), StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException ex) {
-                    System.out.println(ex.getMessage());
+                    ex.printStackTrace();
                 }
             }
         }

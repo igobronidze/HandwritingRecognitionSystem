@@ -53,7 +53,7 @@ public class CachedSystemParameter {
             }
         } catch (Exception ex) {
             cachedParameters = null;
-            System.out.println(ex.getMessage());
+            ex.printStackTrace();
             System.out.println("can't catch system parameters... all parameter value mast be default...");
         }
     }
