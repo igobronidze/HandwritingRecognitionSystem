@@ -21,6 +21,7 @@ import ge.edu.tsu.hrs.control_panel.server.dao.testinginfo.TestingInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.processor.common.HRSPathProcessor;
+import ge.edu.tsu.hrs.control_panel.server.processor.imageprocessing.ImageProcessingProcessor;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
 import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hrs.control_panel.server.util.CharSequenceInitializer;
@@ -30,6 +31,7 @@ import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutterParams
 import ge.edu.tsu.hrs.image_processing.characterdetect.model.Contour;
 import ge.edu.tsu.hrs.image_processing.characterdetect.model.TextAdapter;
 import ge.edu.tsu.hrs.image_processing.characterdetect.model.TextRow;
+import ge.edu.tsu.hrs.image_processing.characterdetect.util.ContourUtil;
 import ge.edu.tsu.hrs.image_processing.characterdetect.util.TextAdapterUtil;
 import ge.edu.tsu.hrs.neural_network.exception.NNException;
 import ge.edu.tsu.hrs.neural_network.neural.network.NeuralNetwork;
@@ -59,6 +61,8 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	private final ProductionNetworkProcessor productionNetworkProcessor = new ProductionNetworkProcessor();
 
 	private final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
+
+	private final ImageProcessingProcessor imageProcessingProcessor = new ImageProcessingProcessor();
 
 	private final Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
@@ -191,7 +195,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	}
 
 	@Override
-	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId, int networkExtraId) {
+	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId, int networkExtraId, boolean analyseMode) {
 		System.out.println("Start text recognizing");
 		List<RecognitionInfo> recognitionInfos = new ArrayList<>();
 		for (BufferedImage image : images) {
@@ -219,8 +223,22 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
 			recognitionInfo.setNetworkInfoGatheringDuration(new Date().getTime() - date.getTime());
 			date = new Date();
-			TextAdapter textAdapter = ContoursDetector.detectContours(image, new TextCutterParams());
+			BufferedImage cleanedImage = imageProcessingProcessor.cleanImage(image, null, null, null);
+			recognitionInfo.setCleanImageDuration(new Date().getTime() - date.getTime());
+			date = new Date();
+			TextAdapter textAdapter = ContoursDetector.detectContours(cleanedImage, new TextCutterParams());
 			recognitionInfo.setDetectContoursDuration(new Date().getTime() - date.getTime());
+			if (analyseMode) {
+				recognitionInfo.setCleanedImage(cleanedImage);
+				List<BufferedImage> symbolImages = new ArrayList<>();
+				for (TextRow textRow : textAdapter.getRows()) {
+					for (Contour contour : textRow.getContours()) {
+						symbolImages.add(ContourUtil.getBufferedImageFromContour(contour));
+					}
+				}
+				recognitionInfo.setCutSymbolImages(symbolImages);
+				recognitionInfo.setNetworkResults(new ArrayList<>());
+			}
 			long inputDataGatheringDuration = 0;
 			long activationDuration = 0;
 			long extraDuration = 0;
@@ -246,6 +264,13 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 					text.append(getAns(output, charSequence));
 					updateDoubleQuotes(text);
 					extraDuration += new Date().getTime() - date.getTime();
+					if (analyseMode) {
+						NetworkResult networkResult = new NetworkResult();
+						networkResult.setOutputActivation(output);
+						networkResult.setAnswer(getAns(output, charSequence));
+						networkResult.setCharSequence(charSequence);
+						recognitionInfo.getNetworkResults().add(networkResult);
+					}
 				}
 				text.append(System.lineSeparator());
 			}

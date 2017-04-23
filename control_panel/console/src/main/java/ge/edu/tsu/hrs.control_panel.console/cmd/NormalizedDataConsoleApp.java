@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Scanner;
 
-public class NormalizedDataMain {
+public class NormalizedDataConsoleApp {
 
     private static final NormalizedDataService normalizedDataService = new NormalizedDataServiceImpl();
 

@@ -111,14 +111,14 @@ public class SymbolPane extends VBox {
         editButton.setOnAction(event -> {
             Stage stage = new Stage();
             stage.setTitle(Messages.get("edit"));
-            stage.setWidth(480);
-            stage.setHeight(480);
-            Canvas canvas = new Canvas(300, 300);
+            stage.setWidth(380);
+            stage.setHeight(380);
+            Canvas canvas = new Canvas(200, 200);
             AnchorPane pane = new AnchorPane();
-            pane.setPrefWidth(300 + 10);
-            pane.setMaxWidth(300 + 10);
-            pane.setMaxHeight(300 + 10);
-            pane.setPrefHeight(300 + 10);
+            pane.setPrefWidth(200 + 10);
+            pane.setMaxWidth(200 + 10);
+            pane.setMaxHeight(200 + 10);
+            pane.setPrefHeight(200 + 10);
             pane.setStyle("-fx-border-color: green; -fx-border-style: solid; -fx-border-width: 6px; -fx-background-color: white");
             GraphicsContext gc = canvas.getGraphicsContext2D();
             gc.drawImage(SwingFXUtils.toFXImage(image, null), 0, 0,canvas.getWidth(), canvas.getHeight());
@@ -205,7 +205,7 @@ public class SymbolPane extends VBox {
             });
             TCHButton saveButton = new TCHButton(Messages.get("save"));
             saveButton.setOnAction(event1 -> {
-                WritableImage writableImage = new WritableImage(300, 300);
+                WritableImage writableImage = new WritableImage(200, 200);
                 canvas.snapshot(null, writableImage);
                 parameters.setUseJoiningFunctional(userJoiningFunctionalCheckBox.isSelected());
                 List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(writableImage, null), parameters);

@@ -17,5 +17,5 @@ public interface NeuralNetworkService {
 
     float testNeural(List<GroupedNormalizedData> groupedNormalizedDatum, int networkId, int networkExtraId) throws ControlPanelException;
 
-    List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId, int networkExtraId);
+    List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId, int networkExtraId, boolean analyseMode);
 }

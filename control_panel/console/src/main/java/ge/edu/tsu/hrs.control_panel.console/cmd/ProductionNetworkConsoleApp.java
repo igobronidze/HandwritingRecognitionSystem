@@ -5,7 +5,7 @@ import ge.edu.tsu.hrs.control_panel.service.productionnetwork.ProductionNetworkS
 
 import java.util.Scanner;
 
-public class ProductionNetworkMain {
+public class ProductionNetworkConsoleApp {
 
     private static final ProductionNetworkService productionNetworkService = new ProductionNetworkServiceImpl();
 

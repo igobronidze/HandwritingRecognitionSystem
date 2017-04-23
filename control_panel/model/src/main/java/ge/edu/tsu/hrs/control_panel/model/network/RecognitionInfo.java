@@ -1,10 +1,21 @@
 package ge.edu.tsu.hrs.control_panel.model.network;
 
+import java.awt.image.BufferedImage;
+import java.util.List;
+
 public class RecognitionInfo {
 
     private String text;
 
+    private BufferedImage cleanedImage;
+
+    private List<BufferedImage> cutSymbolImages;
+
+    private List<NetworkResult> networkResults;
+
     private long networkInfoGatheringDuration;
+
+    private long cleanImageDuration;
 
     private long detectContoursDuration;
 
@@ -60,5 +71,37 @@ public class RecognitionInfo {
 
     public void setExtraDuration(long extraDuration) {
         this.extraDuration = extraDuration;
+    }
+
+    public BufferedImage getCleanedImage() {
+        return cleanedImage;
+    }
+
+    public void setCleanedImage(BufferedImage cleanedImage) {
+        this.cleanedImage = cleanedImage;
+    }
+
+    public List<BufferedImage> getCutSymbolImages() {
+        return cutSymbolImages;
+    }
+
+    public void setCutSymbolImages(List<BufferedImage> cutSymbolImages) {
+        this.cutSymbolImages = cutSymbolImages;
+    }
+
+    public List<NetworkResult> getNetworkResults() {
+        return networkResults;
+    }
+
+    public void setNetworkResults(List<NetworkResult> networkResults) {
+        this.networkResults = networkResults;
+    }
+
+    public long getCleanImageDuration() {
+        return cleanImageDuration;
+    }
+
+    public void setCleanImageDuration(long cleanImageDuration) {
+        this.cleanImageDuration = cleanImageDuration;
     }
 }

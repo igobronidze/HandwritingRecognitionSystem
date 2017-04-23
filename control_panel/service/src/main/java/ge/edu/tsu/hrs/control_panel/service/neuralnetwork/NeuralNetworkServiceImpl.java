@@ -43,7 +43,7 @@ public class NeuralNetworkServiceImpl implements NeuralNetworkService {
     }
 
     @Override
-    public List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId, int networkExtraId) {
-        return iNeuralNetworkProcessor.recognizeText(images, networkId, networkExtraId);
+    public List<RecognitionInfo> recognizeText(List<BufferedImage> images, int networkId, int networkExtraId, boolean analyseMode) {
+        return iNeuralNetworkProcessor.recognizeText(images, networkId, networkExtraId, analyseMode);
     }
 }

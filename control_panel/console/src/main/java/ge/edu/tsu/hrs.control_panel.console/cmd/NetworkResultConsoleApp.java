@@ -13,7 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
 
-public class NetworkResultMain {
+public class NetworkResultConsoleApp {
 
     private static String s;
 

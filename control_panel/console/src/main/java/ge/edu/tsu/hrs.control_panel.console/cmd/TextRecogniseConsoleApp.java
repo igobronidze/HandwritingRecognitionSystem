@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class RecognizeTextMain {
+public class TextRecogniseConsoleApp {
 
 	private static final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
 
@@ -79,7 +79,7 @@ public class RecognizeTextMain {
 				BufferedImage image = ImageIO.read(new File(textPath));
 				List<BufferedImage> images = new ArrayList<>();
 				images.add(image);
-				List<RecognitionInfo> recognitionInfos = neuralNetworkService.recognizeText(images, networkId, networkExtraId);
+				List<RecognitionInfo> recognitionInfos = neuralNetworkService.recognizeText(images, networkId, networkExtraId, false);
 				for (RecognitionInfo recognitionInfo : recognitionInfos) {
 					System.out.println(recognitionInfo.getText());
 				}

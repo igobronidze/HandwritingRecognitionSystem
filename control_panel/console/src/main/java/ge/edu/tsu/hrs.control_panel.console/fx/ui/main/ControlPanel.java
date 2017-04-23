@@ -6,6 +6,7 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.dashboard.AdminDashboard;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.networkcontrol.NetworkControlPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.normalization.NormalizationPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.sysparams.SystemParametersPane;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.textrecognition.TextRecognitionPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.service.startup.StartUpService;
 import ge.edu.tsu.hrs.control_panel.service.startup.StartUpServiceImpl;
@@ -71,6 +72,10 @@ public class ControlPanel extends Application {
             case SYSTEM_PARAMETERS:
                 text = Messages.get("systemParameters");
                 root.setCenter(new SystemParametersPane());
+                break;
+            case TEXT_RECOGNITION:
+                text = Messages.get("textRecognition");
+                root.setCenter(new TextRecognitionPane());
                 break;
         }
         root.setTop(new ControlPanelHeader(text));
