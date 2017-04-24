@@ -93,7 +93,7 @@ public class NeuralNetworkHelper {
                 return neuralNetwork;
             }
             thread = new Thread(null, () -> {
-                if (loadFromDatabase && extraId != 0) {
+                if (loadFromDatabase && extraId == 0) {
                     NeuralNetwork.copyNetwork(loadNetworkFromDatabase(id), neuralNetwork);
                     if (neuralNetwork.getNeuralNetworkParameter() != null) {
                         System.out.println("Loaded network from database with id - " + id);
@@ -166,7 +166,7 @@ public class NeuralNetworkHelper {
                 return NeuralNetwork.load(hrsPathProcessor.getPath(HRSPath.NEURAL_NETWORKS_PATH) + id + "/" + extraId + ".nnet");
             }
         } catch (NNException ex) {
-            ex.printStackTrace();
+            System.out.println("Can't load network from file system!");
         }
         return null;
     }

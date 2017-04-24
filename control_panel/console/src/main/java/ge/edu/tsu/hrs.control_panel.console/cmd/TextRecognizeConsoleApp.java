@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-public class TextRecogniseConsoleApp {
+public class TextRecognizeConsoleApp {
 
 	private static final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
 

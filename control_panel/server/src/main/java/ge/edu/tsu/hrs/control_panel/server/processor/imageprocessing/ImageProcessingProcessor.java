@@ -121,6 +121,9 @@ public class ImageProcessingProcessor {
         if (mat.type() != opencv_core.CV_8UC1) {
             opencv_imgproc.cvtColor(mat, mat, opencv_imgproc.CV_RGB2GRAY);
         }
+        if (blurringParameters == null || thresholdParameters == null || morphologicalParameters == null) {
+            return cleanImageWithoutParameters(mat);
+        }
         switch (blurringParameters.getType()) {
             case BILATERAL_FILTER:
                 BilateralFilterParams bilateralFilterParams = new BilateralFilterParams();
@@ -200,6 +203,14 @@ public class ImageProcessingProcessor {
                 default:
                     break;
         }
+        return OpenCVUtil.matToBufferedImage(mat);
+    }
+
+    private BufferedImage cleanImageWithoutParameters(opencv_core.Mat mat) {
+        GaussianBlurParams gaussianBlurParams = new GaussianBlurParams();
+        mat = NoiseRemover.applyNoiseRemoval(mat, gaussianBlurParams, 1);
+        OtsuBinarizationParams otsuBinarizationParams = new OtsuBinarizationParams();
+        mat = BinaryConverter.applyThreshold(mat, otsuBinarizationParams);
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
