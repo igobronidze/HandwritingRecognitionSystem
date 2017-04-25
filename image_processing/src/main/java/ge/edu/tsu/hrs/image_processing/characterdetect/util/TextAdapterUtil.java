@@ -5,31 +5,60 @@ import ge.edu.tsu.hrs.image_processing.characterdetect.model.TextRow;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class TextAdapterUtil {
 
-    public static boolean isSpace(TextAdapter textAdapter, int distance, int averageSymbolPerSpace) {
+    public static boolean isSpace(TextAdapter textAdapter, int distance, float minAverageSymbolPerSpace, float maxAverageSymbolPerSpace) {
         if (textAdapter.getMinDistanceForSpace() == -1) {
-            textAdapter.setMinDistanceForSpace(getMinDistanceForSpace(textAdapter, averageSymbolPerSpace));
+            textAdapter.setMinDistanceForSpace(getMinDistanceForSpace(textAdapter, minAverageSymbolPerSpace, maxAverageSymbolPerSpace));
         }
         return textAdapter.getMinDistanceForSpace() <= distance;
     }
 
-    private static int getMinDistanceForSpace(TextAdapter textAdapter, int averageSymbolPerSpace) {
+    private static int getMinDistanceForSpace(TextAdapter textAdapter, float minAverageSymbolPerSpace, float maxAverageSymbolPerSpace) {
         Map<Integer, Integer> distanceBetweenContours = textAdapter.getDistanceBetweenContours();
         List<DistanceBetweenContours> distanceBetweenContoursList = new ArrayList<>();
         for (Integer distance : distanceBetweenContours.keySet()) {
             distanceBetweenContoursList.add(new DistanceBetweenContours(distance, distanceBetweenContours.get(distance)));
         }
         Collections.sort(distanceBetweenContoursList);
-        int spaces = countCharactersFromTextAdapter(textAdapter) / averageSymbolPerSpace;
-        try {
-            return distanceBetweenContoursList.get(distanceBetweenContoursList.size() - spaces).distance;
-        } catch (IndexOutOfBoundsException ex) {
-            return 1;
+        int maxIndex;
+        int max = -1;
+        Set<Integer> used = new HashSet<>();
+        int count = countCharactersFromTextAdapter(textAdapter);
+        while (true) {
+            max = -1;
+            maxIndex = 1;
+            for (int i = 1; i < distanceBetweenContoursList.size(); i++) {
+                if (!used.contains(i) && distanceBetweenContoursList.get(i).distance - distanceBetweenContoursList.get(i - 1).distance >= max) {
+                    maxIndex = i;
+                    max = distanceBetweenContoursList.get(i).distance - distanceBetweenContoursList.get(i - 1).distance;
+                }
+            }
+            if (max == -1) {
+                break;
+            }
+            used.add(maxIndex);
+            int spaces = 0;
+            for (int i = maxIndex; i < distanceBetweenContoursList.size(); i++) {
+                spaces += distanceBetweenContoursList.get(i).amount;
+            }
+            if ((float)count / spaces >= minAverageSymbolPerSpace && (float)count / spaces <= maxAverageSymbolPerSpace) {
+                return distanceBetweenContoursList.get(maxIndex).distance;
+            }
         }
+        int spaces = count / ((int)(minAverageSymbolPerSpace + maxAverageSymbolPerSpace) / 2);
+        for (int i = distanceBetweenContoursList.size() - 1; i >= 0; i--) {
+            spaces -= distanceBetweenContoursList.get(i).amount;
+            if (spaces <= 0) {
+                return distanceBetweenContoursList.get(i).distance;
+            }
+        }
+        return 10;
     }
 
     private static int countCharactersFromTextAdapter(TextAdapter textAdapter) {

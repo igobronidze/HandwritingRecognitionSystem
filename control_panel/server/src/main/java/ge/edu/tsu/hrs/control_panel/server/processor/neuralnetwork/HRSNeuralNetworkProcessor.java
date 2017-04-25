@@ -70,7 +70,9 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
 	private final Parameter savePerIteration = new Parameter("savePerIteration", "1000");
 
-	private final Parameter averageSymbolPerSpace = new Parameter("averageSpacePerSymbol", "7");
+	private final Parameter minAverageSymbolPerSpace = new Parameter("minAverageSpacePerSymbol", "5.8");
+
+	private final Parameter maxAverageSymbolPerSpace = new Parameter("maxAverageSpacePerSymbol", "9.5");
 
 	@Override
 	public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
@@ -247,7 +249,8 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 				for (Contour contour : textRow.getContours()) {
 					date = new Date();
 					if (rightPoint != -1) {
-						if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint, systemParameterProcessor.getIntegerParameterValue(averageSymbolPerSpace))) {
+						if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint, systemParameterProcessor.getFloatParameterValue(minAverageSymbolPerSpace),
+								systemParameterProcessor.getFloatParameterValue(maxAverageSymbolPerSpace))) {
 							text.append(" ");
 						}
 					}
