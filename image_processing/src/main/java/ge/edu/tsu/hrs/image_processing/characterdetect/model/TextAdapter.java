@@ -17,7 +17,7 @@ public class TextAdapter {
 
     private Map<Integer, Integer> distanceBetweenContours = new HashMap<>();
 
-    private int possibleDistance = -1;
+    private int minDistanceForSpace = -1;
 
     public Queue<TextRow> getRows() {
         return rows;
@@ -35,11 +35,11 @@ public class TextAdapter {
         this.distanceBetweenContours = distanceBetweenContours;
     }
 
-    public int getPossibleDistance() {
-        return possibleDistance;
+    public int getMinDistanceForSpace() {
+        return minDistanceForSpace;
     }
 
-    public void setPossibleDistance(int possibleDistance) {
-        this.possibleDistance = possibleDistance;
+    public void setMinDistanceForSpace(int minDistanceForSpace) {
+        this.minDistanceForSpace = minDistanceForSpace;
     }
 }

@@ -23,8 +23,6 @@ public class TextRow {
         }
     });
 
-    private Map<Integer, Integer> distanceBetweenContours = new HashMap<>();
-
     public short getTopPoint() {
         return topPoint;
     }
@@ -63,13 +61,5 @@ public class TextRow {
 
     public void setContours(Queue<Contour> contours) {
         this.contours = contours;
-    }
-
-    public Map<Integer, Integer> getDistanceBetweenContours() {
-        return distanceBetweenContours;
-    }
-
-    public void setDistanceBetweenContours(Map<Integer, Integer> distanceBetweenContours) {
-        this.distanceBetweenContours = distanceBetweenContours;
     }
 }

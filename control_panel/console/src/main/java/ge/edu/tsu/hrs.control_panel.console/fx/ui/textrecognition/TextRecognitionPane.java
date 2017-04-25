@@ -82,7 +82,7 @@ public class TextRecognitionPane extends VBox {
             } catch (Exception ex) {
                 srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
                 recognizeButton.setDisable(true);
-                ex.printStackTrace();
+                System.out.println("Can't upload image!");
             }
         });
         cleanedImageView = new ImageView();

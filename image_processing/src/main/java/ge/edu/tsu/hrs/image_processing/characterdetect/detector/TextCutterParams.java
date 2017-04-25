@@ -8,7 +8,7 @@ public class TextCutterParams {
 
     private boolean useJoiningFunctional = true;
 
-    private int percentageOfSameForJoining = 35;
+    private int percentageOfSameForJoining = 85;
 
     private int percentageOfSamesForOneRow = 15;
 

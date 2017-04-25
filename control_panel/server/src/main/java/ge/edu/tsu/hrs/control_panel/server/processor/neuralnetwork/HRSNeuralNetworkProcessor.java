@@ -68,9 +68,9 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
 	private final Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
 
-	private final Parameter deltaForNotSpaces = new Parameter("deltaForNotSpaces", "3");
-
 	private final Parameter savePerIteration = new Parameter("savePerIteration", "1000");
+
+	private final Parameter averageSymbolPerSpace = new Parameter("averageSpacePerSymbol", "7");
 
 	@Override
 	public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
@@ -247,7 +247,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 				for (Contour contour : textRow.getContours()) {
 					date = new Date();
 					if (rightPoint != -1) {
-						if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint + 1, systemParameterProcessor.getIntegerParameterValue(deltaForNotSpaces))) {
+						if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint, systemParameterProcessor.getIntegerParameterValue(averageSymbolPerSpace))) {
 							text.append(" ");
 						}
 					}

@@ -97,14 +97,31 @@ public class ContoursDetector {
                 Contour contour = contours.poll();
                 if (isUnitedContours(lContour, contour, params.getPercentageOfSameForJoining())) {
                     lContour.setUnitedContour(contour);
-                    // may update contour's edges, but it's occur some problems
                 } else {
                     newContours.add(contour);
                 }
                 lContour = contour;
             }
+            textRow.setContours(newContours);
+            for (Contour contour : textRow.getContours()) {
+                short bottomPoint = contour.getBottomPoint();
+                short topPoint = contour.getTopPoint();
+                short rightPoint = contour.getRightPoint();
+                short leftPoint = contour.getLeftPoint();
+                Contour tmpContour = contour.getUnitedContour();
+                while (tmpContour != null) {
+                    bottomPoint = (short)Math.max(bottomPoint, tmpContour.getBottomPoint());
+                    topPoint = (short)Math.min(topPoint, tmpContour.getTopPoint());
+                    rightPoint = (short)Math.max(rightPoint, tmpContour.getRightPoint());
+                    leftPoint = (short)Math.min(leftPoint, tmpContour.getLeftPoint());
+                    tmpContour = tmpContour.getUnitedContour();
+                }
+                contour.setBottomPoint(bottomPoint);
+                contour.setTopPoint(topPoint);
+                contour.setLeftPoint(leftPoint);
+                contour.setRightPoint(rightPoint);
+            }
         }
-        textRow.setContours(newContours);
     }
 
     private static boolean isUnitedContours(Contour contour1, Contour contour2, int numberOfSameForJoining) {

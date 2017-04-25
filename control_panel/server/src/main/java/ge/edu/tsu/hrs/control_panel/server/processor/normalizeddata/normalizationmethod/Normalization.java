@@ -105,25 +105,13 @@ public abstract class Normalization {
     }
 
     private float[][] getAreasFromContour(Contour contour) {
-        int bottomPoint = contour.getBottomPoint();
-        int topPoint = contour.getTopPoint();
-        int rightPoint = contour.getRightPoint();
-        int leftPoint = contour.getLeftPoint();
-        Contour tmpContour = contour.getUnitedContour();
-        while (tmpContour != null) {
-            bottomPoint = Math.max(bottomPoint, tmpContour.getBottomPoint());
-            topPoint = Math.min(topPoint, tmpContour.getTopPoint());
-            rightPoint = Math.max(rightPoint, tmpContour.getRightPoint());
-            leftPoint = Math.min(leftPoint, tmpContour.getLeftPoint());
-            tmpContour = tmpContour.getUnitedContour();
-        }
-        int height = bottomPoint - topPoint + 1;
-        int width = rightPoint - leftPoint + 1;
+        int height = contour.getBottomPoint() - contour.getTopPoint() + 1;
+        int width = contour.getRightPoint() - contour.getLeftPoint() + 1;
         float[][] areas = new float[height][width];
-        tmpContour = contour;
+        Contour tmpContour = contour;
         while (tmpContour != null) {
             for (Point point : tmpContour.getContourCoordinates()) {
-                areas[point.getX() - topPoint][point.getY() - leftPoint] = (float) ((int) (((float) point.getColor() / blackPixel) * 10000)) / 10000;
+                areas[point.getX() - contour.getTopPoint()][point.getY() - contour.getLeftPoint()] = (float) ((int) (((float) point.getColor() / blackPixel) * 10000)) / 10000;
             }
             tmpContour = tmpContour.getUnitedContour();
         }
