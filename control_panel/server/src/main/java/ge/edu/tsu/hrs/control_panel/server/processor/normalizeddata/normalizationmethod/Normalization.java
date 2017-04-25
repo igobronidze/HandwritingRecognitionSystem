@@ -48,6 +48,12 @@ public abstract class Normalization {
                 float bottomI = (i + 1) * deltaI;
                 float leftJ = j * deltaJ;
                 float rightJ = (j + 1) * deltaJ;
+                if (rightJ > realHeight) {
+                    rightJ = realHeight;
+                }
+                if (bottomI > realWidth) {
+                    bottomI = realWidth;
+                }
                 topI = (int) topI == topI ? topI + 0.000001F : topI;
                 bottomI = (int) bottomI == bottomI ? bottomI - 0.000001F : bottomI;
                 leftJ = (int) leftJ == leftJ ? leftJ + 0.00001F : leftJ;
@@ -76,8 +82,8 @@ public abstract class Normalization {
                     area += (bottomI - (int) bottomI) * (rightJ - leftJ) * areas[(int) bottomI][(int) leftJ];
                 } else {
                     for (int ii = (int)topI + 1; ii < (int)bottomI; ii++) {
-                        area += ((int) leftJ + 1 - leftJ) * areas[ii][(int)leftJ];
-                        area += (rightJ - (int)rightJ) * areas[ii][(int)rightJ];
+                        area += ((int) leftJ + 1 - leftJ) * areas[ii][(int) leftJ];
+                        area += (rightJ - (int) rightJ) * areas[ii][(int) rightJ];
                     }
                     for (int jj = (int)leftJ + 1; jj < (int)rightJ; jj++) {
                         area += ((int)topI + 1 - topI) * areas[(int)topI][jj];
