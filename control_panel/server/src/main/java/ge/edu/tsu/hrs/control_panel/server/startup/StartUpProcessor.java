@@ -1,5 +1,6 @@
 package ge.edu.tsu.hrs.control_panel.server.startup;
 
+import ge.edu.tsu.hrs.control_panel.server.caching.CachedProductionNetwork;
 import ge.edu.tsu.hrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
 
@@ -29,5 +30,11 @@ public class StartUpProcessor {
     @StartUp
     private void setFailedNetworkInfos() {
         networkInfoDAO.setFailedNetworkInfos();
+    }
+
+    @StartUp
+    private void loadProductionNetwork() {
+        Thread thread = new Thread(null, CachedProductionNetwork::loadData);
+        thread.start();
     }
 }

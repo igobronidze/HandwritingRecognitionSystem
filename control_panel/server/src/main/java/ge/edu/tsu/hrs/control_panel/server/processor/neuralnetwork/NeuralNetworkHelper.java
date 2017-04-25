@@ -28,11 +28,13 @@ public class NeuralNetworkHelper {
 
     private static final Parameter stackSizeForNetworkStream = new Parameter("stackSizeForNetworkStream", "8000000");
 
-    public static void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork, boolean saveInDatabase, String path) {
-        if (path != null && !path.isEmpty()) {
+    private static final Parameter productionNetworkPath = new Parameter("productionNetworkPath", "network_workspace/production.nnet");
+
+    public static void saveNeuralNetwork(int id, NeuralNetwork neuralNetwork, boolean saveInDatabase, boolean productionNetwork) {
+        if (productionNetwork) {
             Thread thread = new Thread(null, () -> {
-                saveNetworkWithPath(neuralNetwork, path);
-                System.out.println("Save neural network in file system, path - " + path);
+                saveNetworkWithPath(neuralNetwork, systemParameterProcessor.getStringParameterValue(productionNetworkPath));
+                System.out.println("Save neural network in file system, path - " + systemParameterProcessor.getStringParameterValue(productionNetworkPath));
             }, "Save network in file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
             thread.start();
             try {
@@ -63,13 +65,13 @@ public class NeuralNetworkHelper {
         }
     }
 
-    public static NeuralNetwork loadNeuralNetwork(int id, int extraId, boolean loadFromDatabase, String path) {
+    public static NeuralNetwork loadNeuralNetwork(int id, int extraId, boolean loadFromDatabase, boolean productionPath) {
         final NeuralNetwork neuralNetwork = new NeuralNetwork();
-        if (path != null && !path.isEmpty()) {
+        if (productionPath) {
             Thread thread = new Thread(null, () -> {
-                NeuralNetwork.copyNetwork(loadNetworkFromPath(path), neuralNetwork);
+                NeuralNetwork.copyNetwork(loadNetworkFromPath(systemParameterProcessor.getStringParameterValue(productionNetworkPath)), neuralNetwork);
                 if (neuralNetwork.getNeuralNetworkParameter() != null) {
-                    System.out.println("Loaded network from path " + path);
+                    System.out.println("Loaded network from path " + systemParameterProcessor.getStringParameterValue(productionNetworkPath));
                 }
             }, "Load network from file system thread", systemParameterProcessor.getLongParameterValue(stackSizeForNetworkStream));
             thread.start();

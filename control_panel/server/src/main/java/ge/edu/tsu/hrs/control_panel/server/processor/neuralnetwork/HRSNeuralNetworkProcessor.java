@@ -12,6 +12,7 @@ import ge.edu.tsu.hrs.control_panel.model.network.TrainingDataInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.NormalizedData;
 import ge.edu.tsu.hrs.control_panel.model.sysparam.Parameter;
+import ge.edu.tsu.hrs.control_panel.server.caching.CachedProductionNetwork;
 import ge.edu.tsu.hrs.control_panel.server.dao.networkinfo.NetworkInfoDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.networkinfo.NetworkInfoDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.dao.normalizeddata.NormalizedDataDAO;
@@ -57,8 +58,6 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	private final TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
 	private final TrainingDataInfoDAO trainingDataInfoDAO = new TrainingDataInfoDAOImpl();
-
-	private final ProductionNetworkProcessor productionNetworkProcessor = new ProductionNetworkProcessor();
 
 	private final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
 
@@ -124,7 +123,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			networkInfoDAO.updateTrainedState(trainingDuration, id);
 			networkInfo.setTrainingStatus(NetworkTrainingStatus.TRAINED);
 			networkInfoDAO.updateTrainingCurrentState(trainingProgress.getCurrentSquaredError(), trainingProgress.getCurrentIterations(), trainingProgress.getCurrentDuration(), id);
-			NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork, true, null);
+			NeuralNetworkHelper.saveNeuralNetwork(id, neuralNetwork, true, false);
 			System.out.println("Finished network training!");
 		} catch (NNException ex) {
 			ex.printStackTrace();
@@ -143,7 +142,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		}
 		List<NormalizedData> normalizedDataList = normalizedDataDAO.getNormalizedDatum(groupedNormalizedDatum);
 		try {
-			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
+			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, false);
 			List<TrainingData> trainingDataList = new ArrayList<>();
 			CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
 			CharSequenceInitializer.initializeCharSequence(charSequence);
@@ -176,7 +175,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	public NetworkResult getNetworkResult(BufferedImage image, int networkId, int networkExtraId) {
 		try {
 			System.out.println("Started get network result!");
-			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
+			NeuralNetwork neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, false);
 			CharSequence charSequence = networkInfoDAO.getCharSequenceById(networkId);
 			TrainingDataInfo trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
 			Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
@@ -208,14 +207,14 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			TrainingDataInfo trainingDataInfo;
 			CharSequence charSequence;
 			if (networkId == null || networkId == -1) {
-				neuralNetwork = productionNetworkProcessor.getProductionNeuralNetwork();
-				trainingDataInfo = productionNetworkProcessor.getProductionTrainingDataInfo();
-				charSequence = productionNetworkProcessor.getProductionCharSequence();
+				neuralNetwork = CachedProductionNetwork.getProductionNeuralNetwork();
+				trainingDataInfo = CachedProductionNetwork.getProductionTrainingDataInfo();
+				charSequence = CachedProductionNetwork.getProductionCharSequence();
 				try {
 					CharSequenceInitializer.initializeCharSequence(charSequence);
 				} catch (ControlPanelException ex) {}
 			} else {
-				neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, null);
+				neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, false);
 				charSequence = networkInfoDAO.getCharSequenceById(networkId);
 				try {
 					CharSequenceInitializer.initializeCharSequence(charSequence);
