@@ -83,7 +83,7 @@ public class CutSymbolsPane extends VBox {
             } catch (Exception ex) {
                 srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
                 cutButton.setDisable(true);
-                ex.printStackTrace();
+                System.out.println("Can't load image!");
             }
         });
         textArea = new TCHTextArea();
@@ -115,9 +115,9 @@ public class CutSymbolsPane extends VBox {
         flowPane.setHgap(15);
         flowPane.setVgap(5);
         flowPane.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding());
-        TCHNumberTextField checkedRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-2"), TCHComponentSize.SMALL);
+        TCHNumberTextField checkedRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-5777216"), TCHComponentSize.SMALL);
         TCHFieldLabel checkedRGBMaxValueFieldLabel = new TCHFieldLabel(Messages.get("checkedRGBMaxValue"), checkedRGBMaxValueField);
-        TCHNumberTextField checkNeighborRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-5777216"), TCHComponentSize.SMALL);
+        TCHNumberTextField checkNeighborRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-2"), TCHComponentSize.SMALL);
         TCHFieldLabel checkNeighborRGBMaxValueFieldLabel = new TCHFieldLabel(Messages.get("checkNeighborRGBMaxValue"), checkNeighborRGBMaxValueField);
         TCHComboBox doubleQuoteAsTwoCharComboBox = new TCHComboBox(Arrays.asList(Boolean.TRUE, Boolean.FALSE));
         TCHFieldLabel doubleQuoteAsTwoCharFieldLabel = new TCHFieldLabel(Messages.get("doubleQuoteAsTwoChar"), doubleQuoteAsTwoCharComboBox);

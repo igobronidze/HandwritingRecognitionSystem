@@ -1,9 +1,9 @@
 package ge.edu.tsu.hrs.control_panel.service.imageprocessing;
 
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdParameters;
 
 import java.awt.image.BufferedImage;
 import java.util.List;

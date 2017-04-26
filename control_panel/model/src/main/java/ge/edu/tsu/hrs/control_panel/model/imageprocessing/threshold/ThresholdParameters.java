@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.control_panel.model.imageprocessing;
+package ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold;
 
 public class ThresholdParameters {
 

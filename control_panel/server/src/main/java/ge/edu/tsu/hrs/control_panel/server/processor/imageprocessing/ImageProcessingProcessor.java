@@ -1,9 +1,10 @@
 package ge.edu.tsu.hrs.control_panel.server.processor.imageprocessing;
 
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ImageCondition;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdParameters;
 import ge.edu.tsu.hrs.control_panel.server.util.CharacterUtil;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.ContoursDetector;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutterParams;
@@ -28,12 +29,15 @@ import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.Simp
 import ge.edu.tsu.hrs.image_processing.util.OpenCVUtil;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgproc;
+import org.omg.CORBA.UNKNOWN;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class ImageProcessingProcessor {
 
@@ -122,7 +126,7 @@ public class ImageProcessingProcessor {
             opencv_imgproc.cvtColor(mat, mat, opencv_imgproc.CV_RGB2GRAY);
         }
         if (blurringParameters == null || thresholdParameters == null || morphologicalParameters == null) {
-            return cleanImageWithoutParameters(mat);
+            return cleanImageWithoutParameters(mat, detectImageCondition(srcImage));
         }
         switch (blurringParameters.getType()) {
             case BILATERAL_FILTER:
@@ -206,12 +210,43 @@ public class ImageProcessingProcessor {
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
-    private BufferedImage cleanImageWithoutParameters(opencv_core.Mat mat) {
-        GaussianBlurParams gaussianBlurParams = new GaussianBlurParams();
-        mat = NoiseRemover.applyNoiseRemoval(mat, gaussianBlurParams, 1);
+    private BufferedImage cleanImageWithoutParameters(opencv_core.Mat mat, ImageCondition imageCondition) {
+        BilateralFilterParams bilateralFilterParams = new BilateralFilterParams();
+        AdaptiveThresholdParams adaptiveThresholdParams = new AdaptiveThresholdParams();
         OtsuBinarizationParams otsuBinarizationParams = new OtsuBinarizationParams();
-        mat = BinaryConverter.applyThreshold(mat, otsuBinarizationParams);
+        switch (imageCondition) {
+            case DARK_ON_BRIGHT:
+                mat = NoiseRemover.applyNoiseRemoval(mat, bilateralFilterParams, 1);
+                mat = BinaryConverter.applyThreshold(mat, adaptiveThresholdParams);
+                break;
+            case BRIGHT_ON_DARK:
+                mat = NoiseRemover.applyNoiseRemoval(mat, bilateralFilterParams, 1);
+                otsuBinarizationParams.setType(9);
+                mat = BinaryConverter.applyThreshold(mat, otsuBinarizationParams);
+                break;
+            case DARK_ON_BRIGHT_WITH_LINES:
+                mat = NoiseRemover.applyNoiseRemoval(mat, bilateralFilterParams, 4);
+                mat = BinaryConverter.applyThreshold(mat, adaptiveThresholdParams);
+                break;
+            case UNKNOWN:
+                break;
+        }
         return OpenCVUtil.matToBufferedImage(mat);
+    }
+
+    private ImageCondition detectImageCondition(BufferedImage image) {
+//        Map<Integer, Integer> rgbMap = new TreeMap<>();
+//        for (int i = 0; i < image.getHeight(); i++) {
+//            for (int j = 0; j < image.getWidth(); j++) {
+//                int rgb = image.getRGB(j, i);
+//                if (rgbMap.get(rgb) == null) {
+//                    rgbMap.put(rgb, 1);
+//                } else {
+//                    rgbMap.put(rgb, rgbMap.get(rgb) + 1);
+//                }
+//            }
+//        }
+        return ImageCondition.UNKNOWN;
     }
 
     private static boolean isUnnecessaryCharacter(char c) {

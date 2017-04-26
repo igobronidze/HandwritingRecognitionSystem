@@ -7,12 +7,12 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.BlurringType;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.MorphologicalType;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdParameters;
-import ge.edu.tsu.hrs.control_panel.model.imageprocessing.ThresholdType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdType;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathService;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathServiceImpl;
 import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingService;
@@ -99,7 +99,7 @@ public class CleanImagePane extends VBox {
                 srcImageView.setImage(ImageFactory.getImage("no_photo.png"));
                 imageName = "";
                 convertButton.setDisable(true);
-                ex.printStackTrace();
+                System.out.println("Can't load image!");
             }
         });
         resultImageView = new ImageView();
