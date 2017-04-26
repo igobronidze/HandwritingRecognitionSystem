@@ -59,6 +59,12 @@ public class CutSymbolsPane extends VBox {
         this.getChildren().addAll(getTopPane(), getBottomPane());
     }
 
+    public CutSymbolsPane(BufferedImage image) {
+        this();
+        srcImageView.setImage(SwingFXUtils.toFXImage(image, null));
+        cutButton.setDisable(false);
+    }
+
     private HBox getTopPane() {
         HBox hBox = new HBox();
         hBox.setPadding(new Insets(4, 4, 0, 4));

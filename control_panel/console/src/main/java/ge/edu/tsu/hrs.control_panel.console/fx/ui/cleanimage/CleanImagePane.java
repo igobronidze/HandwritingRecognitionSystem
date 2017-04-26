@@ -54,6 +54,8 @@ public class CleanImagePane extends VBox {
 
     private TCHButton convertButton;
 
+    private TCHButton toCutPageButton;
+
     private HBox bottomHBox;
 
     private BlurringPane blurringPane;
@@ -154,8 +156,14 @@ public class CleanImagePane extends VBox {
             BufferedImage bufferedImage = imageProcessingService.cleanImage(srcImage, blurringParameters, thresholdParameters, morphologicalParameters);
             Image resultImage = SwingFXUtils.toFXImage(bufferedImage, null);
             resultImageView.setImage(resultImage);
+            toCutPageButton.setDisable(false);
         });
-        mainParametersVBox.getChildren().addAll(convertGrayFieldLabel, blurringFieldLabel, thresholdFieldLabel, morphologicalFieldLabel, convertButton);
+        toCutPageButton = new TCHButton(Messages.get("toCutPage"));
+        toCutPageButton.setOnAction(event -> {
+            ControlPanel.loadCutSymbolPane(SwingFXUtils.fromFXImage(resultImageView.getImage(), null));
+        });
+        toCutPageButton.setDisable(true);
+        mainParametersVBox.getChildren().addAll(convertGrayFieldLabel, blurringFieldLabel, thresholdFieldLabel, morphologicalFieldLabel, convertButton, toCutPageButton);
         return mainParametersVBox;
     }
 

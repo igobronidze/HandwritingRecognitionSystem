@@ -16,6 +16,8 @@ import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
 
+import java.awt.image.BufferedImage;
+
 public class ControlPanel extends Application {
 
     private StartUpService startUpService = new StartUpServiceImpl();
@@ -81,6 +83,13 @@ public class ControlPanel extends Application {
         root.setTop(new ControlPanelHeader(text));
         root.setBottom(new ControlPanelFooter());
         currPage = systemPageType;
+    }
+
+    public static void loadCutSymbolPane(BufferedImage image) {
+        root.setCenter(new CutSymbolsPane(image));
+        root.setTop(new ControlPanelHeader(Messages.get("cutSymbols")));
+        root.setBottom(new ControlPanelFooter());
+        currPage = SystemPageType.CUT_SYMBOLS;
     }
 
     public static Stage getStage() {
