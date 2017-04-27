@@ -2,7 +2,7 @@ package ge.edu.tsu.hrs.image_processing.characterdetect.detector;
 
 public class TextCutterParams {
 
-    private int checkedRGBMaxValue = -2;
+    private int checkedRGBMaxValue = -5777216;
 
     private int checkNeighborRGBMaxValue = -5777216;
 

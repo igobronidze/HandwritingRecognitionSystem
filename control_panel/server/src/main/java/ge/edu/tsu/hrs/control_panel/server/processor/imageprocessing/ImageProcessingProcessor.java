@@ -5,6 +5,8 @@ import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalParameters;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdParameters;
+import ge.edu.tsu.hrs.control_panel.model.sysparam.Parameter;
+import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hrs.control_panel.server.util.CharacterUtil;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.ContoursDetector;
 import ge.edu.tsu.hrs.image_processing.characterdetect.detector.TextCutterParams;
@@ -35,11 +37,18 @@ import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.TreeMap;
+import java.util.TreeSet;
 
 public class ImageProcessingProcessor {
+
+    private final SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
+
+    private final Parameter maxNumberOfColors = new Parameter("maxNumberOfColors", "200");
 
     public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters) {
         TextCutterParams textCutterParams = new TextCutterParams();
@@ -126,7 +135,7 @@ public class ImageProcessingProcessor {
             opencv_imgproc.cvtColor(mat, mat, opencv_imgproc.CV_RGB2GRAY);
         }
         if (blurringParameters == null || thresholdParameters == null || morphologicalParameters == null) {
-            return cleanImageWithoutParameters(mat, detectImageCondition(srcImage));
+            return cleanImageWithoutParameters(mat);
         }
         switch (blurringParameters.getType()) {
             case BILATERAL_FILTER:
@@ -210,7 +219,18 @@ public class ImageProcessingProcessor {
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
-    private BufferedImage cleanImageWithoutParameters(opencv_core.Mat mat, ImageCondition imageCondition) {
+    private BufferedImage cleanImageWithoutParameters(opencv_core.Mat mat) {
+        BufferedImage testImage = OpenCVUtil.matToBufferedImage(mat);
+        Set<Integer> set = new TreeSet<>();
+        for (int i = 0; i < testImage.getHeight(); i++) {
+            for (int j = 0; j < testImage.getWidth(); j++) {
+                set.add(testImage.getRGB(j, i));
+            }
+        }
+        if (set.size() < systemParameterProcessor.getIntegerParameterValue(maxNumberOfColors)) {
+            return OpenCVUtil.matToBufferedImage(mat);
+        }
+        ImageCondition imageCondition = detectImageCondition();
         BilateralFilterParams bilateralFilterParams = new BilateralFilterParams();
         AdaptiveThresholdParams adaptiveThresholdParams = new AdaptiveThresholdParams();
         OtsuBinarizationParams otsuBinarizationParams = new OtsuBinarizationParams();
@@ -234,19 +254,8 @@ public class ImageProcessingProcessor {
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
-    private ImageCondition detectImageCondition(BufferedImage image) {
-//        Map<Integer, Integer> rgbMap = new TreeMap<>();
-//        for (int i = 0; i < image.getHeight(); i++) {
-//            for (int j = 0; j < image.getWidth(); j++) {
-//                int rgb = image.getRGB(j, i);
-//                if (rgbMap.get(rgb) == null) {
-//                    rgbMap.put(rgb, 1);
-//                } else {
-//                    rgbMap.put(rgb, rgbMap.get(rgb) + 1);
-//                }
-//            }
-//        }
-        return ImageCondition.UNKNOWN;
+    private ImageCondition detectImageCondition() {
+        return ImageCondition.DARK_ON_BRIGHT_WITH_LINES;
     }
 
     private static boolean isUnnecessaryCharacter(char c) {

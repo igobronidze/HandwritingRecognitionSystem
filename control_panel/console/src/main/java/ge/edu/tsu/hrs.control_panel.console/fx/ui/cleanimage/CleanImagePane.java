@@ -140,20 +140,32 @@ public class CleanImagePane extends VBox {
         convertGrayCheckBox.setSelected(true);
         convertGrayCheckBox.setDisable(true);
         TCHFieldLabel convertGrayFieldLabel = new TCHFieldLabel(Messages.get("convertGrayIfNeed"), convertGrayCheckBox);
+        CheckBox cleanWithoutParamsCheckBox = new CheckBox();
+        TCHFieldLabel cleanWithoutParamsFieldLabel = new TCHFieldLabel(Messages.get("cleanWithoutParams"), cleanWithoutParamsCheckBox);
         blurringComboBox = new TCHComboBox(Arrays.asList(BlurringType.values()));
         TCHFieldLabel blurringFieldLabel = new TCHFieldLabel(Messages.get("blurringType"), blurringComboBox);
         thresholdComboBox = new TCHComboBox(Arrays.asList(ThresholdType.values()));
         TCHFieldLabel thresholdFieldLabel = new TCHFieldLabel(Messages.get("thresholdType"), thresholdComboBox);
         morphologicalComboBox = new TCHComboBox(Arrays.asList(MorphologicalType.values()));
         TCHFieldLabel morphologicalFieldLabel = new TCHFieldLabel(Messages.get("morphologicalType"), morphologicalComboBox);
+        cleanWithoutParamsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            blurringComboBox.setDisable(newValue);
+            thresholdComboBox.setDisable(newValue);
+            morphologicalComboBox.setDisable(newValue);
+        });
         convertButton = new TCHButton(Messages.get("convert"));
         convertButton.setDisable(true);
         convertButton.setOnAction(event -> {
-            BlurringParameters blurringParameters = blurringPane.getBlurringParameters();
-            ThresholdParameters thresholdParameters = thresholdPane.getThresholdParameters();
-            MorphologicalParameters morphologicalParameters = morphologicalPane.getMorphologicalParameters();
             BufferedImage srcImage = SwingFXUtils.fromFXImage(srcImageView.getImage(), null);
-            BufferedImage bufferedImage = imageProcessingService.cleanImage(srcImage, blurringParameters, thresholdParameters, morphologicalParameters);
+            BufferedImage bufferedImage;
+            if (cleanWithoutParamsCheckBox.isSelected()) {
+                bufferedImage = imageProcessingService.cleanImage(srcImage, null, null, null);
+            } else {
+                BlurringParameters blurringParameters = blurringPane.getBlurringParameters();
+                ThresholdParameters thresholdParameters = thresholdPane.getThresholdParameters();
+                MorphologicalParameters morphologicalParameters = morphologicalPane.getMorphologicalParameters();
+                bufferedImage = imageProcessingService.cleanImage(srcImage, blurringParameters, thresholdParameters, morphologicalParameters);
+            }
             Image resultImage = SwingFXUtils.toFXImage(bufferedImage, null);
             resultImageView.setImage(resultImage);
             toCutPageButton.setDisable(false);
@@ -163,7 +175,7 @@ public class CleanImagePane extends VBox {
             ControlPanel.loadCutSymbolPane(SwingFXUtils.fromFXImage(resultImageView.getImage(), null));
         });
         toCutPageButton.setDisable(true);
-        mainParametersVBox.getChildren().addAll(convertGrayFieldLabel, blurringFieldLabel, thresholdFieldLabel, morphologicalFieldLabel, convertButton, toCutPageButton);
+        mainParametersVBox.getChildren().addAll(convertGrayFieldLabel, cleanWithoutParamsFieldLabel, blurringFieldLabel, thresholdFieldLabel, morphologicalFieldLabel, convertButton, toCutPageButton);
         return mainParametersVBox;
     }
 
