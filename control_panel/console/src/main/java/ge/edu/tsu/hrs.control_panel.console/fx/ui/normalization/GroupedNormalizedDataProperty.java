@@ -1,9 +1,10 @@
-package ge.edu.tsu.hrs.control_panel.console.fx.ui.networkcontrol;
+package ge.edu.tsu.hrs.control_panel.console.fx.ui.normalization;
 
 import ge.edu.tsu.hrs.control_panel.model.network.normalizeddata.GroupedNormalizedData;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleLongProperty;
 import javafx.beans.property.SimpleStringProperty;
 
 public class GroupedNormalizedDataProperty {
@@ -26,6 +27,8 @@ public class GroupedNormalizedDataProperty {
 
 	private SimpleBooleanProperty checked;
 
+	private SimpleLongProperty duration;
+
 	public GroupedNormalizedDataProperty(GroupedNormalizedData groupedNormalizedData) {
 		this.id = new SimpleIntegerProperty(groupedNormalizedData.getId());
 		this.width = new SimpleIntegerProperty(groupedNormalizedData.getWidth());
@@ -36,6 +39,7 @@ public class GroupedNormalizedDataProperty {
 		this.name = new SimpleStringProperty(groupedNormalizedData.getName());
 		this.count = new SimpleIntegerProperty(groupedNormalizedData.getCount());
 		this.checked = new SimpleBooleanProperty(false);
+		this.duration = new SimpleLongProperty(groupedNormalizedData.getDuration());
 	}
 
 	public int getId() {
@@ -112,5 +116,13 @@ public class GroupedNormalizedDataProperty {
 
 	public void setChecked(boolean checked) {
 		this.checked.set(checked);
+	}
+
+	public long getDuration() {
+		return duration.get();
+	}
+
+	public void setDuration(long duration) {
+		this.duration.set(duration);
 	}
 }

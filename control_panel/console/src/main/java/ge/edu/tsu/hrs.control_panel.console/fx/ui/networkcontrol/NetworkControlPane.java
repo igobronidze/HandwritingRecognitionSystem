@@ -9,6 +9,7 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHNumberTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.normalization.GroupedNormalizedDataProperty;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.exception.ControlPanelException;
