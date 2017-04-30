@@ -24,6 +24,10 @@ public class SystemParameterProcessor {
         return Long.parseLong(getStringParameterValue(parameter));
     }
 
+    public boolean getBooleanParameterValue(Parameter parameter) {
+        return Boolean.parseBoolean(getStringParameterValue(parameter));
+    }
+
     public List<Integer> getIntegerListParameterValue(Parameter parameter) {
         String text = getStringParameterValue(parameter);
         if (text == null || text.isEmpty()) {

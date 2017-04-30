@@ -17,8 +17,8 @@ public class ImageProcessingServiceImpl implements ImageProcessingService {
         return imageProcessingProcessor.cleanImage(srcImage, blurringParameters, thresholdParameters, morphologicalParameters);
     }
 
-    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters) {
-        return imageProcessingProcessor.getCutSymbols(srcImage, parameters);
+    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining) {
+        return imageProcessingProcessor.getCutSymbols(srcImage, parameters, forceNotJoining);
     }
 
     public List<String> processTextForImage(String text, boolean doubleQuoteAsTwoChar) {

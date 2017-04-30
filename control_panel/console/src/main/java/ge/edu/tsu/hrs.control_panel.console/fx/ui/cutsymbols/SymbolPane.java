@@ -197,7 +197,7 @@ public class SymbolPane extends VBox {
             mainHBox.getChildren().addAll(pane, parametersVBox);
 
             TCHCheckBox userJoiningFunctionalCheckBox = new TCHCheckBox(Messages.get("useJoiningFunctional"));
-            userJoiningFunctionalCheckBox.setSelected(parameters.isUseJoiningFunctional());
+            userJoiningFunctionalCheckBox.setSelected(parameters == null ? true : parameters.isUseJoiningFunctional());
 
             TCHButton closeButton = new TCHButton(Messages.get("close"));
             closeButton.setOnAction(event1 -> {
@@ -207,8 +207,10 @@ public class SymbolPane extends VBox {
             saveButton.setOnAction(event1 -> {
                 WritableImage writableImage = new WritableImage(200, 200);
                 canvas.snapshot(null, writableImage);
-                parameters.setUseJoiningFunctional(userJoiningFunctionalCheckBox.isSelected());
-                List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(writableImage, null), parameters);
+                if (parameters != null) {
+                    parameters.setUseJoiningFunctional(userJoiningFunctionalCheckBox.isSelected());
+                }
+                List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(writableImage, null), parameters, !userJoiningFunctionalCheckBox.isSelected());
                 List<String> symbols = new ArrayList<>();
                 for (int i = 0; i < images.size(); i++) {
                     symbols.add("");

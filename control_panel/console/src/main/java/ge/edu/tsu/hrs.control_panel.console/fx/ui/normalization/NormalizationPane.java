@@ -99,6 +99,7 @@ public class NormalizationPane extends VBox {
 		nameColumn.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding().subtract(5 + 30 + 40 + 100 * 6 + 140));
 		nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
 		normalizationTable = new TableView<>();
+		normalizationTable.setStyle("-fx-font-family: sylfaen;");
 		normalizationTable.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().subtract(30).multiply(TABLE_HEIGHT_PART));
 		normalizationTable.getColumns().addAll(idColumn, widthColumn, heightColumn, minValueColumn, maxValueColumn, countColumn, durationColumn, normalizationTypeColumn, nameColumn);
 		normalizationTable.setRowFactory( tv -> {

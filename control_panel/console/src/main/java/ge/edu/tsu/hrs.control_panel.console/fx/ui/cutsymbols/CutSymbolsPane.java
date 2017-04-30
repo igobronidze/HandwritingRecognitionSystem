@@ -12,15 +12,19 @@ import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
 import ge.edu.tsu.hrs.control_panel.model.imageprocessing.TextCutterParameters;
+import ge.edu.tsu.hrs.control_panel.model.sysparam.Parameter;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathService;
 import ge.edu.tsu.hrs.control_panel.service.common.HRSPathServiceImpl;
 import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingService;
 import ge.edu.tsu.hrs.control_panel.service.imageprocessing.ImageProcessingServiceImpl;
+import ge.edu.tsu.hrs.control_panel.service.systemparameter.SystemParameterService;
+import ge.edu.tsu.hrs.control_panel.service.systemparameter.SystemParameterServiceImpl;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.geometry.Insets;
 import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Cursor;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -42,6 +46,10 @@ public class CutSymbolsPane extends VBox {
 
     private final ImageProcessingService imageProcessingService = new ImageProcessingServiceImpl();
 
+    private final SystemParameterService systemParameterService = new SystemParameterServiceImpl();
+
+    private final Parameter doubleQuoteAsTwoChar = new Parameter("doubleQuoteAsTwoChar", "true");
+
     private static final double TOP_PANE_PART = 0.75;
 
     private static final double IMAGE_WIDTH_PART = 0.30;
@@ -54,6 +62,8 @@ public class CutSymbolsPane extends VBox {
 
     private SymbolsPane symbolsPane;
 
+    private CheckBox cutWithoutParamsCheckBox;
+
     public CutSymbolsPane() {
         this.setSpacing(8);
         this.getChildren().addAll(getTopPane(), getBottomPane());
@@ -63,6 +73,7 @@ public class CutSymbolsPane extends VBox {
         this();
         srcImageView.setImage(SwingFXUtils.toFXImage(image, null));
         cutButton.setDisable(false);
+        cutWithoutParamsCheckBox.setSelected(true);
     }
 
     private HBox getTopPane() {
@@ -121,6 +132,8 @@ public class CutSymbolsPane extends VBox {
         flowPane.setHgap(15);
         flowPane.setVgap(5);
         flowPane.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding());
+        cutWithoutParamsCheckBox = new CheckBox();
+        TCHFieldLabel cutWithoutParamsFieldLabel = new TCHFieldLabel(Messages.get("cutWithoutParams"), cutWithoutParamsCheckBox);
         TCHNumberTextField checkedRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-5777216"), TCHComponentSize.SMALL);
         TCHFieldLabel checkedRGBMaxValueFieldLabel = new TCHFieldLabel(Messages.get("checkedRGBMaxValue"), checkedRGBMaxValueField);
         TCHNumberTextField checkNeighborRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-2"), TCHComponentSize.SMALL);
@@ -138,18 +151,22 @@ public class CutSymbolsPane extends VBox {
         cutButton = new TCHButton(Messages.get("cut"));
         cutButton.setDisable(true);
         cutButton.setOnAction(event -> {
-            TextCutterParameters parameters = new TextCutterParameters();
-            parameters.setUseJoiningFunctional(Boolean.valueOf(useJoiningFunctionalComboBox.getValue().toString()));
-            parameters.setDoubleQuoteAsTwoChar(Boolean.valueOf(doubleQuoteAsTwoCharComboBox.getValue().toString()));
-            parameters.setPercentageOfSameForJoining(percentageOfSameForJoiningField.getNumber().intValue());
-            parameters.setCheckedRGBMaxValue(checkedRGBMaxValueField.getNumber().intValue());
-            parameters.setCheckNeighborRGBMaxValue(checkNeighborRGBMaxValueField.getNumber().intValue());
-            parameters.setPercentageOfSamesForOneRow(percentageOfSamesForOneRowField.getNumber().intValue());
-            parameters.setNoiseArea(noiseAreaField.getNumber().intValue());
-            List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters);
-            symbolsPane.initSymbols(images, imageProcessingService.processTextForImage(textArea.getText(), parameters.isDoubleQuoteAsTwoChar()), parameters);
+            TextCutterParameters parameters = null;
+            if (!cutWithoutParamsCheckBox.isSelected()) {
+                parameters = new TextCutterParameters();
+                parameters.setUseJoiningFunctional(Boolean.valueOf(useJoiningFunctionalComboBox.getValue().toString()));
+                parameters.setDoubleQuoteAsTwoChar(Boolean.valueOf(doubleQuoteAsTwoCharComboBox.getValue().toString()));
+                parameters.setPercentageOfSameForJoining(percentageOfSameForJoiningField.getNumber().intValue());
+                parameters.setCheckedRGBMaxValue(checkedRGBMaxValueField.getNumber().intValue());
+                parameters.setCheckNeighborRGBMaxValue(checkNeighborRGBMaxValueField.getNumber().intValue());
+                parameters.setPercentageOfSamesForOneRow(percentageOfSamesForOneRowField.getNumber().intValue());
+                parameters.setNoiseArea(noiseAreaField.getNumber().intValue());
+            }
+            List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters, false);
+            symbolsPane.initSymbols(images, imageProcessingService.processTextForImage(textArea.getText(), parameters == null ? systemParameterService.getBooleanParameterValue(doubleQuoteAsTwoChar) :
+                    parameters.isDoubleQuoteAsTwoChar()), parameters);
         });
-        flowPane.getChildren().addAll(checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
+        flowPane.getChildren().addAll(cutWithoutParamsFieldLabel, checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
                 percentageOfSameForJoiningFieldLabel, percentageOfSamesForOneRowFieldLabel, noiseAreaFieldLabel, cutButton);
         vBox.getChildren().addAll(titleLabel, flowPane);
         scrollPane.setContent(vBox);

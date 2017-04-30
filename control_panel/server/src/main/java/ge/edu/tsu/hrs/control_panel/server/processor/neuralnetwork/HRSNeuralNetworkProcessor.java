@@ -45,7 +45,9 @@ import ge.edu.tsu.hrs.neural_network.transfer.TransferFunctionType;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
@@ -225,6 +227,20 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			recognitionInfo.setNetworkInfoGatheringDuration(new Date().getTime() - date.getTime());
 			date = new Date();
 			BufferedImage cleanedImage = imageProcessingProcessor.cleanImage(image, null, null, null);
+			boolean isBinary = true;
+			Set<Integer> set = new HashSet<>();
+			for (int i = 0; i < cleanedImage.getHeight(); i++) {
+				for (int j = 0; j < cleanedImage.getWidth(); j++) {
+					set.add(cleanedImage.getRGB(j, i));
+					if (set.size() > 2) {
+						isBinary = false;
+						break;
+					}
+				}
+				if (!isBinary) {
+					break;
+				}
+			}
 			recognitionInfo.setCleanImageDuration(new Date().getTime() - date.getTime());
 			date = new Date();
 			TextAdapter textAdapter = ContoursDetector.detectContours(cleanedImage, new TextCutterParams());
@@ -234,7 +250,11 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 				List<BufferedImage> symbolImages = new ArrayList<>();
 				for (TextRow textRow : textAdapter.getRows()) {
 					for (Contour contour : textRow.getContours()) {
-						symbolImages.add(ContourUtil.getBufferedImageFromContour(contour));
+						if (isBinary) {
+							symbolImages.add(ContourUtil.getBufferedImageFromContour(contour));
+						} else {
+							symbolImages.add(imageProcessingProcessor.simpleClean(ContourUtil.getBufferedImageFromContour(contour)));
+						}
 					}
 				}
 				recognitionInfo.setCutSymbolImages(symbolImages);
@@ -256,7 +276,12 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 					extraDuration += new Date().getTime() - date.getTime();
 					date = new Date();
 					rightPoint = contour.getRightPoint();
-					NormalizedData normalizedData = normalization.getNormalizedDataFromContour(contour, trainingDataInfo);
+					NormalizedData normalizedData;
+					if (isBinary) {
+						normalizedData = normalization.getNormalizedDataFromContour(contour, trainingDataInfo);
+					} else {
+						normalizedData = normalization.getNormalizedDataFromImage(imageProcessingProcessor.simpleClean(ContourUtil.getBufferedImageFromContour(contour)), trainingDataInfo, null);
+					}
 					TrainingData trainingData = NetworkDataCreator.getTrainingData(normalizedData, charSequence);
 					inputDataGatheringDuration += new Date().getTime() - date.getTime();
 					date = new Date();

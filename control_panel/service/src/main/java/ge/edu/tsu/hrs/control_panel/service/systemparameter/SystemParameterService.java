@@ -26,4 +26,6 @@ public interface SystemParameterService {
     Long getLongParameterValue(Parameter parameter);
 
     List<Integer> getIntegerListParameterValue(Parameter parameter);
+
+    boolean getBooleanParameterValue(Parameter parameter);
 }

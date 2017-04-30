@@ -64,4 +64,9 @@ public class SystemParameterServiceImpl implements SystemParameterService {
     public List<Integer> getIntegerListParameterValue(Parameter parameter) {
         return systemParameterProcessor.getIntegerListParameterValue(parameter);
     }
+
+    @Override
+    public boolean getBooleanParameterValue(Parameter parameter) {
+        return systemParameterProcessor.getBooleanParameterValue(parameter);
+    }
 }

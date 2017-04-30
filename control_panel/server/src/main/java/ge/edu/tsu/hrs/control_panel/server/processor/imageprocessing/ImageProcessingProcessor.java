@@ -50,19 +50,46 @@ public class ImageProcessingProcessor {
 
     private final Parameter maxNumberOfColors = new Parameter("maxNumberOfColors", "200");
 
-    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters) {
+    private final Parameter percentageOfSameForJoining = new Parameter("percentageOfSameForJoining", "75");
+
+    private final Parameter percentageOfSamesForOneRow = new Parameter("percentageOfSamesForOneRow", "50");
+
+    private final Parameter useJoiningFunctional = new Parameter("useJoiningFunctional", "true");
+
+    private final Parameter noiseArea = new Parameter("noiseArea","15");
+
+    private final Parameter backgroundMinPart = new Parameter("backgroundMinPart", "0.03");
+
+    private final Parameter extraColorsPart = new Parameter("extraColorsPart", "0.15");
+
+    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining) {
         TextCutterParams textCutterParams = new TextCutterParams();
-        textCutterParams.setCheckedRGBMaxValue(parameters.getCheckedRGBMaxValue());
-        textCutterParams.setCheckNeighborRGBMaxValue(parameters.getCheckNeighborRGBMaxValue());
-        textCutterParams.setPercentageOfSameForJoining(parameters.getPercentageOfSameForJoining());
-        textCutterParams.setPercentageOfSamesForOneRow(parameters.getPercentageOfSamesForOneRow());
-        textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
-        textCutterParams.setNoiseArea(parameters.getNoiseArea());
+        if (parameters != null) {
+            textCutterParams.setCheckedRGBMaxValue(parameters.getCheckedRGBMaxValue());
+            textCutterParams.setCheckNeighborRGBMaxValue(parameters.getCheckNeighborRGBMaxValue());
+            textCutterParams.setPercentageOfSameForJoining(parameters.getPercentageOfSameForJoining());
+            textCutterParams.setPercentageOfSamesForOneRow(parameters.getPercentageOfSamesForOneRow());
+            textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
+            textCutterParams.setNoiseArea(parameters.getNoiseArea());
+        } else {
+            textCutterParams.setPercentageOfSameForJoining(systemParameterProcessor.getIntegerParameterValue(percentageOfSameForJoining));
+            textCutterParams.setPercentageOfSamesForOneRow(systemParameterProcessor.getIntegerParameterValue(percentageOfSamesForOneRow));
+            if (forceNotJoining) {
+                textCutterParams.setUseJoiningFunctional(false);
+            } else {
+                textCutterParams.setUseJoiningFunctional(systemParameterProcessor.getBooleanParameterValue(useJoiningFunctional));
+            }
+            textCutterParams.setNoiseArea(systemParameterProcessor.getIntegerParameterValue(noiseArea));
+            fillCheckedParams(textCutterParams, srcImage);
+        }
         TextAdapter textAdapter = ContoursDetector.detectContours(srcImage, textCutterParams);
         List<BufferedImage> images = new ArrayList<>();
         for (TextRow textRow : textAdapter.getRows()) {
             for (Contour contour : textRow.getContours()) {
                 BufferedImage image = ContourUtil.getBufferedImageFromContour(contour);
+                if (parameters == null) {
+                    image = simpleClean(image);
+                }
                 images.add(image);
             }
         }
@@ -251,6 +278,45 @@ public class ImageProcessingProcessor {
             case UNKNOWN:
                 break;
         }
+        return OpenCVUtil.matToBufferedImage(mat);
+    }
+
+    private void fillCheckedParams(TextCutterParams params, BufferedImage image) {
+        Map<Integer, Integer> rgbMap = new TreeMap<>();
+        for (int i = 0; i < image.getHeight(); i++) {
+            for (int j = 0; j < image.getWidth(); j++) {
+                int x = image.getRGB(j, i);
+                if (rgbMap.containsKey(x)) {
+                    rgbMap.put(x, rgbMap.get(x) + 1);
+                } else {
+                    rgbMap.put(x, 1);
+                }
+            }
+        }
+        int border = 0;
+        int area = image.getHeight() * image.getWidth();
+        for (int x : rgbMap.keySet()) {
+            if (border > 1 && rgbMap.get(x) >= area * systemParameterProcessor.getFloatParameterValue(backgroundMinPart)) {
+                break;
+            }
+            border++;
+        }
+        border = (int) ((1 - systemParameterProcessor.getFloatParameterValue(extraColorsPart)) * border);
+        for (Integer x : rgbMap.keySet()) {
+            if (border == 0) {
+                params.setCheckedRGBMaxValue(x);
+                params.setCheckNeighborRGBMaxValue(x);
+            }
+            border--;
+        }
+    }
+
+    public BufferedImage simpleClean(BufferedImage image) {
+        opencv_core.Mat mat = OpenCVUtil.bufferedImageToMat(image);
+        if (mat.type() != opencv_core.CV_8UC1) {
+            opencv_imgproc.cvtColor(mat, mat, opencv_imgproc.CV_RGB2GRAY);
+        }
+        mat = BinaryConverter.applyThreshold(mat, new OtsuBinarizationParams());
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
