@@ -72,22 +72,14 @@ public class ImageProcessingProcessor {
             textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
             textCutterParams.setNoiseArea(parameters.getNoiseArea());
         } else {
-            textCutterParams.setPercentageOfSameForJoining(systemParameterProcessor.getIntegerParameterValue(percentageOfSameForJoining));
-            textCutterParams.setPercentageOfSamesForOneRow(systemParameterProcessor.getIntegerParameterValue(percentageOfSamesForOneRow));
-            if (forceNotJoining) {
-                textCutterParams.setUseJoiningFunctional(false);
-            } else {
-                textCutterParams.setUseJoiningFunctional(systemParameterProcessor.getBooleanParameterValue(useJoiningFunctional));
-            }
-            textCutterParams.setNoiseArea(systemParameterProcessor.getIntegerParameterValue(noiseArea));
-            fillCheckedParams(textCutterParams, srcImage);
+            fillTextCutterParams(textCutterParams, srcImage, forceNotJoining);
         }
         TextAdapter textAdapter = ContoursDetector.detectContours(srcImage, textCutterParams);
         List<BufferedImage> images = new ArrayList<>();
         for (TextRow textRow : textAdapter.getRows()) {
             for (Contour contour : textRow.getContours()) {
                 BufferedImage image = ContourUtil.getBufferedImageFromContour(contour);
-                if (parameters == null) {
+                if (parameters == null && !forceNotJoining) {
                     image = simpleClean(image);
                 }
                 images.add(image);
@@ -281,7 +273,15 @@ public class ImageProcessingProcessor {
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
-    private void fillCheckedParams(TextCutterParams params, BufferedImage image) {
+    public void fillTextCutterParams(TextCutterParams params, BufferedImage image, boolean forceNotJoining) {
+        params.setPercentageOfSameForJoining(systemParameterProcessor.getIntegerParameterValue(percentageOfSameForJoining));
+        params.setPercentageOfSamesForOneRow(systemParameterProcessor.getIntegerParameterValue(percentageOfSamesForOneRow));
+        if (forceNotJoining) {
+            params.setUseJoiningFunctional(false);
+        } else {
+            params.setUseJoiningFunctional(systemParameterProcessor.getBooleanParameterValue(useJoiningFunctional));
+        }
+        params.setNoiseArea(systemParameterProcessor.getIntegerParameterValue(noiseArea));
         Map<Integer, Integer> rgbMap = new TreeMap<>();
         for (int i = 0; i < image.getHeight(); i++) {
             for (int j = 0; j < image.getWidth(); j++) {

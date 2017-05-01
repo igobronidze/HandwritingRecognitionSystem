@@ -131,7 +131,8 @@ public class ContoursDetector {
     }
 
     private static boolean isInSameTextRow(TextRow textRow, Contour contour, int percentage) {
-        return textRow.getContours().size() == 0 || (float)(contour.getBottomPoint() - contour.getTopPoint() + 1) * percentage / 100 <= (textRow.getBottomPoint() - contour.getTopPoint() + 1);
+        return textRow.getContours().size() == 0 || (float)(contour.getBottomPoint() - contour.getTopPoint() + 1) * percentage / 100 <= (textRow.getBottomPoint() - contour.getTopPoint() + 1)
+                || (textRow.getBottomPoint() - contour.getTopPoint() + 1) * 2F >= (textRow.getBottomPoint() - textRow.getTopPoint() + 1);
     }
 
     private static List<Point> getConnectedPoints(short i, short j, TextCutterParams params) {

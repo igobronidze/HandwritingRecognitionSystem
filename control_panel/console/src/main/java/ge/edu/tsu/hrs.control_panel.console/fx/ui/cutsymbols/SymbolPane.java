@@ -197,7 +197,7 @@ public class SymbolPane extends VBox {
             mainHBox.getChildren().addAll(pane, parametersVBox);
 
             TCHCheckBox userJoiningFunctionalCheckBox = new TCHCheckBox(Messages.get("useJoiningFunctional"));
-            userJoiningFunctionalCheckBox.setSelected(parameters == null ? true : parameters.isUseJoiningFunctional());
+            userJoiningFunctionalCheckBox.setSelected(parameters == null ? false : parameters.isUseJoiningFunctional());
 
             TCHButton closeButton = new TCHButton(Messages.get("close"));
             closeButton.setOnAction(event1 -> {
