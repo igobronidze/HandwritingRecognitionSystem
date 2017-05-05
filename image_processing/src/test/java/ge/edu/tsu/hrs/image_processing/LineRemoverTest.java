@@ -7,9 +7,9 @@ import org.junit.Test;
 
 public class LineRemoverTest {
 
-    private String srcPath = "test_images/lineremover/music.jpg";
+    private String srcPath = "test_images/lineremover/1.jpg";
 
-    private String resultPath = "test_images/lineremover/r_music.jpg";
+    private String resultPath = "test_images/lineremover/2.jpg";
 
     @Test
     @Ignore

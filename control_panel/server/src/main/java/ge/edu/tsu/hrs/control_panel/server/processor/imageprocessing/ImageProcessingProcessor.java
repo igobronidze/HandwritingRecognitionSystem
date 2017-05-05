@@ -60,7 +60,7 @@ public class ImageProcessingProcessor {
 
     private final Parameter backgroundMinPart = new Parameter("backgroundMinPart", "0.03");
 
-    private final Parameter extraColorsPart = new Parameter("extraColorsPart", "0.15");
+    private final Parameter extraColorsPart = new Parameter("extraColorsPart", "0.5");
 
     public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining) {
         TextCutterParams textCutterParams = new TextCutterParams();
