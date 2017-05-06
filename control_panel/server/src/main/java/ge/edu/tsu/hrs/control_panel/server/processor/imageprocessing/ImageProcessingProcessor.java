@@ -31,13 +31,11 @@ import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.Simp
 import ge.edu.tsu.hrs.image_processing.util.OpenCVUtil;
 import org.bytedeco.javacpp.opencv_core;
 import org.bytedeco.javacpp.opencv_imgproc;
-import org.omg.CORBA.UNKNOWN;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -50,7 +48,7 @@ public class ImageProcessingProcessor {
 
     private final Parameter maxNumberOfColors = new Parameter("maxNumberOfColors", "200");
 
-    private final Parameter percentageOfSameForJoining = new Parameter("percentageOfSameForJoining", "75");
+    private final Parameter percentageOfSameForJoining = new Parameter("percentageOfSameForJoining", "60");
 
     private final Parameter percentageOfSamesForOneRow = new Parameter("percentageOfSamesForOneRow", "50");
 
@@ -62,7 +60,7 @@ public class ImageProcessingProcessor {
 
     private final Parameter extraColorsPart = new Parameter("extraColorsPart", "0.5");
 
-    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining) {
+    public List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining, Float extraPart) {
         TextCutterParams textCutterParams = new TextCutterParams();
         if (parameters != null) {
             textCutterParams.setCheckedRGBMaxValue(parameters.getCheckedRGBMaxValue());
@@ -72,7 +70,7 @@ public class ImageProcessingProcessor {
             textCutterParams.setUseJoiningFunctional(parameters.isUseJoiningFunctional());
             textCutterParams.setNoiseArea(parameters.getNoiseArea());
         } else {
-            fillTextCutterParams(textCutterParams, srcImage, forceNotJoining);
+            fillTextCutterParams(textCutterParams, srcImage, forceNotJoining, extraPart);
         }
         TextAdapter textAdapter = ContoursDetector.detectContours(srcImage, textCutterParams);
         List<BufferedImage> images = new ArrayList<>();
@@ -273,7 +271,7 @@ public class ImageProcessingProcessor {
         return OpenCVUtil.matToBufferedImage(mat);
     }
 
-    public void fillTextCutterParams(TextCutterParams params, BufferedImage image, boolean forceNotJoining) {
+    public void fillTextCutterParams(TextCutterParams params, BufferedImage image, boolean forceNotJoining, Float extraPart) {
         params.setPercentageOfSameForJoining(systemParameterProcessor.getIntegerParameterValue(percentageOfSameForJoining));
         params.setPercentageOfSamesForOneRow(systemParameterProcessor.getIntegerParameterValue(percentageOfSamesForOneRow));
         if (forceNotJoining) {
@@ -301,7 +299,11 @@ public class ImageProcessingProcessor {
             }
             border++;
         }
-        border = (int) ((1 - systemParameterProcessor.getFloatParameterValue(extraColorsPart)) * border);
+        if (extraPart == null) {
+            border = (int) ((1 - systemParameterProcessor.getFloatParameterValue(extraColorsPart)) * border);
+        } else {
+            border = (int) ((1 - extraPart) * border);
+        }
         for (Integer x : rgbMap.keySet()) {
             if (border == 0) {
                 params.setCheckedRGBMaxValue(x);

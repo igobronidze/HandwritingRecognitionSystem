@@ -7,6 +7,7 @@ import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHFieldLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHLabel;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHNumberTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHTextArea;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHTextField;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.main.ControlPanel;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.ImageFactory;
 import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
@@ -64,6 +65,8 @@ public class CutSymbolsPane extends VBox {
 
     private CheckBox cutWithoutParamsCheckBox;
 
+    private TCHTextField extraColorsPartField;
+
     public CutSymbolsPane() {
         this.setSpacing(8);
         this.getChildren().addAll(getTopPane(), getBottomPane());
@@ -74,6 +77,7 @@ public class CutSymbolsPane extends VBox {
         srcImageView.setImage(SwingFXUtils.toFXImage(image, null));
         cutButton.setDisable(false);
         cutWithoutParamsCheckBox.setSelected(true);
+        extraColorsPartField.setDisable(false);
     }
 
     private HBox getTopPane() {
@@ -133,6 +137,12 @@ public class CutSymbolsPane extends VBox {
         flowPane.setVgap(5);
         flowPane.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding());
         cutWithoutParamsCheckBox = new CheckBox();
+        cutWithoutParamsCheckBox.selectedProperty().addListener((observable, oldValue, newValue) -> {
+            extraColorsPartField.setDisable(!newValue);
+        });
+        extraColorsPartField = new TCHTextField("0.5", TCHComponentSize.SMALL);
+        TCHFieldLabel extraColorsPartFieldLabel = new TCHFieldLabel(Messages.get("extraColorsPart"), extraColorsPartField);
+        extraColorsPartField.setDisable(true);
         TCHFieldLabel cutWithoutParamsFieldLabel = new TCHFieldLabel(Messages.get("cutWithoutParams"), cutWithoutParamsCheckBox);
         TCHNumberTextField checkedRGBMaxValueField = new TCHNumberTextField(new BigDecimal("-5777216"), TCHComponentSize.SMALL);
         TCHFieldLabel checkedRGBMaxValueFieldLabel = new TCHFieldLabel(Messages.get("checkedRGBMaxValue"), checkedRGBMaxValueField);
@@ -162,11 +172,12 @@ public class CutSymbolsPane extends VBox {
                 parameters.setPercentageOfSamesForOneRow(percentageOfSamesForOneRowField.getNumber().intValue());
                 parameters.setNoiseArea(noiseAreaField.getNumber().intValue());
             }
-            List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters, false);
+            List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(srcImageView.getImage(), null), parameters, false,
+                    extraColorsPartField.getText().isEmpty() ? null : Float.valueOf(extraColorsPartField.getText()));
             symbolsPane.initSymbols(images, imageProcessingService.processTextForImage(textArea.getText(), parameters == null ? systemParameterService.getBooleanParameterValue(doubleQuoteAsTwoChar) :
                     parameters.isDoubleQuoteAsTwoChar()), parameters);
         });
-        flowPane.getChildren().addAll(cutWithoutParamsFieldLabel, checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
+        flowPane.getChildren().addAll(cutWithoutParamsFieldLabel, extraColorsPartFieldLabel, checkedRGBMaxValueFieldLabel, checkNeighborRGBMaxValueFieldLabel, doubleQuoteAsTwoCharFieldLabel, useJoiningFunctionalFieldLabel,
                 percentageOfSameForJoiningFieldLabel, percentageOfSamesForOneRowFieldLabel, noiseAreaFieldLabel, cutButton);
         vBox.getChildren().addAll(titleLabel, flowPane);
         scrollPane.setContent(vBox);

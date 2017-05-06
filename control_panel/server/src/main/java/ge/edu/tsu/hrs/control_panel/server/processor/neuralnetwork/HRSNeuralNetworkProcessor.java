@@ -248,7 +248,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			if (isBinary) {
 				textAdapter = ContoursDetector.detectContours(cleanedImage, textCutterParams);
 			} else {
-				imageProcessingProcessor.fillTextCutterParams(textCutterParams, cleanedImage, false);
+				imageProcessingProcessor.fillTextCutterParams(textCutterParams, cleanedImage, false, null);
 				textAdapter = ContoursDetector.detectContours(cleanedImage, textCutterParams);
 			}
 			recognitionInfo.setDetectContoursDuration(new Date().getTime() - date.getTime());

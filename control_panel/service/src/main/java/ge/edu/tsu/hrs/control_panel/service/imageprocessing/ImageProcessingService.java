@@ -12,7 +12,7 @@ public interface ImageProcessingService {
 
     BufferedImage cleanImage(BufferedImage srcImage, BlurringParameters blurringParameters, ThresholdParameters thresholdParameters, MorphologicalParameters morphologicalParameters);
 
-    List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining);
+    List<BufferedImage> getCutSymbols(BufferedImage srcImage, TextCutterParameters parameters, boolean forceNotJoining, Float extraColorsPart);
 
     List<String> processTextForImage(String text, boolean doubleQuoteAsTwoChar);
 

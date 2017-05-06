@@ -43,6 +43,10 @@ public class SymbolPane extends VBox {
 
     private final Parameter cutImageHeightOnUI = new Parameter("cutImageHeightOnUI", "115");
 
+    private Integer cachedWidth;
+
+    private Integer cachedHeight;
+
     private BufferedImage image;
 
     private int index;
@@ -75,8 +79,14 @@ public class SymbolPane extends VBox {
     private ImageView getImageView() {
         ImageView imageView = new ImageView();
         imageView.setImage(SwingFXUtils.toFXImage(image, null));
-        imageView.setFitWidth(systemParameterService.getIntegerParameterValue(cutImageWidthOnUI));
-        imageView.setFitHeight(systemParameterService.getIntegerParameterValue(cutImageHeightOnUI));
+        if (cachedWidth == null) {
+            cachedWidth = systemParameterService.getIntegerParameterValue(cutImageWidthOnUI);
+        }
+        if (cachedHeight == null) {
+            cachedHeight = systemParameterService.getIntegerParameterValue(cutImageHeightOnUI);
+        }
+        imageView.setFitWidth(cachedWidth);
+        imageView.setFitHeight(cachedHeight);
         return imageView;
     }
 
@@ -210,7 +220,7 @@ public class SymbolPane extends VBox {
                 if (parameters != null) {
                     parameters.setUseJoiningFunctional(userJoiningFunctionalCheckBox.isSelected());
                 }
-                List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(writableImage, null), parameters, !userJoiningFunctionalCheckBox.isSelected());
+                List<BufferedImage> images = imageProcessingService.getCutSymbols(SwingFXUtils.fromFXImage(writableImage, null), parameters, !userJoiningFunctionalCheckBox.isSelected(), null);
                 List<String> symbols = new ArrayList<>();
                 for (int i = 0; i < images.size(); i++) {
                     symbols.add("");
