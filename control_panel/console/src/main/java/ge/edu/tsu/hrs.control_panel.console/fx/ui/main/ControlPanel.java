@@ -1,5 +1,6 @@
 package ge.edu.tsu.hrs.control_panel.console.fx.ui.main;
 
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.book.BookPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.cleanimage.CleanImagePane;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.cutsymbols.CutSymbolsPane;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.dashboard.AdminDashboard;
@@ -78,6 +79,10 @@ public class ControlPanel extends Application {
             case TEXT_RECOGNITION:
                 text = Messages.get("textRecognition");
                 root.setCenter(new TextRecognitionPane());
+                break;
+            case BOOK:
+                text = Messages.get("books");
+                root.setCenter(new BookPane());
                 break;
         }
         root.setTop(new ControlPanelHeader(text));

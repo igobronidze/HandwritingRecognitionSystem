@@ -36,6 +36,11 @@
             <artifactId>model</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>ge.edu.tsu.hrs</groupId>
+            <artifactId>words_processing</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 
 </project>
