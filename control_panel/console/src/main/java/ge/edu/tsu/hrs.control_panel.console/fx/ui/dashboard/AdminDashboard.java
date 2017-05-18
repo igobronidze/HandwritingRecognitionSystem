@@ -39,7 +39,11 @@ public class AdminDashboard extends FlowPane {
 		textRecognitionButton.setOnAction(event -> {
 			ControlPanel.initComponents(SystemPageType.TEXT_RECOGNITION);
 		});
-		this.getChildren().addAll(networkControlButton, cleanImageButton, cutSymbolsButton, normalizationButton, systemParameterButton, textRecognitionButton);
+		DashboardButton bookButton = new DashboardButton(Messages.get("books"));
+		bookButton.setOnAction(event -> {
+			ControlPanel.initComponents(SystemPageType.BOOK);
+		});
+		this.getChildren().addAll(networkControlButton, cleanImageButton, cutSymbolsButton, normalizationButton, systemParameterButton, textRecognitionButton, bookButton);
 	}
 
 	private void initUI() {

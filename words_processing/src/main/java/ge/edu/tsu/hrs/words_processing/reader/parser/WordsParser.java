@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.words_processing.pdf_reader.parser;
+package ge.edu.tsu.hrs.words_processing.reader.parser;
 
 import java.util.ArrayList;
 import java.util.List;

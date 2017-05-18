@@ -7,4 +7,6 @@ import java.util.List;
 public interface WordDAO {
 
 	void addWords(List<Word> words);
+
+	List<Word> getWords();
 }

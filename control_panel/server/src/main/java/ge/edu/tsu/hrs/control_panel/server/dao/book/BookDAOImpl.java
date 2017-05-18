@@ -16,7 +16,7 @@ public class BookDAOImpl implements BookDAO {
 	@Override
 	public void addBook(Book book) {
 		try {
-			String sql = "INSERT INTO Book (name, description, total_words, distinct_words, saved_words) VALUES (?,?,?,?,?,?);";
+			String sql = "INSERT INTO Book (name, description, total_words, distinct_words, saved_words, duration) VALUES (?,?,?,?,?,?);";
 			pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
 			pstmt.setString(1, book.getName());
 			pstmt.setString(2, book.getDescription());

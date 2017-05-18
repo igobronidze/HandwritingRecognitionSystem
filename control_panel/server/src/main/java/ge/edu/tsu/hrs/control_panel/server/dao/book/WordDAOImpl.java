@@ -4,7 +4,9 @@ import ge.edu.tsu.hrs.control_panel.model.book.Word;
 import ge.edu.tsu.hrs.control_panel.server.dao.DatabaseUtil;
 
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -16,11 +18,11 @@ public class WordDAOImpl implements WordDAO {
 	public void addWords(List<Word> words) {
 		try {
 			if (!words.isEmpty()) {
-				System.out.println("Started words inserting, count - " + words.size());
 				Long currMS = new Date().getTime();
-				StringBuilder sql = new StringBuilder("INSERT INTO Word VALUES ");
+				System.out.println("Started words inserting, count - " + words.size());
+				StringBuilder sql = new StringBuilder("INSERT INTO Word (word) VALUES ");
 				for (int i = 0; i < words.size(); i++) {
-					sql.append("(" + words.get(i).getWord() + ")");
+					sql.append("('").append(words.get(i).getWord()).append("')");
 					if (i != words.size() - 1) {
 						sql.append(", ");
 					}
@@ -34,5 +36,28 @@ public class WordDAOImpl implements WordDAO {
 		} finally {
 			DatabaseUtil.closeConnection();
 		}
+	}
+
+	@Override
+	public List<Word> getWords() {
+		List<Word> words = new ArrayList<>();
+		try {
+			Long currMS = new Date().getTime();
+			System.out.println("Started words selecting");
+			String sql = "SELECT * FROM Word";
+			pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
+			ResultSet rs = pstmt.executeQuery();
+			while (rs.next()) {
+				Word word = new Word(rs.getString("word"));
+				words.add(word);
+			}
+			System.out.println("Words selecting took " + (new Date().getTime() - currMS) + "ms, count - " + words.size());
+		} catch (SQLException ex) {
+			ex.printStackTrace();
+			return getWords();   // TODO[IG] შეიძლება ჩაიციკლოს
+		} finally {
+			DatabaseUtil.closeConnection();
+		}
+		return words;
 	}
 }

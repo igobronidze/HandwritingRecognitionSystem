@@ -1,20 +1,20 @@
 package ge.edu.tsu.hrs.words_processing.exception;
 
-public class PDFReaderException extends Exception {
+public class ReaderException extends Exception {
 
 	private String messageKey;
 
-	public PDFReaderException() {}
+	public ReaderException() {}
 
-	public PDFReaderException(String messageKey) {
+	public ReaderException(String messageKey) {
 		this.messageKey = messageKey;
 	}
 
-	public PDFReaderException(Exception ex) {
+	public ReaderException(Exception ex) {
 		super(ex);
 	}
 
-	public PDFReaderException(String messageKey, Exception ex) {
+	public ReaderException(String messageKey, Exception ex) {
 		super(ex);
 		this.messageKey = messageKey;
 	}

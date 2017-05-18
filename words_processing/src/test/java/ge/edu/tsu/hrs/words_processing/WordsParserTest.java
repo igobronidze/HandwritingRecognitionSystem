@@ -1,7 +1,7 @@
 package ge.edu.tsu.hrs.words_processing;
 
-import ge.edu.tsu.hrs.words_processing.pdf_reader.parser.GeorgianWordsParserPattern;
-import ge.edu.tsu.hrs.words_processing.pdf_reader.parser.WordsParser;
+import ge.edu.tsu.hrs.words_processing.reader.parser.GeorgianWordsParserPattern;
+import ge.edu.tsu.hrs.words_processing.reader.parser.WordsParser;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
