@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.control_panel.server.datacreator;
+package ge.edu.tsu.hrs.control_panel.server.various_processes;
 
 import ge.edu.tsu.hrs.control_panel.server.util.CharacterUtil;
 
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class CutSymbolsSplitter {
+public class CutSymbolsSplitter implements VariousProcesses {
 
     private static final String srcPath = "D:\\hrs\\HRSImageData\\cut_symbols\\handwritten\\vefxistyaosani_test";
 
@@ -20,7 +20,7 @@ public class CutSymbolsSplitter {
 
     private static final String testPath = srcPath + "/test";
 
-    public static void main(String[] args) {
+    public void process() {
         Map<Character, List<File>> charToFilesMap = new HashMap<>();
         File srcFile = new File(srcPath);
         File trainFile = new File(trainPath);

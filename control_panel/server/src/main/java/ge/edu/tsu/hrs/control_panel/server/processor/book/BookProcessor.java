@@ -79,7 +79,7 @@ public class BookProcessor {
 				} else {
 					System.out.println("Book is too small");
 				}
-			} catch (ReaderException ex) {
+			} catch (Exception ex) {
 				System.out.println(ex.getMessage());
 			}
 		}

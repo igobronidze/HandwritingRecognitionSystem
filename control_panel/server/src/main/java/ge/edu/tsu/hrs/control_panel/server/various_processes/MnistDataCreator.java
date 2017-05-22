@@ -1,4 +1,4 @@
-package ge.edu.tsu.hrs.control_panel.server.datacreator;
+package ge.edu.tsu.hrs.control_panel.server.various_processes;
 
 import ge.edu.tsu.hrs.image_processing.opencv.operation.BinaryConverter;
 import ge.edu.tsu.hrs.image_processing.opencv.operation.parameter.threshold.SimpleThresholdParams;
@@ -8,7 +8,7 @@ import org.bytedeco.javacpp.opencv_imgproc;
 
 import java.io.File;
 
-public class MnistDataCreator {
+public class MNISTDataCreator implements VariousProcesses {
 
     private static final String trainingSrcDirectoryPath = "D:\\hrs\\HRSImageData\\original_images\\mnist\\training\\";
 
@@ -18,7 +18,7 @@ public class MnistDataCreator {
 
     private static final String testingResultDirectoryPath = "D:\\hrs\\HRSImageData\\cut_symbols\\mnist\\testing\\";
 
-    public static void main(String[] args) {
+    public void process() {
         File testingRoot = new File(testingSrcDirectoryPath);
         for (File directory : testingRoot.listFiles()) {
             applyThresholdForDirectory(directory.getAbsolutePath(), testingResultDirectoryPath + directory.getName());
