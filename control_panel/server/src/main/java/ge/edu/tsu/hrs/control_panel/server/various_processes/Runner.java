@@ -2,7 +2,7 @@ package ge.edu.tsu.hrs.control_panel.server.various_processes;
 
 public class Runner {
 
-	private static final VariousProcessesType TYPE = VariousProcessesType.GATHER_BOOKS_FROM_FOLDERS;
+	private static final VariousProcessesType TYPE = VariousProcessesType.DIVIDE_CHARACTERS;
 
 	public static void main(String[] args) {
 		VariousProcesses variousProcesses = null;
@@ -15,6 +15,9 @@ public class Runner {
 				break;
 			case MNIST_DATA_CREATOR:
 				variousProcesses = new MNISTDataCreator();
+				break;
+			case DIVIDE_CHARACTERS:
+				variousProcesses = new DivideCharacters();
 				break;
 		}
 		variousProcesses.process();

@@ -81,9 +81,14 @@ public class NormalizedDataProcessor {
     }
 
     private Character getSymbolFromFile(File file) {
-        String fileName = file.getName();
-        String fileNameWithoutExtension = fileName.replaceFirst("[.][^.]+$", "");
-        String text = fileNameWithoutExtension.split("_")[1];
-        return CharacterUtil.getCharFromFileName(text);
+        try {
+            String fileName = file.getName();
+            String fileNameWithoutExtension = fileName.replaceFirst("[.][^.]+$", "");
+            String text = fileNameWithoutExtension.split("_")[1];
+            return CharacterUtil.getCharFromFileName(text);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+            return 'X';
+        }
     }
 }
