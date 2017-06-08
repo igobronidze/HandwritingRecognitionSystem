@@ -27,6 +27,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
     @Override
     public void addNormalizedDatum(List<NormalizedData> normalizedDatum, GroupedNormalizedData groupedNormalizedData) {
         try {
+            System.out.println("Start add normalized data method count[" + normalizedDatum.size() + "]");
             StringBuilder sql = new StringBuilder("INSERT INTO normalized_data (letter, data, grouped_normalized_data_id) VALUES ");
             for (int i = 0; i < normalizedDatum.size() - 1; i++) {
                 sql.append("(?, ?, ?), ");
@@ -45,6 +46,7 @@ public class NormalizedDataDAOImpl implements NormalizedDataDAO {
             pstmt.setLong(1, groupedNormalizedData.getDuration());
             pstmt.setInt(2, groupedNormalizedData.getId());
             pstmt.executeUpdate();
+            System.out.println("Finished add normalized data method");
         } catch (SQLException ex) {
             ex.printStackTrace();
         } finally {

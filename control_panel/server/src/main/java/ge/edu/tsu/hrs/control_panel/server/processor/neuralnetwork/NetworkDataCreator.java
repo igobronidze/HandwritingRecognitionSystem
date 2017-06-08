@@ -18,7 +18,7 @@ public class NetworkDataCreator {
         }
         if (normalizedData.getLetter() != null) {
             List<Float> output = new ArrayList<>();
-            int index = charSequence.getCharToIndexMap().get(normalizedData.getLetter());
+            int index = charSequence.getCharToIndexMap().get(normalizedData.getLetter());   // TODO[IG] occur NullPointerException
             for (int i = 0; i < charSequence.getNumberOfChars(); i++) {
                 output.add(i == index ? 1.0f : 0.0f);
             }
