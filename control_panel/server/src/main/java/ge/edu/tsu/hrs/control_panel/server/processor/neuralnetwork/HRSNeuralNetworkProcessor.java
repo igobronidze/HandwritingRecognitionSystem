@@ -94,8 +94,8 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			layers.add(charSequence.getNumberOfChars());
 			NeuralNetwork neuralNetwork = new NeuralNetwork(layers);
 			setNeuralNetworkParameters(neuralNetwork, networkInfo);
-			for (NormalizedData aNormalizedDataList : normalizedDataList) {
-				neuralNetwork.addTrainingData(NetworkDataCreator.getTrainingData(aNormalizedDataList, charSequence));
+			for (NormalizedData normalizedData : normalizedDataList) {
+				neuralNetwork.addTrainingData(NetworkDataCreator.getTrainingData(normalizedData, charSequence));
 			}
 			TrainingProgress trainingProgress = new TrainingProgress();
 			trainingProgress.setUpdatePerIteration(systemParameterProcessor.getLongParameterValue(updatePerIterationParameter));
@@ -214,13 +214,17 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 				charSequence = CachedProductionNetwork.getProductionCharSequence();
 				try {
 					CharSequenceInitializer.initializeCharSequence(charSequence);
-				} catch (ControlPanelException ex) {}
+				} catch (ControlPanelException ex) {
+					ex.printStackTrace();
+				}
 			} else {
 				neuralNetwork = NeuralNetworkHelper.loadNeuralNetwork(networkId, networkExtraId, true, false);
 				charSequence = networkInfoDAO.getCharSequenceById(networkId);
 				try {
 					CharSequenceInitializer.initializeCharSequence(charSequence);
-				} catch (ControlPanelException ex) {}
+				} catch (ControlPanelException ex) {
+					ex.printStackTrace();
+				}
 				trainingDataInfo = trainingDataInfoDAO.getTrainingDataInfo(networkId);
 			}
 			Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
