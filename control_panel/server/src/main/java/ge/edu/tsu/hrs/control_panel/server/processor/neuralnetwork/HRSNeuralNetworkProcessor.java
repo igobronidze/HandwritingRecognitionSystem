@@ -2,6 +2,12 @@ package ge.edu.tsu.hrs.control_panel.server.processor.neuralnetwork;
 
 import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
 import ge.edu.tsu.hrs.control_panel.model.exception.ControlPanelException;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.blurrin.BlurringType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.morphological.MorphologicalType;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdParameters;
+import ge.edu.tsu.hrs.control_panel.model.imageprocessing.threshold.ThresholdType;
 import ge.edu.tsu.hrs.control_panel.model.network.CharSequence;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkResult;
@@ -74,6 +80,14 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	private final Parameter minAverageSymbolPerSpace = new Parameter("minAverageSpacePerSymbol", "5.8");
 
 	private final Parameter maxAverageSymbolPerSpace = new Parameter("maxAverageSpacePerSymbol", "9.5");
+
+	private final Parameter imageCleaningType = new Parameter("imageCleaningType", "1");
+
+	private final Parameter percentageOfSameForJoining = new Parameter("percentageOfSameForJoining", "60");
+
+	private final Parameter percentageOfSamesForOneRow = new Parameter("percentageOfSamesForOneRow", "50");
+
+	private final Parameter noiseArea = new Parameter("noiseArea","15");
 
 	@Override
 	public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
@@ -230,7 +244,23 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			Normalization normalization = Normalization.getInstance(trainingDataInfo.getNormalizationType());
 			recognitionInfo.setNetworkInfoGatheringDuration(new Date().getTime() - date.getTime());
 			date = new Date();
-			BufferedImage cleanedImage = imageProcessingProcessor.cleanImage(image, null, null, null);
+			BufferedImage cleanedImage;
+			switch (systemParameterProcessor.getStringParameterValue(imageCleaningType)) {
+				case "1":
+					BlurringParameters blurringParameters = new BlurringParameters();
+					blurringParameters.setType(BlurringType.BILATERAL_FILTER);
+					blurringParameters.setAmount(3);
+					ThresholdParameters thresholdParameters = new ThresholdParameters();
+					thresholdParameters.setThresholdMethodType(ThresholdType.ADAPTIVE_THRESHOLD);
+					thresholdParameters.setBlockSize(23);
+					MorphologicalParameters morphologicalParameters = new MorphologicalParameters();
+					morphologicalParameters.setMorphologicalType(MorphologicalType.NO_OPERATION);
+					cleanedImage = imageProcessingProcessor.cleanImage(image, blurringParameters, thresholdParameters, morphologicalParameters);
+					break;
+				case "0":
+					default:
+						cleanedImage = imageProcessingProcessor.cleanImage(image, null, null, null);
+			}
 			boolean isBinary = true;
 			Set<Integer> set = new HashSet<>();
 			for (int i = 0; i < cleanedImage.getHeight(); i++) {
@@ -248,6 +278,9 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			recognitionInfo.setCleanImageDuration(new Date().getTime() - date.getTime());
 			date = new Date();
 			TextCutterParams textCutterParams = new TextCutterParams();
+			textCutterParams.setPercentageOfSameForJoining(systemParameterProcessor.getIntegerParameterValue(percentageOfSameForJoining));
+			textCutterParams.setPercentageOfSamesForOneRow(systemParameterProcessor.getIntegerParameterValue(percentageOfSamesForOneRow));
+			textCutterParams.setNoiseArea(systemParameterProcessor.getIntegerParameterValue(noiseArea));
 			TextAdapter textAdapter;
 			if (isBinary) {
 				textAdapter = ContoursDetector.detectContours(cleanedImage, textCutterParams);

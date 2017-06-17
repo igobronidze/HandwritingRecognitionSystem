@@ -48,13 +48,7 @@ public class ImageProcessingProcessor {
 
     private final Parameter maxNumberOfColors = new Parameter("maxNumberOfColors", "200");
 
-    private final Parameter percentageOfSameForJoining = new Parameter("percentageOfSameForJoining", "60");
-
-    private final Parameter percentageOfSamesForOneRow = new Parameter("percentageOfSamesForOneRow", "50");
-
     private final Parameter useJoiningFunctional = new Parameter("useJoiningFunctional", "true");
-
-    private final Parameter noiseArea = new Parameter("noiseArea","15");
 
     private final Parameter backgroundMinPart = new Parameter("backgroundMinPart", "0.03");
 
@@ -157,29 +151,51 @@ public class ImageProcessingProcessor {
         switch (blurringParameters.getType()) {
             case BILATERAL_FILTER:
                 BilateralFilterParams bilateralFilterParams = new BilateralFilterParams();
-                bilateralFilterParams.setDiameter(blurringParameters.getDiameter());
-                bilateralFilterParams.setSigmaColor(blurringParameters.getSigmaColor());
-                bilateralFilterParams.setSigmaSpace(blurringParameters.getSigmaSpace());
+                if (blurringParameters.getDiameter() != null) {
+                    bilateralFilterParams.setDiameter(blurringParameters.getDiameter());
+                }
+                if (blurringParameters.getSigmaColor() != null) {
+                    bilateralFilterParams.setSigmaColor(blurringParameters.getSigmaColor());
+                }
+                if (blurringParameters.getSigmaSpace() != null) {
+                    bilateralFilterParams.setSigmaSpace(blurringParameters.getSigmaSpace());
+                }
                 mat = NoiseRemover.applyNoiseRemoval(mat, bilateralFilterParams, blurringParameters.getAmount());
                 break;
             case BLUR:
                 BlurParams blurParams = new BlurParams();
-                blurParams.setkSizeHeight(blurringParameters.getkSizeHeight());
-                blurParams.setkSizeWidth(blurringParameters.getkSizeWidth());
+                if (blurringParameters.getkSizeHeight() != null) {
+                    blurParams.setkSizeHeight(blurringParameters.getkSizeHeight());
+                }
+                if (blurringParameters.getkSizeWidth() != null) {
+                    blurParams.setkSizeWidth(blurringParameters.getkSizeWidth());
+                }
                 mat = NoiseRemover.applyNoiseRemoval(mat, blurParams, blurringParameters.getAmount());
                 break;
             case GAUSSIAN_BLUR:
                 GaussianBlurParams gaussianBlurParams = new GaussianBlurParams();
-                gaussianBlurParams.setkSizeWidth(blurringParameters.getkSizeWidth());
-                gaussianBlurParams.setkSizeHeight(blurringParameters.getkSizeHeight());
-                gaussianBlurParams.setBorderType(blurringParameters.getBorderType());
-                gaussianBlurParams.setSigmaX(blurringParameters.getSigmaX());
-                gaussianBlurParams.setSigmaY(blurringParameters.getSigmaY());
+                if (blurringParameters.getkSizeWidth() != null) {
+                    gaussianBlurParams.setkSizeWidth(blurringParameters.getkSizeWidth());
+                }
+                if (blurringParameters.getkSizeHeight() != null) {
+                    gaussianBlurParams.setkSizeHeight(blurringParameters.getkSizeHeight());
+                }
+                if (blurringParameters.getBorderType() != null) {
+                    gaussianBlurParams.setBorderType(blurringParameters.getBorderType());
+                }
+                if (blurringParameters.getSigmaX() != null) {
+                    gaussianBlurParams.setSigmaX(blurringParameters.getSigmaX());
+                }
+                if (blurringParameters.getSigmaY() != null) {
+                    gaussianBlurParams.setSigmaY(blurringParameters.getSigmaY());
+                }
                 mat = NoiseRemover.applyNoiseRemoval(mat, gaussianBlurParams, blurringParameters.getAmount());
                 break;
             case MEDIAN_BLUR:
                 MedianBlurParams medianBlurParams = new MedianBlurParams();
-                medianBlurParams.setkSize(blurringParameters.getkSize());
+                if (blurringParameters.getkSize() != null) {
+                    medianBlurParams.setkSize(blurringParameters.getkSize());
+                }
                 mat = NoiseRemover.applyNoiseRemoval(mat, medianBlurParams, blurringParameters.getAmount());
                 break;
             case NO_BLURRING:
@@ -189,25 +205,47 @@ public class ImageProcessingProcessor {
         switch (thresholdParameters.getThresholdMethodType()) {
             case ADAPTIVE_THRESHOLD:
                 AdaptiveThresholdParams adaptiveThresholdParams = new AdaptiveThresholdParams();
-                adaptiveThresholdParams.setAdaptiveMethod(thresholdParameters.getAdaptiveMethod());
-                adaptiveThresholdParams.setThresholdType(thresholdParameters.getThresholdType());
-                adaptiveThresholdParams.setBlockSize(thresholdParameters.getBlockSize());
-                adaptiveThresholdParams.setMaxValue(thresholdParameters.getMaxValue());
-                adaptiveThresholdParams.setC(thresholdParameters.getC());
+                if (thresholdParameters.getAdaptiveMethod() != null) {
+                    adaptiveThresholdParams.setAdaptiveMethod(thresholdParameters.getAdaptiveMethod());
+                }
+                if (thresholdParameters.getThresholdType() != null) {
+                    adaptiveThresholdParams.setThresholdType(thresholdParameters.getThresholdType());
+                }
+                if (thresholdParameters.getBlockSize() != null) {
+                    adaptiveThresholdParams.setBlockSize(thresholdParameters.getBlockSize());
+                }
+                if (thresholdParameters.getMaxValue() != null) {
+                    adaptiveThresholdParams.setMaxValue(thresholdParameters.getMaxValue());
+                }
+                if (thresholdParameters.getC() != null) {
+                    adaptiveThresholdParams.setC(thresholdParameters.getC());
+                }
                 mat = BinaryConverter.applyThreshold(mat, adaptiveThresholdParams);
                 break;
             case OTSU_BINARIZATION:
                 OtsuBinarizationParams otsuBinarizationParams = new OtsuBinarizationParams();
-                otsuBinarizationParams.setMaxValue(thresholdParameters.getMaxValue());
-                otsuBinarizationParams.setThresh(thresholdParameters.getThresh());
-                otsuBinarizationParams.setType(thresholdParameters.getType());
+                if (thresholdParameters.getMaxValue() != null) {
+                    otsuBinarizationParams.setMaxValue(thresholdParameters.getMaxValue());
+                }
+                if (thresholdParameters.getThresh() != null) {
+                    otsuBinarizationParams.setThresh(thresholdParameters.getThresh());
+                }
+                if (thresholdParameters.getType() != null) {
+                    otsuBinarizationParams.setType(thresholdParameters.getType());
+                }
                 mat = BinaryConverter.applyThreshold(mat, otsuBinarizationParams);
                 break;
             case SIMPLE_THRESHOLD:
                 SimpleThresholdParams simpleThresholdParams = new SimpleThresholdParams();
-                simpleThresholdParams.setMaxValue(thresholdParameters.getMaxValue());
-                simpleThresholdParams.setThresh(thresholdParameters.getThresh());
-                simpleThresholdParams.setType(thresholdParameters.getType());
+                if (thresholdParameters.getMaxValue() != null) {
+                    simpleThresholdParams.setMaxValue(thresholdParameters.getMaxValue());
+                }
+                if (thresholdParameters.getThresh() != null) {
+                    simpleThresholdParams.setThresh(thresholdParameters.getThresh());
+                }
+                if (thresholdParameters.getType() != null) {
+                    simpleThresholdParams.setType(thresholdParameters.getType());
+                }
                 mat = BinaryConverter.applyThreshold(mat, simpleThresholdParams);
                 break;
             case NO_THRESHOLD:
@@ -215,11 +253,19 @@ public class ImageProcessingProcessor {
                     break;
         }
         DilationParams dilationParams = new DilationParams();
-        dilationParams.setDilation_elem(morphologicalParameters.getDilationElem());
-        dilationParams.setDilation_size(morphologicalParameters.getDilationSize());
+        if (morphologicalParameters.getDilationElem() != null) {
+            dilationParams.setDilation_elem(morphologicalParameters.getDilationElem());
+        }
+        if (morphologicalParameters.getDilationSize() != null) {
+            dilationParams.setDilation_size(morphologicalParameters.getDilationSize());
+        }
         ErosionParams erosionParams = new ErosionParams();
-        erosionParams.setErosion_elem(morphologicalParameters.getErosionElem());
-        erosionParams.setErosion_size(morphologicalParameters.getErosionSize());
+        if (morphologicalParameters.getErosionElem() != null) {
+            erosionParams.setErosion_elem(morphologicalParameters.getErosionElem());
+        }
+        if (morphologicalParameters.getErosionSize() != null) {
+            erosionParams.setErosion_size(morphologicalParameters.getErosionSize());
+        }
         switch (morphologicalParameters.getMorphologicalType()) {
             case DILATION_EROSION:
                 mat = MorphologicalOperations.applyDilation(mat, dilationParams, false, morphologicalParameters.getDilationAmount());
@@ -272,14 +318,11 @@ public class ImageProcessingProcessor {
     }
 
     public void fillTextCutterParams(TextCutterParams params, BufferedImage image, boolean forceNotJoining, Float extraPart) {
-        params.setPercentageOfSameForJoining(systemParameterProcessor.getIntegerParameterValue(percentageOfSameForJoining));
-        params.setPercentageOfSamesForOneRow(systemParameterProcessor.getIntegerParameterValue(percentageOfSamesForOneRow));
         if (forceNotJoining) {
             params.setUseJoiningFunctional(false);
         } else {
             params.setUseJoiningFunctional(systemParameterProcessor.getBooleanParameterValue(useJoiningFunctional));
         }
-        params.setNoiseArea(systemParameterProcessor.getIntegerParameterValue(noiseArea));
         Map<Integer, Integer> rgbMap = new TreeMap<>();
         for (int i = 0; i < image.getHeight(); i++) {
             for (int j = 0; j < image.getWidth(); j++) {

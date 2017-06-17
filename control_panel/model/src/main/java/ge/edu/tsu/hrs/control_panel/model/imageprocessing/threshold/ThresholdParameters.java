@@ -4,19 +4,19 @@ public class ThresholdParameters {
 
     private ThresholdType thresholdMethodType;
 
-    private int thresh;
+    private Integer thresh;
 
-    private int maxValue;
+    private Integer maxValue;
 
-    private int type;
+    private Integer type;
 
-    private int adaptiveMethod;
+    private Integer adaptiveMethod;
 
-    private int thresholdType;
+    private Integer thresholdType;
 
-    private int blockSize;
+    private Integer blockSize;
 
-    private int c;
+    private Integer c;
 
     public ThresholdType getThresholdMethodType() {
         return thresholdMethodType;
@@ -26,59 +26,59 @@ public class ThresholdParameters {
         this.thresholdMethodType = thresholdMethodType;
     }
 
-    public int getThresh() {
+    public Integer getThresh() {
         return thresh;
     }
 
-    public void setThresh(int thresh) {
+    public void setThresh(Integer thresh) {
         this.thresh = thresh;
     }
 
-    public int getMaxValue() {
+    public Integer getMaxValue() {
         return maxValue;
     }
 
-    public void setMaxValue(int maxValue) {
+    public void setMaxValue(Integer maxValue) {
         this.maxValue = maxValue;
     }
 
-    public int getType() {
+    public Integer getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public void setType(Integer type) {
         this.type = type;
     }
 
-    public int getAdaptiveMethod() {
+    public Integer getAdaptiveMethod() {
         return adaptiveMethod;
     }
 
-    public void setAdaptiveMethod(int adaptiveMethod) {
+    public void setAdaptiveMethod(Integer adaptiveMethod) {
         this.adaptiveMethod = adaptiveMethod;
     }
 
-    public int getThresholdType() {
+    public Integer getThresholdType() {
         return thresholdType;
     }
 
-    public void setThresholdType(int thresholdType) {
+    public void setThresholdType(Integer thresholdType) {
         this.thresholdType = thresholdType;
     }
 
-    public int getBlockSize() {
+    public Integer getBlockSize() {
         return blockSize;
     }
 
-    public void setBlockSize(int blockSize) {
+    public void setBlockSize(Integer blockSize) {
         this.blockSize = blockSize;
     }
 
-    public int getC() {
+    public Integer getC() {
         return c;
     }
 
-    public void setC(int c) {
+    public void setC(Integer c) {
         this.c = c;
     }
 }

@@ -6,31 +6,23 @@ public class BlurringParameters {
 
     private int amount;
 
-    private int kSize;
+    private Integer kSize;
 
-    private int diameter;
+    private Integer diameter;
 
-    private int sigmaColor;
+    private Integer sigmaColor;
 
-    private int sigmaSpace;
+    private Integer sigmaSpace;
 
-    private int kSizeWidth;
+    private Integer kSizeWidth;
 
-    private int kSizeHeight;
+    private Integer kSizeHeight;
 
-    private double sigmaX;
+    private Double sigmaX;
 
-    private double sigmaY;
+    private Double sigmaY;
 
-    private int borderType;
-
-    public int getAmount() {
-        return amount;
-    }
-
-    public void setAmount(int amount) {
-        this.amount = amount;
-    }
+    private Integer borderType;
 
     public BlurringType getType() {
         return type;
@@ -40,75 +32,83 @@ public class BlurringParameters {
         this.type = type;
     }
 
-    public int getkSize() {
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public Integer getkSize() {
         return kSize;
     }
 
-    public void setkSize(int kSize) {
+    public void setkSize(Integer kSize) {
         this.kSize = kSize;
     }
 
-    public int getDiameter() {
+    public Integer getDiameter() {
         return diameter;
     }
 
-    public void setDiameter(int diameter) {
+    public void setDiameter(Integer diameter) {
         this.diameter = diameter;
     }
 
-    public int getSigmaColor() {
+    public Integer getSigmaColor() {
         return sigmaColor;
     }
 
-    public void setSigmaColor(int sigmaColor) {
+    public void setSigmaColor(Integer sigmaColor) {
         this.sigmaColor = sigmaColor;
     }
 
-    public int getSigmaSpace() {
+    public Integer getSigmaSpace() {
         return sigmaSpace;
     }
 
-    public void setSigmaSpace(int sigmaSpace) {
+    public void setSigmaSpace(Integer sigmaSpace) {
         this.sigmaSpace = sigmaSpace;
     }
 
-    public int getkSizeWidth() {
+    public Integer getkSizeWidth() {
         return kSizeWidth;
     }
 
-    public void setkSizeWidth(int kSizeWidth) {
+    public void setkSizeWidth(Integer kSizeWidth) {
         this.kSizeWidth = kSizeWidth;
     }
 
-    public int getkSizeHeight() {
+    public Integer getkSizeHeight() {
         return kSizeHeight;
     }
 
-    public void setkSizeHeight(int kSizeHeight) {
+    public void setkSizeHeight(Integer kSizeHeight) {
         this.kSizeHeight = kSizeHeight;
     }
 
-    public double getSigmaX() {
+    public Double getSigmaX() {
         return sigmaX;
     }
 
-    public void setSigmaX(double sigmaX) {
+    public void setSigmaX(Double sigmaX) {
         this.sigmaX = sigmaX;
     }
 
-    public double getSigmaY() {
+    public Double getSigmaY() {
         return sigmaY;
     }
 
-    public void setSigmaY(double sigmaY) {
+    public void setSigmaY(Double sigmaY) {
         this.sigmaY = sigmaY;
     }
 
-    public int getBorderType() {
+    public Integer getBorderType() {
         return borderType;
     }
 
-    public void setBorderType(int borderType) {
+    public void setBorderType(Integer borderType) {
         this.borderType = borderType;
     }
 }

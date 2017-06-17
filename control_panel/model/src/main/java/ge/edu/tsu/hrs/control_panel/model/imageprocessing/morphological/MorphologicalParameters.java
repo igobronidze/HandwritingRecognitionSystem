@@ -6,15 +6,15 @@ public class MorphologicalParameters {
 
     private int erosionAmount;
 
-    private int erosionElem;
+    private Integer erosionElem;
 
-    private int erosionSize;
+    private Integer erosionSize;
 
     private int dilationAmount;
 
-    private int dilationElem;
+    private Integer dilationElem;
 
-    private int dilationSize;
+    private Integer dilationSize;
 
     public MorphologicalType getMorphologicalType() {
         return morphologicalType;
@@ -32,19 +32,19 @@ public class MorphologicalParameters {
         this.erosionAmount = erosionAmount;
     }
 
-    public int getErosionElem() {
+    public Integer getErosionElem() {
         return erosionElem;
     }
 
-    public void setErosionElem(int erosionElem) {
+    public void setErosionElem(Integer erosionElem) {
         this.erosionElem = erosionElem;
     }
 
-    public int getErosionSize() {
+    public Integer getErosionSize() {
         return erosionSize;
     }
 
-    public void setErosionSize(int erosionSize) {
+    public void setErosionSize(Integer erosionSize) {
         this.erosionSize = erosionSize;
     }
 
@@ -56,19 +56,19 @@ public class MorphologicalParameters {
         this.dilationAmount = dilationAmount;
     }
 
-    public int getDilationElem() {
+    public Integer getDilationElem() {
         return dilationElem;
     }
 
-    public void setDilationElem(int dilationElem) {
+    public void setDilationElem(Integer dilationElem) {
         this.dilationElem = dilationElem;
     }
 
-    public int getDilationSize() {
+    public Integer getDilationSize() {
         return dilationSize;
     }
 
-    public void setDilationSize(int dilationSize) {
+    public void setDilationSize(Integer dilationSize) {
         this.dilationSize = dilationSize;
     }
 }
