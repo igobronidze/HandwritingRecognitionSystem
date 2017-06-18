@@ -30,6 +30,7 @@ import ge.edu.tsu.hrs.control_panel.server.dao.trainingdatainfo.TrainingDataInfo
 import ge.edu.tsu.hrs.control_panel.server.processor.common.HRSPathProcessor;
 import ge.edu.tsu.hrs.control_panel.server.processor.imageprocessing.ImageProcessingProcessor;
 import ge.edu.tsu.hrs.control_panel.server.processor.normalizeddata.normalizationmethod.Normalization;
+import ge.edu.tsu.hrs.control_panel.server.processor.stringmatching.StringMatchingProcessor;
 import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
 import ge.edu.tsu.hrs.control_panel.server.util.CharSequenceInitializer;
 import ge.edu.tsu.hrs.control_panel.server.util.GroupedNormalizedDataUtil;
@@ -50,6 +51,7 @@ import ge.edu.tsu.hrs.neural_network.transfer.TransferFunctionType;
 
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
@@ -71,6 +73,8 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 
 	private final ImageProcessingProcessor imageProcessingProcessor = new ImageProcessingProcessor();
 
+	private final StringMatchingProcessor stringMatchingProcessor = new StringMatchingProcessor();
+
 	private final Parameter updatePerIterationParameter = new Parameter("updatePerIteration", "1000");
 
 	private final Parameter updatePerSeconds = new Parameter("updatePerSeconds", "10");
@@ -88,6 +92,8 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	private final Parameter percentageOfSamesForOneRow = new Parameter("percentageOfSamesForOneRow", "50");
 
 	private final Parameter noiseArea = new Parameter("noiseArea","15");
+
+	private final Parameter notUsedCharsForStringMatching = new Parameter("notUsedCharsForStringMatching", "@#,@#.@#-@#!@#?@#'@#:@#;");
 
 	@Override
 	public void trainNeural(NetworkInfo networkInfo, List<GroupedNormalizedData> groupedNormalizedDatum, boolean saveInDatabase) throws ControlPanelException {
@@ -212,7 +218,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 	}
 
 	@Override
-	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId, int networkExtraId, boolean analyseMode) {
+	public List<RecognitionInfo> recognizeText(List<BufferedImage> images, Integer networkId, int networkExtraId, boolean useWordMatching, boolean analyseMode) {
 		System.out.println("Start text recognizing");
 		List<RecognitionInfo> recognitionInfos = new ArrayList<>();
 		for (BufferedImage image : images) {
@@ -309,12 +315,19 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 			long extraDuration = 0;
 			for (TextRow textRow : textAdapter.getRows()) {
 				int rightPoint = -1;
+				StringBuilder line = new StringBuilder();
+				StringBuilder word = new StringBuilder();
 				for (Contour contour : textRow.getContours()) {
 					date = new Date();
 					if (rightPoint != -1) {
 						if (TextAdapterUtil.isSpace(textAdapter, contour.getLeftPoint() - rightPoint, systemParameterProcessor.getFloatParameterValue(minAverageSymbolPerSpace),
 								systemParameterProcessor.getFloatParameterValue(maxAverageSymbolPerSpace))) {
-							text.append(" ");
+							updateDoubleQuotes(word);
+							if (useWordMatching) {
+								word = applyWordMatching(word.toString());
+							}
+							line.append(word).append(" ");
+							word = new StringBuilder();
 						}
 					}
 					extraDuration += new Date().getTime() - date.getTime();
@@ -332,8 +345,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 					List<Float> output = neuralNetwork.getOutputActivation(trainingData);
 					activationDuration += new Date().getTime() - date.getTime();
 					date = new Date();
-					text.append(getAns(output, charSequence));
-					updateDoubleQuotes(text);
+					word.append(getAns(output, charSequence));
 					extraDuration += new Date().getTime() - date.getTime();
 					if (analyseMode) {
 						NetworkResult networkResult = new NetworkResult();
@@ -343,7 +355,9 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 						recognitionInfo.getNetworkResults().add(networkResult);
 					}
 				}
-				text.append(System.lineSeparator());
+				updateDoubleQuotes(word);
+				line.append(word);
+				text.append(line).append(System.lineSeparator());
 			}
 			recognitionInfo.setText(text.toString());
 			recognitionInfo.setInputDataGatheringDuration(inputDataGatheringDuration);
@@ -394,5 +408,21 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		parameter.setMinError(networkInfo.getMinError());
 		parameter.setTrainingMaxIteration(networkInfo.getTrainingMaxIteration());
 		parameter.setNumberOfTrainingDataInOneIteration(networkInfo.getNumberOfTrainingDataInOneIteration());
+	}
+
+	private StringBuilder applyWordMatching(String word) {
+		Set<String> notUsedChars = new HashSet<>(Arrays.asList(systemParameterProcessor.getStringParameterValue(notUsedCharsForStringMatching).split("@#")));
+		int i = word.length() - 1;
+		while (i >= 0) {
+			String symbol = "" + word.charAt(i);
+			if (notUsedChars.contains(symbol)) {
+				i--;
+			} else {
+				break;
+			}
+		}
+		String realSymbols = word.substring(0, i + 1);
+		String extraSymbols = word.substring(i + 1, word.length());
+		return new StringBuilder(stringMatchingProcessor.getNearestString(realSymbols)).append(extraSymbols);
 	}
 }

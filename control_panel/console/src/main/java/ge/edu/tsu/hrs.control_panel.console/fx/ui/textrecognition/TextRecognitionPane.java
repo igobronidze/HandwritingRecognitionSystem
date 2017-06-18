@@ -1,6 +1,7 @@
 package ge.edu.tsu.hrs.control_panel.console.fx.ui.textrecognition;
 
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHButton;
+import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHCheckBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComboBox;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHComponentSize;
 import ge.edu.tsu.hrs.control_panel.console.fx.ui.component.TCHFieldLabel;
@@ -108,6 +109,8 @@ public class TextRecognitionPane extends VBox {
         TCHFieldLabel networkIdFIeFieldLabel = new TCHFieldLabel(Messages.get("networkId"), networkIdField);
         TCHNumberTextField extraIdField = new TCHNumberTextField(new BigDecimal(0), TCHComponentSize.SMALL);
         TCHFieldLabel extraIdFieldLabel = new TCHFieldLabel(Messages.get("networkExtraId"), extraIdField);
+        TCHCheckBox useWordMatchingCheckBox = new TCHCheckBox();
+        TCHFieldLabel useWordMatchingFieldLabel = new TCHFieldLabel(Messages.get("useWordMatching"), useWordMatchingCheckBox);
         recognizeButton = new TCHButton(Messages.get("recognize"));
         recognizeButton.setDisable(true);
         ScrollPane scrollPane = new ScrollPane();
@@ -117,7 +120,7 @@ public class TextRecognitionPane extends VBox {
             neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.valueOf(processorComboBox.getValue().toString()));
             List<BufferedImage> images = new ArrayList<>();
             images.add(SwingFXUtils.fromFXImage(srcImageView.getImage(), null));
-            List<RecognitionInfo> recognitionInfoList = neuralNetworkService.recognizeText(images, networkIdField.getNumber().intValue(), extraIdField.getNumber().intValue(), true);
+            List<RecognitionInfo> recognitionInfoList = neuralNetworkService.recognizeText(images, networkIdField.getNumber().intValue(), extraIdField.getNumber().intValue(), useWordMatchingCheckBox.isSelected(), true);
             try {
                 RecognitionInfo recognitionInfo = recognitionInfoList.get(0);
                 textArea.setText(recognitionInfo.getText());
@@ -127,7 +130,7 @@ public class TextRecognitionPane extends VBox {
                 ex.printStackTrace();
             }
         });
-        vBox.getChildren().addAll(processorFieldLabel, networkIdFIeFieldLabel, extraIdFieldLabel, recognizeButton);
+        vBox.getChildren().addAll(processorFieldLabel, networkIdFIeFieldLabel, extraIdFieldLabel, useWordMatchingFieldLabel, recognizeButton);
         hBox.getChildren().addAll(vBox, scrollPane);
         return hBox;
     }
