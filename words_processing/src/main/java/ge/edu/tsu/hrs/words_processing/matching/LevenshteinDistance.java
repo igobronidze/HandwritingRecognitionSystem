@@ -10,10 +10,11 @@ public class LevenshteinDistance {
         for (int i = 1; i <= t.length(); i++) {
             matrix[i][0] = i * input.getDeleteRate();
             for (int j = 1; j <= s.length(); j++) {
-                float same = t.charAt(i - 1) == s.charAt(j - 1) ? 0 : 1;
-                float min = Math.min(matrix[i - 1][j], matrix[i][j - 1]);
-                min = Math.min(min, matrix[i - 1][j - 1]);
-                matrix[i][j] = min + same;
+                float deleteCost = matrix[i][j - 1] + input.getDeleteRate();
+                float insertCost = matrix[i - 1][j] + input.getInsertRate();
+                float changeCost = matrix[i - 1][j - 1] + input.getChangeRate() * input.getChangePossibilities().get(j - 1).get(t.charAt(i - 1));
+                float min = Math.min(deleteCost, insertCost);
+                matrix[i][j] = Math.min(min, changeCost);
             }
         }
         return matrix[t.length()][s.length()];
