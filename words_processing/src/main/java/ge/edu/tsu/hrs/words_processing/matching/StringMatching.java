@@ -10,7 +10,7 @@ public class StringMatching {
         List<String> resultString = new ArrayList<>();
         float min = Float.MAX_VALUE;
         for (String text : input.getTexts()) {
-            float distance = LevenshteinDistance.countDistance(input.getExemp(), text);
+            float distance = LevenshteinDistance.countDistance(input.getExemp(), text, input);
             if (distance < min) {
                 min = distance;
                 resultString = new ArrayList<>();

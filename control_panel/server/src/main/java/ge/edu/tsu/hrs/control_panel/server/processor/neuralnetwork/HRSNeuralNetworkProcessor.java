@@ -55,6 +55,7 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
@@ -317,6 +318,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 				int rightPoint = -1;
 				StringBuilder line = new StringBuilder();
 				StringBuilder word = new StringBuilder();
+				List<List<Float>> wordActivations = new ArrayList<>();
 				for (Contour contour : textRow.getContours()) {
 					date = new Date();
 					if (rightPoint != -1) {
@@ -324,10 +326,11 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 								systemParameterProcessor.getFloatParameterValue(maxAverageSymbolPerSpace))) {
 							updateDoubleQuotes(word);
 							if (useWordMatching) {
-								word = applyWordMatching(word.toString());
+								word = applyWordMatching(word.toString(), wordActivations, charSequence.getIndexToCharMap());
 							}
 							line.append(word).append(" ");
 							word = new StringBuilder();
+							wordActivations = new ArrayList<>();
 						}
 					}
 					extraDuration += new Date().getTime() - date.getTime();
@@ -346,6 +349,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 					activationDuration += new Date().getTime() - date.getTime();
 					date = new Date();
 					word.append(getAns(output, charSequence));
+					wordActivations.add(output);
 					extraDuration += new Date().getTime() - date.getTime();
 					if (analyseMode) {
 						NetworkResult networkResult = new NetworkResult();
@@ -356,6 +360,9 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 					}
 				}
 				updateDoubleQuotes(word);
+				if (useWordMatching) {
+					word = applyWordMatching(word.toString(), wordActivations, charSequence.getIndexToCharMap());
+				}
 				line.append(word);
 				text.append(line).append(System.lineSeparator());
 			}
@@ -410,7 +417,7 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		parameter.setNumberOfTrainingDataInOneIteration(networkInfo.getNumberOfTrainingDataInOneIteration());
 	}
 
-	private StringBuilder applyWordMatching(String word) {
+	private StringBuilder applyWordMatching(String word, List<List<Float>> activations, Map<Integer, Character> indexToCharMap) {
 		Set<String> notUsedChars = new HashSet<>(Arrays.asList(systemParameterProcessor.getStringParameterValue(notUsedCharsForStringMatching).split("@#")));
 		int i = word.length() - 1;
 		while (i >= 0) {
@@ -423,6 +430,6 @@ public class HRSNeuralNetworkProcessor implements INeuralNetworkProcessor {
 		}
 		String realSymbols = word.substring(0, i + 1);
 		String extraSymbols = word.substring(i + 1, word.length());
-		return new StringBuilder(stringMatchingProcessor.getNearestString(realSymbols)).append(extraSymbols);
+		return new StringBuilder(stringMatchingProcessor.getNearestString(realSymbols, activations.subList(0, i + 1), indexToCharMap)).append(extraSymbols);
 	}
 }
