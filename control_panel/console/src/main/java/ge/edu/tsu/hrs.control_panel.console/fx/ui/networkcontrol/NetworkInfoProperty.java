@@ -1,11 +1,13 @@
 package ge.edu.tsu.hrs.control_panel.console.fx.ui.networkcontrol;
 
+import ge.edu.tsu.hrs.control_panel.console.fx.util.Messages;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkInfo;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkTrainingStatus;
 import ge.edu.tsu.hrs.control_panel.model.network.TestingInfo;
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleLongProperty;
+import javafx.beans.property.SimpleStringProperty;
 
 import java.util.List;
 
@@ -13,7 +15,7 @@ public class NetworkInfoProperty {
 
 	private SimpleIntegerProperty id;
 
-	private SimpleLongProperty trainingDuration;
+	private SimpleStringProperty trainingDuration;
 
 	private SimpleFloatProperty bestSquaredError;
 
@@ -27,7 +29,7 @@ public class NetworkInfoProperty {
 
 	public NetworkInfoProperty(NetworkInfo networkInfo) {
 		this.id = new SimpleIntegerProperty(networkInfo.getId());
-		this.trainingDuration = new SimpleLongProperty(networkInfo.getTrainingDuration());
+		this.trainingDuration = new SimpleStringProperty(getElapsedTime(networkInfo.getTrainingDuration()));
 		List<TestingInfo> testingInfoList = networkInfo.getTestingInfoList();
 		float bestSquaredError, betsPercentageOfIncorrect, bestDiffBetweenAnsAndBest, bestNormalizedGeneralError;
 		if (testingInfoList.size() == 0) {
@@ -63,16 +65,12 @@ public class NetworkInfoProperty {
 		this.id.set(id);
 	}
 
-	public long getTrainingDuration() {
+	public String getTrainingDuration() {
 		if (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
-			return networkInfo.getCurrentIterations();
+			return getElapsedTime(networkInfo.getCurrentIterations());
 		} else {
 			return trainingDuration.get();
 		}
-	}
-
-	public void setTrainingDuration(long trainingDuration) {
-		this.trainingDuration.set(trainingDuration);
 	}
 
 	public float getBestSquaredError() {
@@ -117,5 +115,20 @@ public class NetworkInfoProperty {
 
 	public void setNetworkInfo(NetworkInfo networkInfo) {
 		this.networkInfo = networkInfo;
+	}
+
+	private String getElapsedTime(long ms) {
+		String result = "";
+		ms /= 1000;
+		if (ms / 3600 != 0) {
+			result += ms / 3600 + Messages.get("hour") + " ";
+		}
+		if (ms % 3600 / 60 != 0) {
+			result += ms % 3600 / 60 + Messages.get("minute") + " ";
+		}
+		if (ms % 60 != 0) {
+			result += ms % 60 + Messages.get("second");
+		}
+		return result;
 	}
 }

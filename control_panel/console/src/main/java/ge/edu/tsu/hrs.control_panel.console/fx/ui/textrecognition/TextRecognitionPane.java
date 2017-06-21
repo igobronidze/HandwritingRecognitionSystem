@@ -94,6 +94,7 @@ public class TextRecognitionPane extends VBox {
         textArea.setEditable(false);
         textArea.prefHeightProperty().bind(ControlPanel.getCenterHeightBinding().subtract(20).multiply(TOP_PANE_PART));
         textArea.prefWidthProperty().bind(ControlPanel.getCenterWidthBinding().subtract(25).multiply(0.4));
+        textArea.setStyle("-fx-font-family: sylfaen; -fx-font-size: 28px;");
         hBox.getChildren().addAll(srcImageView, cleanedImageView, textArea);
         return hBox;
     }
