@@ -72,6 +72,7 @@ public class BookPane extends VBox {
 		this.getChildren().addAll(label, hBox);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initTable() {
 		DoubleBinding doubleProperty = ControlPanel.getCenterWidthBinding().subtract(80);
 		tableView = new TableView<>();

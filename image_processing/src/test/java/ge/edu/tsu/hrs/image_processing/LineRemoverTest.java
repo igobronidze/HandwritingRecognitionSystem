@@ -7,13 +7,13 @@ import org.junit.Test;
 
 public class LineRemoverTest {
 
-    private String srcPath = "test_images/lineremover/1.jpg";
+    private final String SRC_PATH = "test_images/lineremover/1.jpg";
 
-    private String resultPath = "test_images/lineremover/2.jpg";
+    private final String RESULT_PATH = "test_images/lineremover/2.jpg";
 
     @Test
     @Ignore
     public void removeLinesTest() {
-        LinesRemover.removeLines(OpenCVUtil.getAbsPath(srcPath), OpenCVUtil.getAbsPath(resultPath));
+        LinesRemover.removeLines(OpenCVUtil.getAbsPath(SRC_PATH), OpenCVUtil.getAbsPath(RESULT_PATH));
     }
 }

@@ -132,6 +132,7 @@ public class NetworkControlPane extends VBox {
         this.getChildren().addAll(networkInfoTable, parametersHBox, normalizationHBox);
     }
 
+    @SuppressWarnings("unchecked")
     private void initNetworkGridPane() {
         DoubleBinding doubleBinding = ControlPanel.getCenterWidthBinding().subtract(125).divide(6);
         TableColumn<NetworkInfoProperty, Integer> idColumn = new TableColumn<>(Messages.get("id"));
@@ -222,6 +223,7 @@ public class NetworkControlPane extends VBox {
         });
     }
 
+    @SuppressWarnings("unchecked")
     private void initNormalizationPane() {
         TableColumn<GroupedNormalizedDataProperty, Boolean> checkColumn = new TableColumn<>("");
         checkColumn.setCellValueFactory(new PropertyValueFactory<>("checked"));
@@ -278,15 +280,11 @@ public class NetworkControlPane extends VBox {
         vBox.setAlignment(Pos.CENTER);
         TCHButton trainButton = new TCHButton(Messages.get("train"));
         trainButton.setOnAction(event -> {
-            Thread thread = new Thread(null, () -> {
-                trainAction();
-            });
+            Thread thread = new Thread(null, this::trainAction);
             thread.start();
         });
         TCHButton testButton = new TCHButton(Messages.get("test"));
-        testButton.setOnAction(event -> {
-            testAction();
-        });
+        testButton.setOnAction(event -> testAction());
         vBox.getChildren().addAll(trainButton, testButton);
         normalizationHBox.getChildren().add(vBox);
     }
@@ -353,6 +351,7 @@ public class NetworkControlPane extends VBox {
         parametersHBox.getChildren().add(flowPane);
     }
 
+    @SuppressWarnings("Duplicates")
     private void loadGripedNormalizedData() {
         List<GroupedNormalizedData> groupedNormalizedDatum = groupedNormalizedDataService.getGroupedNormalizedDatum(null, null, null, null, null, null, null);
         List<GroupedNormalizedDataProperty> groupedNormalizedDataPropertyList = new ArrayList<>();
@@ -448,6 +447,7 @@ public class NetworkControlPane extends VBox {
         return groupedNormalizedDatum;
     }
 
+    @SuppressWarnings("Duplicates")
     private String getStringFromIntegerList(List<Integer> list) {
         String result = "";
         if (list == null || list.isEmpty()) {
@@ -504,9 +504,7 @@ public class NetworkControlPane extends VBox {
                 stage.setScene(new Scene(vBox, 320, 270));
                 stage.setResizable(false);
                 stage.setTitle(Messages.get("delete"));
-                closeButton.setOnAction(event -> {
-                    stage.close();
-                });
+                closeButton.setOnAction(event -> stage.close());
                 deleteButton.setOnAction(event -> {
                     int id = networkInfoProperty.getId();
                     if (deleteNetworkInfoCheckBox.isSelected()) {
@@ -539,6 +537,7 @@ public class NetworkControlPane extends VBox {
         }
     }
 
+    @SuppressWarnings("unchecked")
     private class TestResultButtonCell extends TableCell<NetworkInfoProperty, Boolean> {
         final ImageView imageView;
         final Button cellButton;

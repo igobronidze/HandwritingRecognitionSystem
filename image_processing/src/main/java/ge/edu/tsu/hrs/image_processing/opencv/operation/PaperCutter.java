@@ -120,10 +120,8 @@ public class PaperCutter {
             }
         }
         // აპროქსიმაცია, შესწორება
-        opencv_core.CvSeq result = opencv_imgproc.cvApproxPoly(seqFounded, Loader.sizeof(opencv_core.CvContour.class), memory, opencv_imgproc.CV_POLY_APPROX_DP,
+        return opencv_imgproc.cvApproxPoly(seqFounded, Loader.sizeof(opencv_core.CvContour.class), memory, opencv_imgproc.CV_POLY_APPROX_DP,
                 opencv_imgproc.cvContourPerimeter(seqFounded) * params.getApproxAccuracy(), 0);
-
-        return result;
     }
 
     private static opencv_core.IplImage applyPerspectiveTransformThresholdOnOriginalImage(opencv_core.IplImage srcImage, opencv_core.CvSeq contour, int percent, PerspectiveTransformParams params) {

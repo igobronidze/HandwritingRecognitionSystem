@@ -33,7 +33,7 @@ public class NormalizedDataConsoleApp {
             if (isRetry(s)) {
                 continue;
             }
-            int groupedNormalizedDataId = 0;
+            int groupedNormalizedDataId;
             try {
                 groupedNormalizedDataId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {

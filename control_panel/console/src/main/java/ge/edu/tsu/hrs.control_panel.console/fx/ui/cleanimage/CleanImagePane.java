@@ -171,9 +171,7 @@ public class CleanImagePane extends VBox {
             toCutPageButton.setDisable(false);
         });
         toCutPageButton = new TCHButton(Messages.get("toCutPage"));
-        toCutPageButton.setOnAction(event -> {
-            ControlPanel.loadCutSymbolPane(SwingFXUtils.fromFXImage(resultImageView.getImage(), null));
-        });
+        toCutPageButton.setOnAction(event -> ControlPanel.loadCutSymbolPane(SwingFXUtils.fromFXImage(resultImageView.getImage(), null)));
         toCutPageButton.setDisable(true);
         mainParametersVBox.getChildren().addAll(convertGrayFieldLabel, cleanWithoutParamsFieldLabel, blurringFieldLabel, thresholdFieldLabel, morphologicalFieldLabel, convertButton, toCutPageButton);
         return mainParametersVBox;
@@ -194,6 +192,7 @@ public class CleanImagePane extends VBox {
         return scrollPane;
     }
 
+    @SuppressWarnings("unchecked")
     private void initListeners() {
         blurringComboBox.valueProperty().addListener((ov, t, t1) -> {
             blurringPane = new BlurringPane(BlurringType.valueOf(blurringComboBox.getValue().toString()));

@@ -6,11 +6,7 @@ import java.util.List;
 
 public interface NetworkInfoService {
 
-    int addNetworkInfo(NetworkInfo networkInfo);
-
     List<NetworkInfo> getNetworkInfoList(Integer id);
 
     void deleteNetworkInfo(int id);
-
-    Object[] getTrainingCurrentState(int id);
 }

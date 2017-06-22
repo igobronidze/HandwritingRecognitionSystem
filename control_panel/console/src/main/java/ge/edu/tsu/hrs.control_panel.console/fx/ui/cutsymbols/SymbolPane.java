@@ -207,12 +207,10 @@ public class SymbolPane extends VBox {
             mainHBox.getChildren().addAll(pane, parametersVBox);
 
             TCHCheckBox userJoiningFunctionalCheckBox = new TCHCheckBox(Messages.get("useJoiningFunctional"));
-            userJoiningFunctionalCheckBox.setSelected(parameters == null ? false : parameters.isUseJoiningFunctional());
+            userJoiningFunctionalCheckBox.setSelected(parameters != null && parameters.isUseJoiningFunctional());
 
             TCHButton closeButton = new TCHButton(Messages.get("close"));
-            closeButton.setOnAction(event1 -> {
-                stage.close();
-            });
+            closeButton.setOnAction(event1 -> stage.close());
             TCHButton saveButton = new TCHButton(Messages.get("save"));
             saveButton.setOnAction(event1 -> {
                 WritableImage writableImage = new WritableImage(200, 200);

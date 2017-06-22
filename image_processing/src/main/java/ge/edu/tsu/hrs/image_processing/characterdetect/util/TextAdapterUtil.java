@@ -27,7 +27,7 @@ public class TextAdapterUtil {
         }
         Collections.sort(distanceBetweenContoursList);
         int maxIndex;
-        int max = -1;
+        int max;
         Set<Integer> used = new HashSet<>();
         int count = countCharactersFromTextAdapter(textAdapter);
         while (true) {

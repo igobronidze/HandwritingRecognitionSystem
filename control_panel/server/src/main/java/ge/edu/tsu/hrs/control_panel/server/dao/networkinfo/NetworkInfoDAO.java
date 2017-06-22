@@ -13,8 +13,6 @@ public interface NetworkInfoDAO {
 
     void deleteNetworkInfo(int id);
 
-    Object[] getTrainingCurrentState(int id);
-
     void updateTrainingCurrentState(float currentSquaredError, long currentIterations, long currentDuration, int id);
 
     void updateTrainedState(long trainingDuration, int id);

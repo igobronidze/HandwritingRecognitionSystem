@@ -15,11 +15,6 @@ public class NetworkInfoServiceImpl implements NetworkInfoService {
     private TestingInfoDAO testingInfoDAO = new TestingInfoDAOImpl();
 
     @Override
-    public int addNetworkInfo(NetworkInfo networkInfo) {
-        return networkInfoDAO.addNetworkInfo(networkInfo);
-    }
-
-    @Override
     public List<NetworkInfo> getNetworkInfoList(Integer id) {
         List<NetworkInfo> networkInfoList = networkInfoDAO.getNetworkInfoList(id);
         for (NetworkInfo networkInfo : networkInfoList) {
@@ -31,10 +26,5 @@ public class NetworkInfoServiceImpl implements NetworkInfoService {
     @Override
     public void deleteNetworkInfo(int id) {
         networkInfoDAO.deleteNetworkInfo(id);
-    }
-
-    @Override
-    public Object[] getTrainingCurrentState(int id) {
-        return networkInfoDAO.getTrainingCurrentState(id);
     }
 }

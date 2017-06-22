@@ -41,19 +41,17 @@ public class RecognizedSymbolPane extends VBox {
 		this.getChildren().addAll(getImagePane(), getSymbolPane());
 	}
 
-	public ImageView getImagePane() {
+	private ImageView getImagePane() {
 		ImageView imageView = new ImageView(SwingFXUtils.toFXImage(image, null));
 		imageView.setFitWidth(80);
 		imageView.setFitHeight(80);
 		imageView.setOnMouseEntered(event -> this.setCursor(Cursor.HAND));
 		imageView.setOnMouseExited(event -> this.setCursor(Cursor.DEFAULT));
-		imageView.setOnMouseClicked(event -> {
-			showActivationsPane();
-		});
+		imageView.setOnMouseClicked(event -> showActivationsPane());
 		return imageView;
 	}
 
-	public Label getSymbolPane() {
+	private Label getSymbolPane() {
 		Label symbolLabel = new Label();
 		symbolLabel.setStyle("-fx-font-family: sylfaen; -fx-font-size: 21px;");
 		symbolLabel.setTextFill(Color.RED);
@@ -77,7 +75,7 @@ public class RecognizedSymbolPane extends VBox {
 		}
 		Collections.sort(symbolActivations);
 		Collections.reverse(symbolActivations);
-		for (int i = 0; i < symbolActivations.size(); i++) {
+		for (SymbolActivation symbolActivation : symbolActivations) {
 			VBox vBox = new VBox(3);
 			vBox.setAlignment(Pos.TOP_CENTER);
 			vBox.setPadding(new Insets(3));
@@ -85,11 +83,11 @@ public class RecognizedSymbolPane extends VBox {
 			vBox.setStyle("-fx-border-color: green; -fx-border-size: 1px;");
 			TCHLabel symbolLabel = new TCHLabel("");
 			symbolLabel.setStyle("-fx-font-family: sylfaen; -fx-font-size: 18px;");
-			symbolLabel.setText(symbolActivations.get(i).symbol + "");
+			symbolLabel.setText(symbolActivation.symbol + "");
 			symbolLabel.setTextFill(Color.GREEN);
 			TCHLabel activationLabel = new TCHLabel("");
 			activationLabel.setStyle("-fx-font-family: sylfaen; -fx-font-size: 16px;");
-			activationLabel.setText(symbolActivations.get(i).activation + "");
+			activationLabel.setText(symbolActivation.activation + "");
 			vBox.getChildren().addAll(symbolLabel, activationLabel);
 			flowPane.getChildren().add(vBox);
 		}

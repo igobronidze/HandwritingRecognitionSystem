@@ -14,7 +14,7 @@ public class LinesRemover2 {
 		opencv_core.IplImage dst;
 		opencv_core.IplImage colorDst;
 		opencv_core.CvMemStorage storage = opencv_core.cvCreateMemStorage(0);
-		opencv_core.CvSeq lines = new opencv_core.CvSeq();
+		opencv_core.CvSeq lines;
 
 		if (src == null) {
 			System.out.println("Couldn't load source image.");

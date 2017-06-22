@@ -29,7 +29,11 @@ public class NetworkInfoProperty {
 
 	public NetworkInfoProperty(NetworkInfo networkInfo) {
 		this.id = new SimpleIntegerProperty(networkInfo.getId());
-		this.trainingDuration = new SimpleStringProperty(getElapsedTime(networkInfo.getTrainingDuration()));
+		if (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
+			this.trainingDuration = new SimpleStringProperty("" + networkInfo.getCurrentIterations());
+		} else {
+			this.trainingDuration = new SimpleStringProperty(getElapsedTime(networkInfo.getTrainingDuration()));
+		}
 		List<TestingInfo> testingInfoList = networkInfo.getTestingInfoList();
 		float bestSquaredError, betsPercentageOfIncorrect, bestDiffBetweenAnsAndBest, bestNormalizedGeneralError;
 		if (testingInfoList.size() == 0) {
@@ -66,11 +70,7 @@ public class NetworkInfoProperty {
 	}
 
 	public String getTrainingDuration() {
-		if (networkInfo.getTrainingStatus() == NetworkTrainingStatus.TRAINING) {
-			return getElapsedTime(networkInfo.getCurrentIterations());
-		} else {
-			return trainingDuration.get();
-		}
+		return trainingDuration.get();
 	}
 
 	public float getBestSquaredError() {

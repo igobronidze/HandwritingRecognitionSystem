@@ -41,9 +41,7 @@ public class ControlPanelHeader extends BorderPane {
         logoImageView = new ImageView();
         logoImageView.setOnMouseEntered(event -> ControlPanelHeader.this.setCursor(Cursor.HAND));
         logoImageView.setOnMouseExited(event -> ControlPanelHeader.this.setCursor(Cursor.DEFAULT));
-        logoImageView.setOnMouseClicked(event -> {
-            ControlPanel.initComponents(SystemPageType.ADMIN_DASHBOARD);
-        });
+        logoImageView.setOnMouseClicked(event -> ControlPanel.initComponents(SystemPageType.ADMIN_DASHBOARD));
         logoImageView.setImage(logo);
         logoImageView.setFitWidth(LOGO_WIDTH);
         logoImageView.setFitHeight(LOGO_HEIGHT);

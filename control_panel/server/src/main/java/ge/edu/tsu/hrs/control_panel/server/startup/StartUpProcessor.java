@@ -17,9 +17,11 @@ public class StartUpProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private Parameter cacheWords = new Parameter("cachWords", "true");
+    private Parameter cacheWords = new Parameter("cachWords", "false");
 
-    private Parameter loadProductionNetwork = new Parameter("loadProductionNetwork", "true");
+    private Parameter loadProductionNetwork = new Parameter("loadProductionNetwork", "false");
+
+    private Parameter failedNotFinishedNetworks = new Parameter("failedNotFinishedNetworks", "false");
 
     public static void process() {
         Class clazz = StartUpProcessor.class;
@@ -38,7 +40,9 @@ public class StartUpProcessor {
 
     @StartUp
     private void setFailedNetworkInfos() {
-        networkInfoDAO.setFailedNetworkInfos();
+        if (systemParameterProcessor.getBooleanParameterValue(failedNotFinishedNetworks)) {
+            networkInfoDAO.setFailedNetworkInfos();
+        }
     }
 
     @StartUp

@@ -125,28 +125,6 @@ public class NetworkInfoDAOImpl implements NetworkInfoDAO {
     }
 
     @Override
-    public Object[] getTrainingCurrentState(int id) {
-        Object[] result = new Object[4];
-        try {
-            String sql = "SELECT training_status, current_squaredError, current_iterations, training_duration fROM network_info WHERE id = ?";
-            pstmt = DatabaseUtil.getConnection().prepareStatement(sql);
-            pstmt.setInt(1, id);
-            ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
-                result[0] = NetworkTrainingStatus.valueOf(rs.getString("training_status"));
-                result[1] = rs.getFloat("current_squared_error");
-                result[2] = rs.getLong("current_iterations");
-                result[3] = rs.getLong("training_duration");
-            }
-        } catch (SQLException ex) {
-            ex.printStackTrace();
-        } finally {
-            DatabaseUtil.closeConnection();
-        }
-        return result;
-    }
-
-    @Override
     public void updateTrainingCurrentState(float currentSquaredError, long currentIterations, long currentDuration, int id) {
         try {
             String sql = "UPDATE network_info SET current_squared_error = ?, current_iterations = ?, training_duration = ? WHERE id = ?";

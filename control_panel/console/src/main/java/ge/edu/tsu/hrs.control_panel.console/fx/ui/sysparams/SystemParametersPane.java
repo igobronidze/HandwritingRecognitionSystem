@@ -58,6 +58,7 @@ public class SystemParametersPane extends HBox {
         initParams();
     }
 
+    @SuppressWarnings("unchecked")
     private void initTable() {
         DoubleBinding doubleProperty = ControlPanel.getCenterWidthBinding().subtract(250 + 90 + 60 + 50);
         tableView = new TableView<>();
@@ -91,7 +92,7 @@ public class SystemParametersPane extends HBox {
         tableView.getColumns().addAll(idColumn, keyColumn, valueColumn, typeColumn, deleteColumn);
         loadSystemParameters();
         tableView.setRowFactory( tv -> {
-            TableRow<SystemParameterProperty> row = new TableRow<SystemParameterProperty>();
+            TableRow<SystemParameterProperty> row = new TableRow<>();
             row.setOnMouseClicked(event -> {
                 if (!row.isEmpty()) {
                     SystemParameterProperty systemParameterProperty = row.getItem();
@@ -120,9 +121,7 @@ public class SystemParametersPane extends HBox {
         TCHFieldLabel typeFieldLabel = new TCHFieldLabel(Messages.get("type"), typeComboBox);
         HBox hBox = new HBox(10);
         TCHButton cleanButton = new TCHButton(Messages.get("clean"));
-        cleanButton.setOnAction(event -> {
-            clearFields();
-        });
+        cleanButton.setOnAction(event -> clearFields());
         TCHButton saveButton = new TCHButton(Messages.get("save"));
         saveButton.setOnAction(event -> {
             String key = keyField.getText();
@@ -149,6 +148,7 @@ public class SystemParametersPane extends HBox {
         this.getChildren().add(vBox);
     }
 
+    @SuppressWarnings("unchecked")
     private void clearFields() {
         keyField.setText("");
         valueField.setText("");

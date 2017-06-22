@@ -8,15 +8,15 @@ import org.junit.Test;
 
 public class ContoursDetectorTest {
 
-	private String srcImagePath = "test_images/binaryconverter/r_text_otsu.jpg";
-	private String resultImagePath = "test_images/binaryconverter/tt.jpg";
+	private final String SRC_IMAGE_PATH = "test_images/binaryconverter/r_text_otsu.jpg";
+	private final String RESULT_IMAGE_PATH = "test_images/binaryconverter/tt.jpg";
 
 	@Test
 	@Ignore
 	public void findContoursTest() {
 		opencv_core.Mat resultMat;
-		opencv_core.Mat srcMat = opencv_imgcodecs.imread(srcImagePath);
+		opencv_core.Mat srcMat = opencv_imgcodecs.imread(SRC_IMAGE_PATH);
 		resultMat = ContoursDetector.findContours(srcMat);
-		opencv_imgcodecs.imwrite(resultImagePath, resultMat);
+		opencv_imgcodecs.imwrite(RESULT_IMAGE_PATH, resultMat);
 	}
 }

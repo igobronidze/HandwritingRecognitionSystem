@@ -6,7 +6,7 @@ import org.bytedeco.javacpp.opencv_imgproc;
 
 public class ContoursDetector {
 
-	private static String resultImagePath = "test_images/binaryconverter/r_text";
+	private static final String RESULT_IMAGE_PATH = "test_images/binaryconverter/r_text";
 
 	public static opencv_core.Mat findContours(opencv_core.Mat srcMat) {
 		opencv_core.Mat grayMat = new opencv_core.Mat();
@@ -44,7 +44,7 @@ public class ContoursDetector {
 			opencv_core.Mat crop = new opencv_core.Mat(srcMat.rows(), srcMat.cols(), opencv_core.CV_8UC3);
 			crop.setTo(new opencv_core.Mat(new opencv_core.Scalar(0, 255, 0, 0)));
 			srcMat.copyTo(crop, mask);
-			opencv_imgcodecs.imwrite(resultImagePath + "_" + i + ".jpg", mask);
+			opencv_imgcodecs.imwrite(RESULT_IMAGE_PATH + "_" + i + ".jpg", mask);
 		}
 		return drawing;
 	}

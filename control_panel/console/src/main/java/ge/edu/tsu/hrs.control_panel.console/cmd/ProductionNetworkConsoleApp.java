@@ -22,7 +22,7 @@ public class ProductionNetworkConsoleApp {
             if (isRetry(s)) {
                 continue;
             }
-            int networkId = -1;
+            int networkId;
             try {
                 networkId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
@@ -35,7 +35,7 @@ public class ProductionNetworkConsoleApp {
             if (isRetry(s)) {
                 continue;
             }
-            int networkExtraId = -1;
+            int networkExtraId;
             try {
                 networkExtraId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {

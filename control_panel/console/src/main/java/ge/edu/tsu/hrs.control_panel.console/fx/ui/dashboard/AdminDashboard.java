@@ -16,33 +16,19 @@ public class AdminDashboard extends FlowPane {
 
 	private void addButtons() {
 		DashboardButton networkControlButton = new DashboardButton(Messages.get("networkControl"));
-		networkControlButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.NETWORK_CONTROL);
-		});
+		networkControlButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.NETWORK_CONTROL));
 		DashboardButton cleanImageButton = new DashboardButton(Messages.get("cleanImage"));
-		cleanImageButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.CLEAN_IMAGE);
-		});
+		cleanImageButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.CLEAN_IMAGE));
 		DashboardButton cutSymbolsButton = new DashboardButton(Messages.get("cutSymbols"));
-		cutSymbolsButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.CUT_SYMBOLS);
-		});
+		cutSymbolsButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.CUT_SYMBOLS));
 		DashboardButton normalizationButton = new DashboardButton(Messages.get("normalization"));
-		normalizationButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.NORMALIZATION);
-		});
+		normalizationButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.NORMALIZATION));
 		DashboardButton systemParameterButton = new DashboardButton(Messages.get("systemParameters"));
-		systemParameterButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.SYSTEM_PARAMETERS);
-		});
+		systemParameterButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.SYSTEM_PARAMETERS));
 		DashboardButton textRecognitionButton = new DashboardButton(Messages.get("textRecognition"));
-		textRecognitionButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.TEXT_RECOGNITION);
-		});
+		textRecognitionButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.TEXT_RECOGNITION));
 		DashboardButton bookButton = new DashboardButton(Messages.get("books"));
-		bookButton.setOnAction(event -> {
-			ControlPanel.initComponents(SystemPageType.BOOK);
-		});
+		bookButton.setOnAction(event -> ControlPanel.initComponents(SystemPageType.BOOK));
 		this.getChildren().addAll(networkControlButton, cleanImageButton, cutSymbolsButton, normalizationButton, systemParameterButton, textRecognitionButton, bookButton);
 	}
 

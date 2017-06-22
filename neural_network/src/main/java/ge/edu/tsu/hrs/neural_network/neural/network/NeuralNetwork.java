@@ -215,8 +215,7 @@ public class NeuralNetwork implements Serializable {
             thread.start();
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
-            }
+            } catch (InterruptedException ignored) {}
         } else {
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(path))) {
                 out.writeObject(neuralNetwork);

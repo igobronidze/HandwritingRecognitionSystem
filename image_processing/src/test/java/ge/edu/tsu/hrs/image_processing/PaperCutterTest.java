@@ -7,13 +7,13 @@ import org.junit.Test;
 
 public class PaperCutterTest {
 
-    private String srcPath = "test_images/imagecutter/receipt.jpg";
+    private final String SRC_PATH = "test_images/imagecutter/receipt.jpg";
 
-    private String resultPath = "test_images/imagecutter/r_receipt.jpg";
+    private final String RESULT_PATH = "test_images/imagecutter/r_receipt.jpg";
 
     @Test
     @Ignore
     public void testCutPaperFromImage() {
-        PaperCutter.cutPaperFromImage(srcPath, resultPath, new CutPaperParams());
+        PaperCutter.cutPaperFromImage(SRC_PATH, RESULT_PATH, new CutPaperParams());
     }
 }

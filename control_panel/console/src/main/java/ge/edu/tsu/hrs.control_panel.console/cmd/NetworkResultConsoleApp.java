@@ -15,8 +15,6 @@ import java.util.Scanner;
 
 public class NetworkResultConsoleApp {
 
-    private static String s;
-
     private static final HRSPathProcessor hrsPathProcessor = new HRSPathProcessor();
 
     private static final String cutSymbolsRootDirectory = hrsPathProcessor.getPath(HRSPath.CUT_SYMBOLS_PATH);
@@ -32,7 +30,7 @@ public class NetworkResultConsoleApp {
             System.out.println();
 
             System.out.println("სიმბოლოს მისამართი: root მისამართიდან - " + cutSymbolsRootDirectory);
-            s = scanner.nextLine();
+            String s = scanner.nextLine();
             if (isRetry(s)) {
                 continue;
             }
@@ -45,7 +43,7 @@ public class NetworkResultConsoleApp {
             if (isRetry(s)) {
                 continue;
             }
-            int networkId = -1;
+            int networkId;
             try {
                 networkId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {
@@ -58,7 +56,7 @@ public class NetworkResultConsoleApp {
             if (isRetry(s)) {
                 continue;
             }
-            int networkExtraId = 0;
+            int networkExtraId;
             try {
                 networkExtraId = Integer.parseInt(s);
             } catch (NumberFormatException ex) {

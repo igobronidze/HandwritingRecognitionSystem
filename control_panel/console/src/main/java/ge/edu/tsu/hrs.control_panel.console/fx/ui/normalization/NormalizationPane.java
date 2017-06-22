@@ -70,6 +70,7 @@ public class NormalizationPane extends VBox {
 		initBottomPane();
 	}
 
+	@SuppressWarnings("unchecked")
 	private void initTopPane() {
 		TableColumn<GroupedNormalizedDataProperty, Boolean> idColumn = new TableColumn<>(Messages.get("id"));
 		idColumn.setPrefWidth(40);
@@ -121,6 +122,7 @@ public class NormalizationPane extends VBox {
 		this.getChildren().add(normalizationTable);
 	}
 
+	@SuppressWarnings("Duplicates")
 	private void loadGripedNormalizedData() {
 		List<GroupedNormalizedData> groupedNormalizedDatum = groupedNormalizedDataService.getGroupedNormalizedDatum(null, null, null, null, null, null, null);
 		List<GroupedNormalizedDataProperty> groupedNormalizedDataPropertyList = new ArrayList<>();
