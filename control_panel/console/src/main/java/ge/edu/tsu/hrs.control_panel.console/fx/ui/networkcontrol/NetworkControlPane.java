@@ -400,7 +400,7 @@ public class NetworkControlPane extends VBox {
         try {
             NetworkInfoProperty networkInfoProperty = networkInfoTable.getSelectionModel().getSelectedItem();
             if (networkInfoProperty != null) {
-                TCHNumberTextField extraIdTextField = new TCHNumberTextField(TCHComponentSize.SMALL);
+                TCHTextField extraIdTextField = new TCHTextField("0-0", TCHComponentSize.SMALL);
                 TCHFieldLabel extraIdFieldLabel = new TCHFieldLabel(Messages.get("networkExtraId"), extraIdTextField);
                 TCHButton trainButton = new TCHButton(Messages.get("test"));
                 VBox vBox = new VBox(15);
@@ -413,17 +413,14 @@ public class NetworkControlPane extends VBox {
                 stage.setScene(new Scene(vBox, 250, 160));
                 trainButton.setOnAction(event -> {
                     Thread thread = new Thread(null, () -> {
-                        int extraId;
-                        try {
-                            extraId = extraIdTextField.getNumber().intValue();
-                        } catch (Exception ex) {
-                            extraId = 0;
-                        }
                         try {
                             neuralNetworkService = new NeuralNetworkServiceImpl(NetworkProcessorType.valueOf(networkProcessorComboBox.getValue().toString()));
-                            neuralNetworkService.testNeural(getGroupedNormalizedDatum(), networkInfoProperty.getId(), extraId);
-                            loadNetworkInfo();
-                        } catch (ControlPanelException ex) {
+                            String[] extraIds = extraIdTextField.getText().split("-");
+                            for (int i = Integer.parseInt(extraIds[0]); i <= Integer.parseInt(extraIds[1]); i++) {
+                                neuralNetworkService.testNeural(getGroupedNormalizedDatum(), networkInfoProperty.getId(), i);
+                                loadNetworkInfo();
+                            }
+                        } catch (Exception ex) {
                             ex.printStackTrace();
                         }
                     });
