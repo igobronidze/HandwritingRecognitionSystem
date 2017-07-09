@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title th:text="#{textRecognition}"></title>
+    </head>
+    <body>
+        <form method="POST" action="/recognize" enctype="multipart/form-data">
+            <input type="image" src="../../images/no_photo.PNG" width="40%" height="400px"></input>
+            <input type="file" id="my_file" style="display: none;" name="file" onclick="return false;"/>
+            <input type="submit" value="recognize"></input>
+        </form>
+
+        <script
+                src="https://code.jquery.com/jquery-3.1.1.js"
+                integrity="sha256-16cdPddA6VdVInumRGo6IbivbERE8p7CQR3HzTBuELA="
+                crossorigin="anonymous"></script>
+        <script th:src="@{/js/recognition.js}" src="../../js/recognition.js" />
+    </body>
+</html>

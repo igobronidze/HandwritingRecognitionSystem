@@ -39,8 +39,7 @@ public class NeuralNetworkHelper {
             thread.start();
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
-            }
+            } catch (InterruptedException ignored) {}
             return;
         }
         Thread thread = new Thread(null, () -> {
@@ -50,8 +49,7 @@ public class NeuralNetworkHelper {
         thread.start();
         try {
             thread.join();
-        } catch (InterruptedException ex) {
-        }
+        } catch (InterruptedException ignored) {}
         if (saveInDatabase) {
             thread = new Thread(null, () -> {
                 saveNetworkInDatabase(id, neuralNetwork);
@@ -60,8 +58,7 @@ public class NeuralNetworkHelper {
             thread.start();
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
-            }
+            } catch (InterruptedException ignored) {}
         }
     }
 
@@ -77,8 +74,7 @@ public class NeuralNetworkHelper {
             thread.start();
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
-            }
+            } catch (InterruptedException ignored) {}
         } else {
             Thread thread = new Thread(null, () -> {
                 NeuralNetwork.copyNetwork(loadNetworkFromFileSystem(id, extraId), neuralNetwork);
@@ -89,8 +85,7 @@ public class NeuralNetworkHelper {
             thread.start();
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
-            }
+            } catch (InterruptedException ignored) {}
             if (neuralNetwork.getNeuralNetworkParameter() != null) {
                 return neuralNetwork;
             }
@@ -105,7 +100,7 @@ public class NeuralNetworkHelper {
             thread.start();
             try {
                 thread.join();
-            } catch (InterruptedException ex) {
+            } catch (InterruptedException ignored) {
             }
         }
         if (neuralNetwork.getNeuralNetworkParameter() != null) {
@@ -124,8 +119,8 @@ public class NeuralNetworkHelper {
         if (file.exists()) {
             File[] files = file.listFiles();
             if (null != files) {
-                for (int i = 0; i < files.length; i++) {
-                    files[i].delete();
+                for (File f : files) {
+                    f.delete();
                 }
             }
         }
