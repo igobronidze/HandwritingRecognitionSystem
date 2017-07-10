@@ -1,5 +1,9 @@
 package ge.edu.tsu.hrs.control_panel.console.spring;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.JsonNodeFactory;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import ge.edu.tsu.hrs.control_panel.model.common.HRSPath;
 import ge.edu.tsu.hrs.control_panel.model.network.NetworkProcessorType;
 import ge.edu.tsu.hrs.control_panel.model.network.RecognitionInfo;
 import ge.edu.tsu.hrs.control_panel.service.neuralnetwork.NeuralNetworkService;
@@ -12,8 +16,10 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
+import javax.servlet.annotation.MultipartConfig;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;

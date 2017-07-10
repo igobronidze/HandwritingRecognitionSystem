@@ -17,11 +17,11 @@ public class StartUpProcessor {
 
     private SystemParameterProcessor systemParameterProcessor = new SystemParameterProcessor();
 
-    private Parameter cacheWords = new Parameter("cachWords", "false");
+    private Parameter cacheWords = new Parameter("cachWords", "true");
 
-    private Parameter loadProductionNetwork = new Parameter("loadProductionNetwork", "false");
+    private Parameter loadProductionNetwork = new Parameter("loadProductionNetwork", "true");
 
-    private Parameter failedNotFinishedNetworks = new Parameter("failedNotFinishedNetworks", "false");
+    private Parameter failedNotFinishedNetworks = new Parameter("failedNotFinishedNetworks", "true");
 
     public static void process() {
         Class clazz = StartUpProcessor.class;
