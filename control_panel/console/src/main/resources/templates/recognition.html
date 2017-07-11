@@ -21,61 +21,15 @@
         form img {
             display: block;
             width: 100%;
-            /*max-width: 150px;*/
             height: 250px;
             margin: 0;
             padding: 0 !important;
             cursor: pointer;
         }
 
-        form button {
-
-        }
-
-        .result {
-            /*margin-top: 20px;*/
-        }
-
         #recognize {
             margin-top: 20px;
         }
-
-        .on-loading {
-            margin: 12px 0 0 12px;
-        }
-
-        .loader {
-            border: 16px solid #f3f3f3;
-            border-radius: 50%;
-            border-top: 16px solid #3498db;
-            width: 120px;
-            height: 120px;
-            -webkit-animation: spin 2s linear infinite;
-            animation: spin 2s linear infinite;
-        }
-
-        @-webkit-keyframes spin {
-            0% { -webkit-transform: rotate(0deg); }
-            100% { -webkit-transform: rotate(360deg); }
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /*#image-wrapper {*/
-            /*position: relative;*/
-        /*}*/
-
-        /*#spinner {*/
-            /*position: absolute;*/
-            /*top: 0;*/
-            /*right: 0;*/
-            /*bottom: 0;*/
-            /*left: 0;*/
-            /*margin: auto;*/
-        /*}*/
     </style>
 </head>
 <body>
@@ -86,16 +40,15 @@
     <div class="col-md-10 col-md-offset-1 form-wrapper">
         <form method="POST" action="/recognize" enctype="multipart/form-data">
             <div class="col-md-6">
-                <label for="my_file">Input:</label>
-                <img class="image-preview" src="../../images/no_photo.PNG"/>
-                <!--<div id="spinner"></div>-->
+                <label for="my_file">ფოტო:</label>
+                <img class="image-preview" src="../../images/upload_handwritten.PNG" style="border: solid 1px black; border-radius: 5px;"/>
                 <input type="file" id="my_file" style="display: none;" name="file"/>
-                <button type="submit" class="btn btn-success btn-lg" id="recognize">Recognize</button>
+                <button type="submit" class="btn btn-success btn-lg" id="recognize" style="margin-left: 400px;">ამოცნობა</button>
             </div>
             <div class="col-md-6">
                 <div class="result">
-                    <label for="result">Result:</label>
-                    <textarea class="form-control result-textarea" id="result" style="height: 250px"
+                    <label for="result">შედეგი:</label>
+                    <textarea class="form-control result-textarea" id="result" style="height: 250px; font-size: 23px; font-weight: bold; line-height: 42px;"
                               readonly="True"></textarea>
                 </div>
             </div>

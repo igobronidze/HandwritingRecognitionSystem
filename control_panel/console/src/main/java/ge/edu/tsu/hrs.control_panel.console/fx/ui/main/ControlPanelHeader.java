@@ -37,7 +37,7 @@ public class ControlPanelHeader extends BorderPane {
     }
 
     private void initComponents(String text) {
-        Image logo = ImageFactory.getImage("logo.png");
+        Image logo = ImageFactory.getImage("logo_1.png");
         logoImageView = new ImageView();
         logoImageView.setOnMouseEntered(event -> ControlPanelHeader.this.setCursor(Cursor.HAND));
         logoImageView.setOnMouseExited(event -> ControlPanelHeader.this.setCursor(Cursor.DEFAULT));
