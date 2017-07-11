@@ -10,7 +10,6 @@ import ge.edu.tsu.hrs.control_panel.server.dao.book.BookDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.dao.book.WordDAO;
 import ge.edu.tsu.hrs.control_panel.server.dao.book.WordDAOImpl;
 import ge.edu.tsu.hrs.control_panel.server.processor.systemparameter.SystemParameterProcessor;
-import ge.edu.tsu.hrs.words_processing.exception.ReaderException;
 import ge.edu.tsu.hrs.words_processing.reader.DOCXReader;
 import ge.edu.tsu.hrs.words_processing.reader.PDFReader;
 import ge.edu.tsu.hrs.words_processing.reader.Reader;
@@ -22,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class BookProcessor {
@@ -61,13 +61,16 @@ public class BookProcessor {
 						words.add(new Word(s));
 					}
 					book.setDistinctWords(words.size());
-					Set<Word> cachedWords = CachedWords.getWords();
+					Map<Integer, List<String>> cachedWords = CachedWords.getWords();
 					if (cachedWords == null) {
 						throw new ControlPanelException("wordsNotCachedYet");
 					}
 					for (Word word : new HashSet<>(words)) {
-						if (cachedWords.contains(word)) {
-							words.remove(word);
+						for (Integer length : cachedWords.keySet()) {
+							if (cachedWords.get(length).contains(word.getWord())) {
+								words.remove(word);
+								break;
+							}
 						}
 					}
 					book.setSavedWords(words.size());

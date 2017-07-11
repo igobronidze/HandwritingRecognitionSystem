@@ -7,7 +7,7 @@ public class MatchingInput {
 
     private String exemp;
 
-    private List<String> texts;
+    private Map<Integer, List<String>> texts;
 
     private float insertRate;
 
@@ -25,11 +25,11 @@ public class MatchingInput {
         this.exemp = exemp;
     }
 
-    public List<String> getTexts() {
+    public Map<Integer, List<String>> getTexts() {
         return texts;
     }
 
-    public void setTexts(List<String> texts) {
+    public void setTexts(Map<Integer, List<String>> texts) {
         this.texts = texts;
     }
 

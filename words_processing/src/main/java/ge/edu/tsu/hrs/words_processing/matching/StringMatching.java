@@ -9,7 +9,7 @@ public class StringMatching {
         long currMS = System.currentTimeMillis();
         List<String> resultString = new ArrayList<>();
         float min = Float.MAX_VALUE;
-        for (String text : input.getTexts()) {
+        for (String text : input.getTexts().get(input.getExemp().length())) {
             float distance = LevenshteinDistance.countDistance(input.getExemp(), text, input);
             if (distance < min) {
                 min = distance;
@@ -17,6 +17,9 @@ public class StringMatching {
                 resultString.add(text);
             } else if (distance == min) {
                 resultString.add(text);
+            }
+            if (distance == 0) {
+                break;
             }
         }
         MatchingResult result = new MatchingResult();

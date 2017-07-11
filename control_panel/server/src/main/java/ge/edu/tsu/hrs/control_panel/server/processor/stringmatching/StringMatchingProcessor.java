@@ -12,7 +12,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 public class StringMatchingProcessor {
 
@@ -25,18 +24,14 @@ public class StringMatchingProcessor {
     private Parameter stringMatchingChangeRate = new Parameter("stringMatchingChangeRate", "1.0");
 
     public String getNearestString(String text, List<List<Float>> activations, Map<Integer, Character> indexToCharMap) {
-        Set<Word> cachedWords = CachedWords.getWords();
+        Map<Integer, List<String>> cachedWords = CachedWords.getWords();
         if (cachedWords == null) {
             CachedWords.loadData();
             cachedWords = CachedWords.getWords();
         }
-        List<String> texts = new ArrayList<>();
-        for (Word word : cachedWords) {
-            texts.add(word.getWord());
-        }
         MatchingInput input = new MatchingInput();
         input.setExemp(text);
-        input.setTexts(texts);
+        input.setTexts(cachedWords);
         input.setInsertRate(systemParameterProcessor.getFloatParameterValue(stringMatchingInsertRate));
         input.setDeleteRate(systemParameterProcessor.getFloatParameterValue(stringMatchingDeleteRate));
         input.setChangeRate(systemParameterProcessor.getFloatParameterValue(stringMatchingChangeRate));

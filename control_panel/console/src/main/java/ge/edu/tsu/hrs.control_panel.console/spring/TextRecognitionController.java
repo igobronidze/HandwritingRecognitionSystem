@@ -44,7 +44,7 @@ public class TextRecognitionController {
             BufferedImage image = ImageIO.read(in);
             List<BufferedImage> images = new ArrayList<>();
             images.add(image);
-            List<RecognitionInfo> recognitionInfos = neuralNetworkService.recognizeText(images, -1, 0, false, false);
+            List<RecognitionInfo> recognitionInfos = neuralNetworkService.recognizeText(images, -1, 0, true, true);
             return recognitionInfos.get(0).getText();
         } catch (Exception e) {
             return "You failed to upload";
